@@ -54,9 +54,9 @@ LOCAL void ja4plus_ja4_version(uint16_t ver, char vstr[3])
     case 0x0304:
         memcpy(vstr, "13", 3);
         break;
-    case 0x7f00 ... 0x7fff:
+    /* case 0x7f00 ... 0x7fff:
         memcpy(vstr, "13", 3);
-        break;
+        break; */
     default:
         memcpy(vstr, "00", 3);
         break;
@@ -90,8 +90,8 @@ LOCAL uint32_t ja4plus_process_server_hello(ArkimeSession_t *session, const uint
 
     uint16_t cipher = 0;
     BSB_IMPORT_u16(bsb, cipher);
-    char cipherHex[7];
-    snprintf(cipherHex, sizeof(cipherHex), "0x%04x", cipher);
+    char cipherHex[5];
+    snprintf(cipherHex, sizeof(cipherHex), "%04x", cipher);
 
     BSB_IMPORT_skip(bsb, 1);
 
@@ -161,7 +161,7 @@ LOCAL uint32_t ja4plus_process_server_hello(ArkimeSession_t *session, const uint
     ja4[5] = ja4ALPN[0];
     ja4[6] = ja4ALPN[1];
     ja4[7] = '_';
-    memcpy(ja4 + 8, cipherHex + 2, 4);
+    memcpy(ja4 + 8, cipherHex, 4);
     ja4[12] = '_';
 
     char tmpBuf[10 * 256];
@@ -190,8 +190,6 @@ LOCAL uint32_t ja4plus_process_server_hello(ArkimeSession_t *session, const uint
 LOCAL void ja4plus_cert_process_rdn(BSB *bsb, BSB *out)
 {
     uint32_t apc, atag, alen;
-    char lastOid[1000];
-    lastOid[0] = 0;
 
     while (BSB_REMAINING(*bsb) > 3) {
         uint8_t *value = arkime_parsers_asn_get_tlv(bsb, &apc, &atag, &alen);
