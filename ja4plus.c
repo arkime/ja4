@@ -13,7 +13,6 @@
 
 extern ArkimeConfig_t        config;
 LOCAL int                    ja4sField;
-LOCAL int                    ja4xField;
 LOCAL GChecksum             *checksums256[ARKIME_MAX_PACKET_THREADS];
 extern uint8_t               arkime_char_to_hexstr[256][3];
 
@@ -345,11 +344,12 @@ void arkime_plugin_init()
                                     ARKIME_FIELD_TYPE_STR_GHASH,  ARKIME_FIELD_FLAG_CNT,
                                     (char *)NULL);
 
-    ja4xField = arkime_field_define("tls", "lotermfield",
-                                    "tls.ja4x", "JA4x", "tls.ja4x",
-                                    "Cert JA4x field",
-                                    ARKIME_FIELD_TYPE_STR_GHASH,  ARKIME_FIELD_FLAG_CNT,
-                                    (char *)NULL);
+
+    arkime_field_define("cert", "termfield",
+                        "cert.ja4x", "JA4x", "cert.ja4x",
+                        "JA4x",
+                        0, ARKIME_FIELD_FLAG_FAKE,
+                        (char *)NULL);
 
     int t;
     for (t = 0; t < config.packetThreads; t++) {
