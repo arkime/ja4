@@ -323,10 +323,7 @@ LOCAL uint32_t ja4plus_process_certificate_wInfo(ArkimeSession_t *session, const
     ja4plus_cert_process_rdn(&bsb, &out);
     ja4plus_cert_print(session->thread, 2, ja4x, &out);
 
-    if (!info->extra)
-        info->extra = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, g_free);
-
-    g_hash_table_replace(info->extra, g_strdup("ja4x"), g_strdup(ja4x));
+    arkime_field_certsinfo_update_extra(info, g_strdup("ja4x"), g_strdup(ja4x));
     return 0;
 
 bad_cert:
