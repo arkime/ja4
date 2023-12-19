@@ -17,6 +17,12 @@ LOCAL int                    ja4sshField;
 LOCAL GChecksum             *checksums256[ARKIME_MAX_PACKET_THREADS];
 extern uint8_t               arkime_char_to_hexstr[256][3];
 
+// keep this in sync with capture/parsers/ssh.c
+typedef struct {
+    uint16_t  modes[2];
+    uint16_t  packets[2];
+} SSHJA4_t;
+
 /******************************************************************************/
 // https://tools.ietf.org/html/draft-davidben-tls-grease-00
 LOCAL int ja4plus_is_grease_value(uint32_t val)
@@ -331,17 +337,19 @@ bad_cert:
     return 0;
 }
 /******************************************************************************/
-LOCAL uint32_t ja4plus_ssh_ja4ssh(ArkimeSession_t *session, const uint8_t *data, int len, void *uw)
+LOCAL uint32_t ja4plus_ssh_ja4ssh(ArkimeSession_t *session, const uint8_t *UNUSED(data), int UNUSED(len), void *uw)
 {
     // https://github.com/FoxIO-LLC/ja4/blob/main/technical_details/JA4SSH.md
     char ja4ssh[50];
     BSB bsb;
 
+    SSHJA4_t *sshja4 = uw;
+
     BSB_INIT(bsb, ja4ssh, sizeof(ja4ssh));
     BSB_EXPORT_sprintf(bsb, "c%ds%d_c%ds%d_c%ds%d",
-            0, 1, // ALW modes passed in
-            2, 3, // ALW packets passed in
-            4, 5); // ALW acks from session
+            sshja4->modes[0], sshja4->modes[1],
+            sshja4->packets[0], sshja4->packets[1],
+            session->tcpFlagAckCnt[0], session->tcpFlagAckCnt[1]);
 
     arkime_field_string_add(ja4sshField, session, ja4ssh, BSB_LENGTH(bsb), TRUE);
     return 0;
