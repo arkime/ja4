@@ -347,9 +347,9 @@ LOCAL uint32_t ja4plus_ssh_ja4ssh(ArkimeSession_t *session, const uint8_t *UNUSE
 
     BSB_INIT(bsb, ja4ssh, sizeof(ja4ssh));
     BSB_EXPORT_sprintf(bsb, "c%ds%d_c%ds%d_c%ds%d",
-            sshja4->modes[0], sshja4->modes[1],
-            sshja4->packets[0], sshja4->packets[1],
-            session->tcpFlagAckCnt[0], session->tcpFlagAckCnt[1]);
+                       sshja4->modes[0], sshja4->modes[1],
+                       sshja4->packets[0], sshja4->packets[1],
+                       session->tcpFlagAckCnt[0], session->tcpFlagAckCnt[1]);
 
     arkime_field_string_add(ja4sshField, session, ja4ssh, BSB_LENGTH(bsb), TRUE);
     return 0;
@@ -375,10 +375,10 @@ void arkime_plugin_init()
                         (char *)NULL);
 
     ja4sshField = arkime_field_define("ssh", "lotermfield",
-                                    "ssh.ja4ssh", "JA4ssh", "ssh.ja4ssh",
-                                    "SSH JA4ssh field",
-                                    ARKIME_FIELD_TYPE_STR_GHASH,  ARKIME_FIELD_FLAG_CNT,
-                                    (char *)NULL);
+                                      "ssh.ja4ssh", "JA4ssh", "ssh.ja4ssh",
+                                      "SSH JA4ssh field",
+                                      ARKIME_FIELD_TYPE_STR_GHASH,  ARKIME_FIELD_FLAG_CNT,
+                                      (char *)NULL);
 
     int t;
     for (t = 0; t < config.packetThreads; t++) {
