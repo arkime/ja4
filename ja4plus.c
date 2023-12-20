@@ -10,9 +10,11 @@
  */
 
 #include "arkime.h"
+#include "../parsers/ssh_info.h"
 
 extern ArkimeConfig_t        config;
 LOCAL int                    ja4sField;
+LOCAL int                    ja4sshField;
 LOCAL GChecksum             *checksums256[ARKIME_MAX_PACKET_THREADS];
 extern uint8_t               arkime_char_to_hexstr[256][3];
 
@@ -330,10 +332,51 @@ bad_cert:
     return 0;
 }
 /******************************************************************************/
+// Given a list of numbers find the mode, we ignore numbers > 2048
+LOCAL int ja4plus_ssh_mode(uint16_t *nums, int num) {
+    unsigned char  count[2048];
+    unsigned short mode = 0;
+    unsigned char  modeCount = 0;
+    memset(count, 0, sizeof(count));
+    for (int i = 0; i < num; i++) {
+        if (nums[i] >= 2048)
+            continue;
+        count[nums[i]]++;
+        if (count[nums[i]] == modeCount && nums[i] < mode) {
+            // new count same as old max, but lower mode
+            mode = nums[i];
+        } else if (count[nums[i]] > modeCount) {
+            mode = nums[i];
+            modeCount = count[nums[i]];
+        }
+
+    }
+    return mode;
+}
+/******************************************************************************/
+LOCAL uint32_t ja4plus_ssh_ja4ssh(ArkimeSession_t *session, const uint8_t *UNUSED(data), int UNUSED(len), void *uw)
+{
+    // https://github.com/FoxIO-LLC/ja4/blob/main/technical_details/JA4SSH.md
+    char ja4ssh[50];
+    BSB bsb;
+
+    SSHInfo_t *ssh = uw;
+
+    BSB_INIT(bsb, ja4ssh, sizeof(ja4ssh));
+    BSB_EXPORT_sprintf(bsb, "c%ds%d_c%ds%d_c%ds%d",
+                       ja4plus_ssh_mode(ssh->lens[0], ssh->packets[0]), ja4plus_ssh_mode(ssh->lens[1], ssh->packets[1]),
+                       ssh->packets[0], ssh->packets[1],
+                       session->tcpFlagAckCnt[0], session->tcpFlagAckCnt[1]);
+
+    arkime_field_string_add(ja4sshField, session, ja4ssh, BSB_LENGTH(bsb), TRUE);
+    return 0;
+}
+/******************************************************************************/
 void arkime_plugin_init()
 {
     arkime_parser_add_named_func("tls_process_server_hello", ja4plus_process_server_hello);
     arkime_parser_add_named_func("tls_process_certificate_wInfo", ja4plus_process_certificate_wInfo);
+    arkime_parser_add_named_func("ssh_counting200", ja4plus_ssh_ja4ssh);
 
     ja4sField = arkime_field_define("tls", "lotermfield",
                                     "tls.ja4s", "JA4s", "tls.ja4s",
@@ -347,6 +390,12 @@ void arkime_plugin_init()
                         "JA4x",
                         0, ARKIME_FIELD_FLAG_FAKE,
                         (char *)NULL);
+
+    ja4sshField = arkime_field_define("ssh", "lotermfield",
+                                      "ssh.ja4ssh", "JA4ssh", "ssh.ja4ssh",
+                                      "SSH JA4ssh field",
+                                      ARKIME_FIELD_TYPE_STR_GHASH,  ARKIME_FIELD_FLAG_CNT,
+                                      (char *)NULL);
 
     int t;
     for (t = 0; t < config.packetThreads; t++) {
