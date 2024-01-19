@@ -2,7 +2,7 @@
  *
  * Copyright 2023 AOL Inc. All rights reserved.
  *
- * SPDX-License-Identifier: Apache-2.0
+ * SPDX-License-Identifier: FoxIO License 1.1
  *
  * This software requires a license to use. See
  * https://github.com/FoxIO-LLC/ja4#licensing
