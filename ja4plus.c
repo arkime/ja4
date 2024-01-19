@@ -14,9 +14,11 @@
 
 extern ArkimeConfig_t        config;
 LOCAL int                    ja4sField;
+LOCAL int                    ja4sRawField;
 LOCAL int                    ja4sshField;
 LOCAL GChecksum             *checksums256[ARKIME_MAX_PACKET_THREADS];
 extern uint8_t               arkime_char_to_hexstr[256][3];
+LOCAL gboolean               ja4Raw;
 
 /******************************************************************************/
 // https://tools.ietf.org/html/draft-davidben-tls-grease-00
@@ -66,6 +68,7 @@ LOCAL void ja4plus_ja4_version(uint16_t ver, char vstr[3])
 /******************************************************************************/
 LOCAL uint32_t ja4plus_process_server_hello(ArkimeSession_t *session, const uint8_t *data, int len, void UNUSED(*uw))
 {
+    // https://github.com/FoxIO-LLC/ja4/blob/main/technical_details/JA4S.md
     uint8_t  ja4NumExtensions = 0;
     uint16_t ja4Extensions[256];
     uint8_t  ja4ALPN[2] = {'0', '0'};
@@ -152,20 +155,20 @@ LOCAL uint32_t ja4plus_process_server_hello(ArkimeSession_t *session, const uint
     char vstr[3];
     ja4plus_ja4_version(supportedver, vstr);
 
-    char ja4[26];
-    ja4[25] = 0;
-    ja4[0] = (session->ipProtocol == IPPROTO_TCP) ? 't' : 'q';
-    ja4[1] = vstr[0];
-    ja4[2] = vstr[1];
-    ja4[3] = (ja4NumExtensions / 10) + '0';
-    ja4[4] = (ja4NumExtensions % 10) + '0';
-    ja4[5] = ja4ALPN[0];
-    ja4[6] = ja4ALPN[1];
-    ja4[7] = '_';
-    memcpy(ja4 + 8, cipherHex, 4);
-    ja4[12] = '_';
+    char ja4s[26];
+    ja4s[25] = 0;
+    ja4s[0] = (session->ipProtocol == IPPROTO_TCP) ? 't' : 'q';
+    ja4s[1] = vstr[0];
+    ja4s[2] = vstr[1];
+    ja4s[3] = (ja4NumExtensions / 10) + '0';
+    ja4s[4] = (ja4NumExtensions % 10) + '0';
+    ja4s[5] = ja4ALPN[0];
+    ja4s[6] = ja4ALPN[1];
+    ja4s[7] = '_';
+    memcpy(ja4s + 8, cipherHex, 4);
+    ja4s[12] = '_';
 
-    char tmpBuf[10 * 256];
+    char tmpBuf[5 * 256];
     BSB tmpBSB;
 
     BSB_INIT(tmpBSB, tmpBuf, sizeof(tmpBuf));
@@ -178,13 +181,22 @@ LOCAL uint32_t ja4plus_process_server_hello(ArkimeSession_t *session, const uint
 
     if (BSB_LENGTH(tmpBSB) > 0) {
         g_checksum_update(checksum, (guchar *)tmpBuf, BSB_LENGTH(tmpBSB));
-        memcpy(ja4 + 13, g_checksum_get_string(checksum), 12);
+        memcpy(ja4s + 13, g_checksum_get_string(checksum), 12);
         g_checksum_reset(checksum);
     } else {
-        memcpy(ja4 + 13, "000000000000", 12);
+        memcpy(ja4s + 13, "000000000000", 12);
     }
 
-    arkime_field_string_add(ja4sField, session, ja4, 25, TRUE);
+    arkime_field_string_add(ja4sField, session, ja4s, 25, TRUE);
+
+    char ja4s_r[13 + 5 * 256];
+    memcpy(ja4s_r, ja4s, 13);
+    memcpy(ja4s_r + 13, tmpBuf, BSB_LENGTH(tmpBSB));
+
+    if (ja4Raw) {
+        arkime_field_string_add(ja4sRawField, session, ja4s_r, 13 + BSB_LENGTH(tmpBSB), TRUE);
+    }
+
     return 0;
 }
 /******************************************************************************/
@@ -228,6 +240,7 @@ LOCAL void ja4plus_cert_print(int thread, int pos, char *ja4x, BSB *out)
 /******************************************************************************/
 LOCAL uint32_t ja4plus_process_certificate_wInfo(ArkimeSession_t *session, const uint8_t *data, int len, void *uw)
 {
+    // https://github.com/FoxIO-LLC/ja4/blob/main/technical_details/JA4X.md
     ArkimeCertsInfo_t *info = uw;
 
     uint32_t atag, alen, apc;
@@ -277,14 +290,22 @@ LOCAL uint32_t ja4plus_process_certificate_wInfo(ArkimeSession_t *session, const
     BSB out;
     char outbuf[1000];
     char ja4x[39];
+    char ja4x_r[1000];
     ja4x[12] = ja4x[25] = '_';
     ja4x[38] = 0;
+
+    BSB ja4x_rbsb;
+    BSB_INIT(ja4x_rbsb, ja4x_r, sizeof(ja4x_r));
 
     BSB tbsb;
     BSB_INIT(tbsb, value, alen);
 
     BSB_INIT(out, outbuf, sizeof(outbuf));
     ja4plus_cert_process_rdn(&tbsb, &out);
+    if (BSB_LENGTH(out) > 0)
+        BSB_EXPORT_ptr(ja4x_rbsb, out.buf, BSB_LENGTH(out)-1);
+    BSB_EXPORT_u08(ja4x_rbsb, '_');
+
     ja4plus_cert_print(session->thread, 0,  ja4x, &out);
 
     /* validity */
@@ -310,8 +331,13 @@ LOCAL uint32_t ja4plus_process_certificate_wInfo(ArkimeSession_t *session, const
         goto bad_cert;
     }
     BSB_INIT(tbsb, value, alen);
+
     BSB_INIT(out, outbuf, sizeof(outbuf));
     ja4plus_cert_process_rdn(&tbsb, &out);
+    if (BSB_LENGTH(out) > 0)
+        BSB_EXPORT_ptr(ja4x_rbsb, out.buf, BSB_LENGTH(out)-1);
+    BSB_EXPORT_u08(ja4x_rbsb, '_');
+
     ja4plus_cert_print(session->thread, 1, ja4x, &out);
 
     /* subjectPublicKeyInfo */
@@ -323,9 +349,16 @@ LOCAL uint32_t ja4plus_process_certificate_wInfo(ArkimeSession_t *session, const
     /* extensions */
     BSB_INIT(out, outbuf, sizeof(outbuf));
     ja4plus_cert_process_rdn(&bsb, &out);
+    if (BSB_LENGTH(out) > 0)
+        BSB_EXPORT_ptr(ja4x_rbsb, out.buf, BSB_LENGTH(out)-1);
+    BSB_EXPORT_u08(ja4x_rbsb, 0);
+
     ja4plus_cert_print(session->thread, 2, ja4x, &out);
 
     arkime_field_certsinfo_update_extra(info, g_strdup("ja4x"), g_strdup(ja4x));
+    if (ja4Raw) {
+        arkime_field_certsinfo_update_extra(info, g_strdup("ja4x_r"), g_strdup(ja4x_r));
+    }
     return 0;
 
 bad_cert:
@@ -364,9 +397,10 @@ LOCAL uint32_t ja4plus_ssh_ja4ssh(ArkimeSession_t *session, const uint8_t *UNUSE
 
     BSB_INIT(bsb, ja4ssh, sizeof(ja4ssh));
     BSB_EXPORT_sprintf(bsb, "c%ds%d_c%ds%d_c%ds%d",
-                       ja4plus_ssh_mode(ssh->lens[0], ssh->packets[0]), ja4plus_ssh_mode(ssh->lens[1], ssh->packets[1]),
-                       ssh->packets[0], ssh->packets[1],
+                       ja4plus_ssh_mode(ssh->lens[0], ssh->packets200[0]), ja4plus_ssh_mode(ssh->lens[1], ssh->packets200[1]),
+                       ssh->packets200[0], ssh->packets200[1],
                        session->tcpFlagAckCnt[0], session->tcpFlagAckCnt[1]);
+    session->tcpFlagAckCnt[0] = session->tcpFlagAckCnt[1] = 0;
 
     arkime_field_string_add(ja4sshField, session, ja4ssh, BSB_LENGTH(bsb), TRUE);
     return 0;
@@ -374,6 +408,10 @@ LOCAL uint32_t ja4plus_ssh_ja4ssh(ArkimeSession_t *session, const uint8_t *UNUSE
 /******************************************************************************/
 void arkime_plugin_init()
 {
+    LOG("JA4+ plugin loaded");
+
+    ja4Raw = arkime_config_boolean(NULL, "ja4Raw", TRUE);
+
     arkime_parser_add_named_func("tls_process_server_hello", ja4plus_process_server_hello);
     arkime_parser_add_named_func("tls_process_certificate_wInfo", ja4plus_process_certificate_wInfo);
     arkime_parser_add_named_func("ssh_counting200", ja4plus_ssh_ja4ssh);
@@ -384,6 +422,12 @@ void arkime_plugin_init()
                                     ARKIME_FIELD_TYPE_STR_GHASH,  ARKIME_FIELD_FLAG_CNT,
                                     (char *)NULL);
 
+    ja4sRawField = arkime_field_define("tls", "lotermfield",
+                                    "tls.ja4s_r", "JA4s_r", "tls.ja4s_r",
+                                    "SSL/TLS JA4s raw field",
+                                    ARKIME_FIELD_TYPE_STR_GHASH,  ARKIME_FIELD_FLAG_CNT,
+                                    (char *)NULL);
+
 
     arkime_field_define("cert", "termfield",
                         "cert.ja4x", "JA4x", "cert.ja4x",
@@ -391,10 +435,16 @@ void arkime_plugin_init()
                         0, ARKIME_FIELD_FLAG_FAKE,
                         (char *)NULL);
 
+    arkime_field_define("cert", "termfield",
+                        "cert.ja4x_r", "JA4x_r", "cert.ja4x_r",
+                        "JA4x_r",
+                        0, ARKIME_FIELD_FLAG_FAKE,
+                        (char *)NULL);
+
     ja4sshField = arkime_field_define("ssh", "lotermfield",
                                       "ssh.ja4ssh", "JA4ssh", "ssh.ja4ssh",
                                       "SSH JA4ssh field",
-                                      ARKIME_FIELD_TYPE_STR_GHASH,  ARKIME_FIELD_FLAG_CNT,
+                                      ARKIME_FIELD_TYPE_STR_ARRAY,  ARKIME_FIELD_FLAG_CNT | ARKIME_FIELD_FLAG_DIFF_FROM_LAST,
                                       (char *)NULL);
 
     int t;
