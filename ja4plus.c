@@ -175,7 +175,9 @@ LOCAL uint32_t ja4plus_process_server_hello(ArkimeSession_t *session, const uint
     for (int i = 0; i < ja4NumExtensions; i++) {
         BSB_EXPORT_sprintf(tmpBSB, "%04x,", ja4Extensions[i]);
     }
-    BSB_EXPORT_rewind(tmpBSB, 1); // Remove last ,
+    if (ja4NumExtensions > 0) {
+        BSB_EXPORT_rewind(tmpBSB, 1); // Remove last ,
+    }
 
     GChecksum *const checksum = checksums256[session->thread];
 
@@ -303,7 +305,7 @@ LOCAL uint32_t ja4plus_process_certificate_wInfo(ArkimeSession_t *session, const
     BSB_INIT(out, outbuf, sizeof(outbuf));
     ja4plus_cert_process_rdn(&tbsb, &out);
     if (BSB_LENGTH(out) > 0)
-        BSB_EXPORT_ptr(ja4x_rbsb, out.buf, BSB_LENGTH(out)-1);
+        BSB_EXPORT_ptr(ja4x_rbsb, out.buf, BSB_LENGTH(out) - 1);
     BSB_EXPORT_u08(ja4x_rbsb, '_');
 
     ja4plus_cert_print(session->thread, 0,  ja4x, &out);
@@ -335,7 +337,7 @@ LOCAL uint32_t ja4plus_process_certificate_wInfo(ArkimeSession_t *session, const
     BSB_INIT(out, outbuf, sizeof(outbuf));
     ja4plus_cert_process_rdn(&tbsb, &out);
     if (BSB_LENGTH(out) > 0)
-        BSB_EXPORT_ptr(ja4x_rbsb, out.buf, BSB_LENGTH(out)-1);
+        BSB_EXPORT_ptr(ja4x_rbsb, out.buf, BSB_LENGTH(out) - 1);
     BSB_EXPORT_u08(ja4x_rbsb, '_');
 
     ja4plus_cert_print(session->thread, 1, ja4x, &out);
@@ -350,7 +352,7 @@ LOCAL uint32_t ja4plus_process_certificate_wInfo(ArkimeSession_t *session, const
     BSB_INIT(out, outbuf, sizeof(outbuf));
     ja4plus_cert_process_rdn(&bsb, &out);
     if (BSB_LENGTH(out) > 0)
-        BSB_EXPORT_ptr(ja4x_rbsb, out.buf, BSB_LENGTH(out)-1);
+        BSB_EXPORT_ptr(ja4x_rbsb, out.buf, BSB_LENGTH(out) - 1);
     BSB_EXPORT_u08(ja4x_rbsb, 0);
 
     ja4plus_cert_print(session->thread, 2, ja4x, &out);
@@ -423,10 +425,10 @@ void arkime_plugin_init()
                                     (char *)NULL);
 
     ja4sRawField = arkime_field_define("tls", "lotermfield",
-                                    "tls.ja4s_r", "JA4s_r", "tls.ja4s_r",
-                                    "SSL/TLS JA4s raw field",
-                                    ARKIME_FIELD_TYPE_STR_GHASH,  ARKIME_FIELD_FLAG_CNT,
-                                    (char *)NULL);
+                                       "tls.ja4s_r", "JA4s_r", "tls.ja4s_r",
+                                       "SSL/TLS JA4s raw field",
+                                       ARKIME_FIELD_TYPE_STR_GHASH,  ARKIME_FIELD_FLAG_CNT,
+                                       (char *)NULL);
 
 
     arkime_field_define("cert", "termfield",
