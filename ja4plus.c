@@ -503,11 +503,27 @@ LOCAL uint32_t ja4plus_tcp_raw_packet(ArkimeSession_t *session, const uint8_t *U
     return 0;
 }
 /******************************************************************************/
+void ja4plus_plugin_save(ArkimeSession_t *session, int final)
+{
+    if (final && session->pluginData[ja4plus_plugin_num])
+        ARKIME_TYPE_FREE(JA4PlusData_t, session->pluginData[ja4plus_plugin_num]);
+}
+/******************************************************************************/
 void arkime_plugin_init()
 {
     LOG("JA4+ plugin loaded");
 
     ja4plus_plugin_num = arkime_plugins_register("ja4plus", TRUE);
+
+    arkime_plugins_set_cb("ja4plus",
+                          NULL,
+                          NULL,
+                          NULL,
+                          NULL,
+                          ja4plus_plugin_save,
+                          NULL,
+                          NULL,
+                          NULL);
 
     ja4Raw = arkime_config_boolean(NULL, "ja4Raw", TRUE);
 

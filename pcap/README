@@ -1,0 +1,8 @@
+TO RUN TESTS:
+* These directions assume you have a working arkime install in ~/arkime and ~/ja4 is this dir
+* in ja4 directory run `make`
+* in ~/arkime/tests directory run `./tests.pl --extra "-o plugins=ja4plus.so" ~/ja4/pcap/*.pcap`
+* profit
+
+TO UPDATE .test FILES:
+* in ja4 directory run `./tests.pl --extra "-o plugins=ja4plus.so" --make ~/ja4/pcap/*.pcap`

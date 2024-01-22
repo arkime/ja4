@@ -1,0 +1,131 @@
+{
+   "sessions3" : [
+      {
+         "body" : {
+            "@timestamp" : "SET",
+            "client" : {
+               "bytes" : 24
+            },
+            "destination" : {
+               "bytes" : 216,
+               "ip" : "10.2.95.39",
+               "mac" : [
+                  "00:00:0c:07:ac:01",
+                  "00:d0:2b:d1:76:00"
+               ],
+               "mac-cnt" : 2,
+               "packets" : 1,
+               "port" : 53
+            },
+            "dns" : {
+               "host" : [
+                  "mx.com"
+               ],
+               "hostCnt" : 1,
+               "mailserverHost" : [
+                  "cluster5.us.messagelabs.com",
+                  "cluster5a.us.messagelabs.com"
+               ],
+               "mailserverHostCnt" : 2,
+               "nameserverASN" : [
+                  "AS15395 Rackspace Ltd.",
+                  "AS27357 Rackspace Hosting"
+               ],
+               "nameserverGEO" : [
+                  "US",
+                  "US"
+               ],
+               "nameserverHost" : [
+                  "dns1.stabletransit.com",
+                  "dns2.stabletransit.com"
+               ],
+               "nameserverHostCnt" : 2,
+               "nameserverIp" : [
+                  "65.61.188.4",
+                  "69.20.95.4"
+               ],
+               "nameserverIpCnt" : 2,
+               "nameserverRIR" : [
+                  "ARIN",
+                  "ARIN"
+               ],
+               "opcode" : [
+                  "QUERY"
+               ],
+               "opcodeCnt" : 1,
+               "qc" : [
+                  "IN"
+               ],
+               "qcCnt" : 1,
+               "qt" : [
+                  "MX"
+               ],
+               "qtCnt" : 1,
+               "status" : [
+                  "NOERROR"
+               ],
+               "statusCnt" : 1
+            },
+            "dstOui" : [
+               "Cisco Systems, Inc",
+               "Jetcell, Inc."
+            ],
+            "dstOuiCnt" : 2,
+            "dstPayload8" : "4c17818000010002",
+            "fileId" : [],
+            "firstPacket" : 1386104996973,
+            "ipProtocol" : 17,
+            "lastPacket" : 1386104997055,
+            "length" : 83,
+            "network" : {
+               "bytes" : 282,
+               "community_id" : "1:ba6AVEG/hzl+V9BnSJZnWVTUR6U=",
+               "packets" : 2
+            },
+            "node" : "test",
+            "packetLen" : [
+               82,
+               232
+            ],
+            "packetPos" : [
+               24,
+               106
+            ],
+            "protocol" : [
+               "dns",
+               "udp"
+            ],
+            "protocolCnt" : 2,
+            "segmentCnt" : 1,
+            "server" : {
+               "bytes" : 174
+            },
+            "source" : {
+               "bytes" : 66,
+               "geo" : {
+                  "country_iso_code" : "US"
+               },
+               "ip" : "10.180.156.185",
+               "mac" : [
+                  "00:1f:5b:ff:51:cb"
+               ],
+               "mac-cnt" : 1,
+               "packets" : 1,
+               "port" : 51427
+            },
+            "srcOui" : [
+               "Apple, Inc."
+            ],
+            "srcOuiCnt" : 1,
+            "srcPayload8" : "4c17010000010000",
+            "totDataBytes" : 198
+         },
+         "header" : {
+            "index" : {
+               "_index" : "tests_sessions3-131203"
+            }
+         }
+      }
+   ]
+}
+

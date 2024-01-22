@@ -1,0 +1,357 @@
+{
+   "sessions3" : [
+      {
+         "body" : {
+            "@timestamp" : "SET",
+            "client" : {
+               "bytes" : 32
+            },
+            "destination" : {
+               "bytes" : 254,
+               "ip" : "10.2.95.39",
+               "mac" : [
+                  "00:00:0c:07:ac:01",
+                  "00:d0:2b:d1:76:00"
+               ],
+               "mac-cnt" : 2,
+               "packets" : 1,
+               "port" : 53
+            },
+            "dns" : {
+               "ASN" : [
+                  "AS36459 GitHub, Inc."
+               ],
+               "GEO" : [
+                  "US"
+               ],
+               "RIR" : [
+                  "ARIN"
+               ],
+               "host" : [
+                  "github.com",
+                  "www.github.com"
+               ],
+               "hostCnt" : 2,
+               "ip" : [
+                  "192.30.252.128"
+               ],
+               "ipCnt" : 1,
+               "nameserverASN" : [
+                  "---"
+               ],
+               "nameserverGEO" : [
+                  "---"
+               ],
+               "nameserverHost" : [
+                  "ns1.p16.dynect.net",
+                  "ns2.p16.dynect.net",
+                  "ns3.p16.dynect.net",
+                  "ns4.p16.dynect.net"
+               ],
+               "nameserverHostCnt" : 4,
+               "nameserverIp" : [
+                  "10.2.95.12"
+               ],
+               "nameserverIpCnt" : 1,
+               "nameserverRIR" : [
+                  ""
+               ],
+               "opcode" : [
+                  "QUERY"
+               ],
+               "opcodeCnt" : 1,
+               "qc" : [
+                  "IN"
+               ],
+               "qcCnt" : 1,
+               "qt" : [
+                  "A"
+               ],
+               "qtCnt" : 1,
+               "status" : [
+                  "NOERROR"
+               ],
+               "statusCnt" : 1
+            },
+            "dstOui" : [
+               "Cisco Systems, Inc",
+               "Jetcell, Inc."
+            ],
+            "dstOuiCnt" : 2,
+            "dstPayload8" : "e039818000010002",
+            "fileId" : [],
+            "firstPacket" : 1385400647217,
+            "ipProtocol" : 17,
+            "lastPacket" : 1385400647218,
+            "length" : 0,
+            "network" : {
+               "bytes" : 328,
+               "community_id" : "1:GTsD3mpAYuXO8KLDJlk5/Mpw/Wc=",
+               "packets" : 2
+            },
+            "node" : "test",
+            "packetLen" : [
+               90,
+               270
+            ],
+            "packetPos" : [
+               24,
+               114
+            ],
+            "protocol" : [
+               "dns",
+               "udp"
+            ],
+            "protocolCnt" : 2,
+            "segmentCnt" : 1,
+            "server" : {
+               "bytes" : 212
+            },
+            "source" : {
+               "bytes" : 74,
+               "geo" : {
+                  "country_iso_code" : "US"
+               },
+               "ip" : "10.180.156.141",
+               "mac" : [
+                  "00:1f:5b:ff:51:cb"
+               ],
+               "mac-cnt" : 1,
+               "packets" : 1,
+               "port" : 62563
+            },
+            "srcOui" : [
+               "Apple, Inc."
+            ],
+            "srcOuiCnt" : 1,
+            "srcPayload8" : "e039010000010000",
+            "totDataBytes" : 244
+         },
+         "header" : {
+            "index" : {
+               "_index" : "tests_sessions3-131125"
+            }
+         }
+      },
+      {
+         "body" : {
+            "@timestamp" : "SET",
+            "client" : {
+               "bytes" : 32
+            },
+            "destination" : {
+               "bytes" : 254,
+               "ip" : "10.178.8.71",
+               "mac" : [
+                  "00:00:0c:07:ac:01",
+                  "00:0e:d6:0b:98:80"
+               ],
+               "mac-cnt" : 2,
+               "packets" : 1,
+               "port" : 53
+            },
+            "dns" : {
+               "ASN" : [
+                  "AS36459 GitHub, Inc."
+               ],
+               "GEO" : [
+                  "US"
+               ],
+               "RIR" : [
+                  "ARIN"
+               ],
+               "host" : [
+                  "github.com",
+                  "www.github.com"
+               ],
+               "hostCnt" : 2,
+               "ip" : [
+                  "192.30.252.130"
+               ],
+               "ipCnt" : 1,
+               "nameserverASN" : [
+                  "---"
+               ],
+               "nameserverGEO" : [
+                  "---"
+               ],
+               "nameserverHost" : [
+                  "ns1.p16.dynect.net",
+                  "ns2.p16.dynect.net",
+                  "ns3.p16.dynect.net",
+                  "ns4.p16.dynect.net"
+               ],
+               "nameserverHostCnt" : 4,
+               "nameserverIp" : [
+                  "10.2.95.12"
+               ],
+               "nameserverIpCnt" : 1,
+               "nameserverRIR" : [
+                  ""
+               ],
+               "opcode" : [
+                  "QUERY"
+               ],
+               "opcodeCnt" : 1,
+               "qc" : [
+                  "IN"
+               ],
+               "qcCnt" : 1,
+               "qt" : [
+                  "A"
+               ],
+               "qtCnt" : 1,
+               "status" : [
+                  "NOERROR"
+               ],
+               "statusCnt" : 1
+            },
+            "dstOui" : [
+               "Cisco Systems, Inc"
+            ],
+            "dstOuiCnt" : 1,
+            "dstPayload8" : "e039818000010002",
+            "fileId" : [],
+            "firstPacket" : 1385400648218,
+            "ipProtocol" : 17,
+            "lastPacket" : 1385400648228,
+            "length" : 9,
+            "network" : {
+               "bytes" : 328,
+               "community_id" : "1:G0XeVsW8anRO3xlyUoJSRZQKxkk=",
+               "packets" : 2
+            },
+            "node" : "test",
+            "packetLen" : [
+               90,
+               270
+            ],
+            "packetPos" : [
+               384,
+               474
+            ],
+            "protocol" : [
+               "dns",
+               "udp"
+            ],
+            "protocolCnt" : 2,
+            "segmentCnt" : 1,
+            "server" : {
+               "bytes" : 212
+            },
+            "source" : {
+               "bytes" : 74,
+               "geo" : {
+                  "country_iso_code" : "US"
+               },
+               "ip" : "10.180.156.141",
+               "mac" : [
+                  "00:1f:5b:ff:51:cb"
+               ],
+               "mac-cnt" : 1,
+               "packets" : 1,
+               "port" : 62416
+            },
+            "srcOui" : [
+               "Apple, Inc."
+            ],
+            "srcOuiCnt" : 1,
+            "srcPayload8" : "e039010000010000",
+            "totDataBytes" : 244
+         },
+         "header" : {
+            "index" : {
+               "_index" : "tests_sessions3-131125"
+            }
+         }
+      },
+      {
+         "body" : {
+            "@timestamp" : "SET",
+            "client" : {
+               "bytes" : 54
+            },
+            "destination" : {
+               "bytes" : 0,
+               "ip" : "10.10.10.11",
+               "mac" : [
+                  "20:4e:71:c5:11:c0"
+               ],
+               "mac-cnt" : 1,
+               "packets" : 0,
+               "port" : 53
+            },
+            "dns" : {
+               "host" : [
+                  "10.100.10.10.in-addr.arpa"
+               ],
+               "hostCnt" : 1,
+               "opcode" : [
+                  "QUERY"
+               ],
+               "opcodeCnt" : 1,
+               "qc" : [
+                  "IN"
+               ],
+               "qcCnt" : 1,
+               "qt" : [
+                  "ANY"
+               ],
+               "qtCnt" : 1
+            },
+            "dstOui" : [
+               "Juniper Networks"
+            ],
+            "dstOuiCnt" : 1,
+            "fileId" : [],
+            "firstPacket" : 1482767159342,
+            "ipProtocol" : 17,
+            "lastPacket" : 1482767159342,
+            "length" : 0,
+            "network" : {
+               "bytes" : 96,
+               "community_id" : "1:riWwYg6ibgUkITnqzx645Ry2+Ps=",
+               "packets" : 1
+            },
+            "node" : "test",
+            "packetLen" : [
+               112
+            ],
+            "packetPos" : [
+               744
+            ],
+            "protocol" : [
+               "dns",
+               "udp"
+            ],
+            "protocolCnt" : 2,
+            "segmentCnt" : 1,
+            "server" : {
+               "bytes" : 0
+            },
+            "source" : {
+               "bytes" : 96,
+               "ip" : "10.10.10.10",
+               "mac" : [
+                  "ac:4b:c8:4c:9f:c1"
+               ],
+               "mac-cnt" : 1,
+               "packets" : 1,
+               "port" : 5353
+            },
+            "srcOui" : [
+               "Juniper Networks"
+            ],
+            "srcOuiCnt" : 1,
+            "srcPayload8" : "caa6001000010000",
+            "totDataBytes" : 54
+         },
+         "header" : {
+            "index" : {
+               "_index" : "tests_sessions3-161226"
+            }
+         }
+      }
+   ]
+}
+
