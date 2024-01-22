@@ -16,9 +16,29 @@ extern ArkimeConfig_t        config;
 LOCAL int                    ja4sField;
 LOCAL int                    ja4sRawField;
 LOCAL int                    ja4sshField;
+LOCAL int                    ja4lcField;
+LOCAL int                    ja4lsField;
+
+LOCAL int                    ja4plus_plugin_num;
 LOCAL GChecksum             *checksums256[ARKIME_MAX_PACKET_THREADS];
 extern uint8_t               arkime_char_to_hexstr[256][3];
 LOCAL gboolean               ja4Raw;
+
+typedef struct {
+    // Used for JA4L
+    // Timestamps are reference against firstPacket
+    uint32_t       timestampA;
+    uint32_t       timestampB;
+    uint32_t       timestampC;
+    uint32_t       timestampD;
+    uint32_t       timestampE;
+
+    uint8_t        client_ttl;
+    uint8_t        server_ttl;
+    uint8_t        tcpdone;
+} JA4PlusData_t;
+
+#define TIMESTAMP_TO_RUSEC(ts) (ts.tv_sec - session->firstPacket.tv_sec) * 1000000 + (ts.tv_usec - session->firstPacket.tv_usec)
 
 /******************************************************************************/
 // https://tools.ietf.org/html/draft-davidben-tls-grease-00
@@ -408,15 +428,93 @@ LOCAL uint32_t ja4plus_ssh_ja4ssh(ArkimeSession_t *session, const uint8_t *UNUSE
     return 0;
 }
 /******************************************************************************/
+LOCAL uint32_t ja4plus_tcp_raw_packet(ArkimeSession_t *session, const uint8_t *UNUSED(d), int UNUSED(l), void *uw)
+{
+    JA4PlusData_t *ja4plus_data = session->pluginData[ja4plus_plugin_num];
+    if (!ja4plus_data) {
+        ja4plus_data = session->pluginData[ja4plus_plugin_num] = ARKIME_TYPE_ALLOC0 (JA4PlusData_t);
+    }
+
+    if (ja4plus_data->tcpdone)
+        return 0;
+
+    ArkimePacket_t      *packet = (ArkimePacket_t *)uw;
+    struct tcphdr       *tcphdr = (struct tcphdr *)(packet->pkt + packet->payloadOffset);
+    int                  len = packet->payloadLen - 4 * tcphdr->th_off;
+
+    struct ip           *ip4 = (struct ip *)(packet->pkt + packet->ipOffset);
+    struct ip6_hdr      *ip6 = (struct ip6_hdr *)(packet->pkt + packet->ipOffset);
+    struct tcphdr       *tcp = (struct tcphdr *)(packet->pkt + packet->payloadOffset);
+
+    if (len == 0) {
+        if (tcp->th_flags & TH_SYN) {
+            if (tcp->th_flags & TH_ACK) {
+                ja4plus_data->timestampB = TIMESTAMP_TO_RUSEC(packet->ts);
+                if (packet->v6) {
+                    ja4plus_data->server_ttl = ip6->ip6_hops;
+                } else {
+                    ja4plus_data->server_ttl = ip4->ip_ttl;
+                }
+            } else {
+                ja4plus_data->timestampA = TIMESTAMP_TO_RUSEC(packet->ts);
+                if (packet->v6) {
+                    ja4plus_data->client_ttl = ip6->ip6_hops;
+                } else {
+                    ja4plus_data->client_ttl = ip4->ip_ttl;
+                }
+            }
+        } else {
+            if ((tcp->th_flags & TH_ACK) && (ja4plus_data->timestampC == 0))
+                ja4plus_data->timestampC = TIMESTAMP_TO_RUSEC(packet->ts);
+        }
+    } else {
+        if (packet->direction == 0) {
+            if (ja4plus_data->timestampD == 0) {
+                ja4plus_data->timestampD = TIMESTAMP_TO_RUSEC(packet->ts);
+            } else if (ja4plus_data->timestampE != 0) {
+                ja4plus_data->tcpdone = 1;
+
+                uint32_t timestampF = TIMESTAMP_TO_RUSEC(packet->ts);
+
+                char ja4lc[100];
+                snprintf(ja4lc, sizeof(ja4lc), "%u_%u_%u",
+                         (ja4plus_data->timestampC - ja4plus_data->timestampB) / 2,
+                         ja4plus_data->client_ttl,
+                         (timestampF - ja4plus_data->timestampE) / 2
+                        );
+
+                arkime_field_string_add(ja4lcField, session, ja4lc, -1, TRUE);
+            }
+        } else {
+            if (ja4plus_data->timestampE == 0) {
+                ja4plus_data->timestampE = TIMESTAMP_TO_RUSEC(packet->ts);
+
+                char ja4ls[100];
+                snprintf(ja4ls, sizeof(ja4ls), "%u_%u_%u",
+                         (ja4plus_data->timestampB - ja4plus_data->timestampA) / 2,
+                         ja4plus_data->server_ttl,
+                         (ja4plus_data->timestampE - ja4plus_data->timestampD) / 2
+                        );
+
+                arkime_field_string_add(ja4lsField, session, ja4ls, -1, TRUE);
+            }
+        }
+    }
+    return 0;
+}
+/******************************************************************************/
 void arkime_plugin_init()
 {
     LOG("JA4+ plugin loaded");
 
+    ja4plus_plugin_num = arkime_plugins_register("ja4plus", TRUE);
+
     ja4Raw = arkime_config_boolean(NULL, "ja4Raw", TRUE);
 
-    arkime_parser_add_named_func("tls_process_server_hello", ja4plus_process_server_hello);
-    arkime_parser_add_named_func("tls_process_certificate_wInfo", ja4plus_process_certificate_wInfo);
-    arkime_parser_add_named_func("ssh_counting200", ja4plus_ssh_ja4ssh);
+    arkime_parsers_add_named_func("tls_process_server_hello", ja4plus_process_server_hello);
+    arkime_parsers_add_named_func("tls_process_certificate_wInfo", ja4plus_process_certificate_wInfo);
+    arkime_parsers_add_named_func("ssh_counting200", ja4plus_ssh_ja4ssh);
+    arkime_parsers_add_named_func("tcp_raw_packet", ja4plus_tcp_raw_packet);
 
     ja4sField = arkime_field_define("tls", "lotermfield",
                                     "tls.ja4s", "JA4s", "tls.ja4s",
@@ -448,6 +546,18 @@ void arkime_plugin_init()
                                       "SSH JA4ssh field",
                                       ARKIME_FIELD_TYPE_STR_ARRAY,  ARKIME_FIELD_FLAG_CNT | ARKIME_FIELD_FLAG_DIFF_FROM_LAST,
                                       (char *)NULL);
+
+    ja4lcField = arkime_field_define("tcp", "lotermfield",
+                                     "tcp.ja4lc", "JA4lc", "tcp.ja4lc",
+                                     "JA4 Latency Client field",
+                                     ARKIME_FIELD_TYPE_STR,  0,
+                                     (char *)NULL);
+
+    ja4lsField = arkime_field_define("tcp", "lotermfield",
+                                     "tcp.ja4ls", "JA4ls", "tcp.ja4ls",
+                                     "JA4 Latency Server field",
+                                     ARKIME_FIELD_TYPE_STR,  0,
+                                     (char *)NULL);
 
     int t;
     for (t = 0; t < config.packetThreads; t++) {
