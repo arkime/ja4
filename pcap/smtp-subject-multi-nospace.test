@@ -122,6 +122,16 @@
                "srcip"
             ],
             "tagsCnt" : 2,
+            "tcp" : {
+               "ja4tc" : [
+                  "14600_2-4-8-1-3_1460_7"
+               ],
+               "ja4tcCnt" : 1,
+               "ja4ts" : [
+                  "32768_2_1460_00"
+               ],
+               "ja4tsCnt" : 1
+            },
             "tcpflags" : {
                "ack" : 1,
                "dstZero" : 0,

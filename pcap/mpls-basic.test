@@ -360,7 +360,15 @@
             "srcPayload8" : "fffd03fffb1ffffb",
             "tcp" : {
                "ja4lc" : "130_255_106",
-               "ja4ls" : "322_253_305"
+               "ja4ls" : "322_253_305",
+               "ja4tc" : [
+                  "4128_2_536_00"
+               ],
+               "ja4tcCnt" : 1,
+               "ja4ts" : [
+                  "4128_2_536_00"
+               ],
+               "ja4tsCnt" : 1
             },
             "tcpflags" : {
                "ack" : 5,

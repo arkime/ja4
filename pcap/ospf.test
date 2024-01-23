@@ -1109,6 +1109,12 @@
                "PCS Computer Systems GmbH"
             ],
             "srcOuiCnt" : 1,
+            "tcp" : {
+               "ja4tc" : [
+                  "28800_2-4-8-1-3_1440_7"
+               ],
+               "ja4tcCnt" : 1
+            },
             "tcpflags" : {
                "ack" : 0,
                "dstZero" : 0,
@@ -1504,7 +1510,7 @@
             "srcOuiCnt" : 1,
             "srcRIR" : "ARIN",
             "tcp" : {
-               "ja4ls" : "0_0_1182075"
+               "ja4ls" : "1182075_0_1182075"
             },
             "tcpflags" : {
                "ack" : 4,
@@ -1594,6 +1600,12 @@
                "PCS Computer Systems GmbH"
             ],
             "srcOuiCnt" : 1,
+            "tcp" : {
+               "ja4tc" : [
+                  "28800_2-4-8-1-3_1440_7"
+               ],
+               "ja4tcCnt" : 1
+            },
             "tcpflags" : {
                "ack" : 0,
                "dstZero" : 0,
@@ -1682,6 +1694,12 @@
                "PCS Computer Systems GmbH"
             ],
             "srcOuiCnt" : 1,
+            "tcp" : {
+               "ja4tc" : [
+                  "28800_2-4-8-1-3_1440_7"
+               ],
+               "ja4tcCnt" : 1
+            },
             "tcpflags" : {
                "ack" : 0,
                "dstZero" : 0,
@@ -1770,6 +1788,12 @@
                "PCS Computer Systems GmbH"
             ],
             "srcOuiCnt" : 1,
+            "tcp" : {
+               "ja4tc" : [
+                  "28800_2-4-8-1-3_1440_7"
+               ],
+               "ja4tcCnt" : 1
+            },
             "tcpflags" : {
                "ack" : 0,
                "dstZero" : 0,
@@ -1858,6 +1882,12 @@
                "PCS Computer Systems GmbH"
             ],
             "srcOuiCnt" : 1,
+            "tcp" : {
+               "ja4tc" : [
+                  "28800_2-4-8-1-3_1440_7"
+               ],
+               "ja4tcCnt" : 1
+            },
             "tcpflags" : {
                "ack" : 0,
                "dstZero" : 0,
@@ -1949,6 +1979,12 @@
                "PCS Computer Systems GmbH"
             ],
             "srcOuiCnt" : 1,
+            "tcp" : {
+               "ja4tc" : [
+                  "28800_2-4-8-1-3_1440_7"
+               ],
+               "ja4tcCnt" : 1
+            },
             "tcpflags" : {
                "ack" : 0,
                "dstZero" : 0,
@@ -2040,6 +2076,12 @@
                "PCS Computer Systems GmbH"
             ],
             "srcOuiCnt" : 1,
+            "tcp" : {
+               "ja4tc" : [
+                  "28800_2-4-8-1-3_1440_7"
+               ],
+               "ja4tcCnt" : 1
+            },
             "tcpflags" : {
                "ack" : 0,
                "dstZero" : 0,
@@ -2131,6 +2173,12 @@
                "PCS Computer Systems GmbH"
             ],
             "srcOuiCnt" : 1,
+            "tcp" : {
+               "ja4tc" : [
+                  "28800_2-4-8-1-3_1440_7"
+               ],
+               "ja4tcCnt" : 1
+            },
             "tcpflags" : {
                "ack" : 0,
                "dstZero" : 0,
@@ -2222,6 +2270,12 @@
                "PCS Computer Systems GmbH"
             ],
             "srcOuiCnt" : 1,
+            "tcp" : {
+               "ja4tc" : [
+                  "28800_2-4-8-1-3_1440_7"
+               ],
+               "ja4tcCnt" : 1
+            },
             "tcpflags" : {
                "ack" : 0,
                "dstZero" : 0,
@@ -2313,6 +2367,12 @@
                "PCS Computer Systems GmbH"
             ],
             "srcOuiCnt" : 1,
+            "tcp" : {
+               "ja4tc" : [
+                  "28800_2-4-8-1-3_1440_7"
+               ],
+               "ja4tcCnt" : 1
+            },
             "tcpflags" : {
                "ack" : 0,
                "dstZero" : 0,
@@ -2404,6 +2464,12 @@
                "PCS Computer Systems GmbH"
             ],
             "srcOuiCnt" : 1,
+            "tcp" : {
+               "ja4tc" : [
+                  "28800_2-4-8-1-3_1440_7"
+               ],
+               "ja4tcCnt" : 1
+            },
             "tcpflags" : {
                "ack" : 0,
                "dstZero" : 0,
@@ -2658,6 +2724,12 @@
                "PCS Computer Systems GmbH"
             ],
             "srcOuiCnt" : 1,
+            "tcp" : {
+               "ja4tc" : [
+                  "28800_2-4-8-1-3_1440_7"
+               ],
+               "ja4tcCnt" : 1
+            },
             "tcpflags" : {
                "ack" : 0,
                "dstZero" : 0,
@@ -2835,6 +2907,12 @@
                "PCS Computer Systems GmbH"
             ],
             "srcOuiCnt" : 1,
+            "tcp" : {
+               "ja4tc" : [
+                  "28800_2-4-8-1-3_1440_7"
+               ],
+               "ja4tcCnt" : 1
+            },
             "tcpflags" : {
                "ack" : 0,
                "dstZero" : 0,
@@ -2923,6 +3001,12 @@
                "PCS Computer Systems GmbH"
             ],
             "srcOuiCnt" : 1,
+            "tcp" : {
+               "ja4tc" : [
+                  "28800_2-4-8-1-3_1440_7"
+               ],
+               "ja4tcCnt" : 1
+            },
             "tcpflags" : {
                "ack" : 0,
                "dstZero" : 0,
@@ -3011,6 +3095,12 @@
                "PCS Computer Systems GmbH"
             ],
             "srcOuiCnt" : 1,
+            "tcp" : {
+               "ja4tc" : [
+                  "28800_2-4-8-1-3_1440_7"
+               ],
+               "ja4tcCnt" : 1
+            },
             "tcpflags" : {
                "ack" : 0,
                "dstZero" : 0,
@@ -3099,6 +3189,12 @@
                "PCS Computer Systems GmbH"
             ],
             "srcOuiCnt" : 1,
+            "tcp" : {
+               "ja4tc" : [
+                  "28800_2-4-8-1-3_1440_7"
+               ],
+               "ja4tcCnt" : 1
+            },
             "tcpflags" : {
                "ack" : 0,
                "dstZero" : 0,
@@ -3187,6 +3283,12 @@
                "PCS Computer Systems GmbH"
             ],
             "srcOuiCnt" : 1,
+            "tcp" : {
+               "ja4tc" : [
+                  "28800_2-4-8-1-3_1440_7"
+               ],
+               "ja4tcCnt" : 1
+            },
             "tcpflags" : {
                "ack" : 0,
                "dstZero" : 0,
