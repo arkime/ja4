@@ -57,6 +57,14 @@
                   "www.google.com"
                ],
                "hostCnt" : 1,
+               "ja4h" : [
+                  "ge11cn06roro_a89d28968959_acc6b8c7c4f4_ce93f075cb4f"
+               ],
+               "ja4hCnt" : 1,
+               "ja4h_r" : [
+                  "ge11cn06roro_Host,User-Agent,Accept,Accept-Language,Accept-Encoding,Connection_PREF_PREF=ID=xxxxxxxxxxxxxxxx:TM=xxxxxxxxxx:LM=xxxxxxxxxx:S=xxxxxxxxxxxx_6oz"
+               ],
+               "ja4h_rCnt" : 1,
                "md5" : [
                   "222315d36e1313774cb1c2f0eb06864f"
                ],

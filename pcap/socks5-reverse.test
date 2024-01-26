@@ -60,6 +60,16 @@
                   "www.google.com"
                ],
                "hostCnt" : 1,
+               "ja4h" : [
+                  "ge11cr040000_04d07570a28f_bf0da51642af_8c5701356d1b",
+                  "ge11nr040000_04d07570a28f_000000000000_000000000000"
+               ],
+               "ja4hCnt" : 2,
+               "ja4h_r" : [
+                  "ge11cr040000_User-Agent,Host,Accept,Accept-Encoding_NID,PREF_NID=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx,PREF=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+                  "ge11nr040000_User-Agent,Host,Accept,Accept-Encoding__"
+               ],
+               "ja4h_rCnt" : 2,
                "key" : [
                   "client",
                   "gl",

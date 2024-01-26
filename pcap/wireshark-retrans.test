@@ -33,6 +33,14 @@
                   ""
                ],
                "hostCnt" : 1,
+               "ja4h" : [
+                  "po11nn070000_eccc1be2da2e_000000000000_000000000000"
+               ],
+               "ja4hCnt" : 1,
+               "ja4h_r" : [
+                  "po11nn070000_Cache-Control,Date,Accept-Encoding,Host,User-Agent,Content-Length,Content-Type__"
+               ],
+               "ja4h_rCnt" : 1,
                "md5" : [
                   "160f27030f302ad5db80621bb0fc67e3",
                   "5152b54f1af8b7ca5ca51a3fbd0b2e4c",

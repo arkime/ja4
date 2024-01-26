@@ -36,6 +36,14 @@
                   "example.com"
                ],
                "hostCnt" : 1,
+               "ja4h" : [
+                  "po11nn040000_605bf80a5691_000000000000_000000000000"
+               ],
+               "ja4hCnt" : 1,
+               "ja4h_r" : [
+                  "po11nn040000_Host,Expect,Connection,Content-Length__"
+               ],
+               "ja4h_rCnt" : 1,
                "md5" : [
                   "4a8b5abca9e7e6bbc4b2e881a86821db",
                   "8533d322aa09355339125acaf8bd42ac"

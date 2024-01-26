@@ -54,6 +54,20 @@
                   "qq.com"
                ],
                "hostCnt" : 1,
+               "ja4h" : [
+                  "ge11cn09enus_761098b9f984_213d997ed630_a99206ebcd07",
+                  "ge11cr08enus_0481aeff6ca2_213d997ed630_a99206ebcd07",
+                  "ge11cr08enus_abc2cf26fc80_213d997ed630_a99206ebcd07",
+                  "po11cr11enus_df037dc93023_213d997ed630_a99206ebcd07"
+               ],
+               "ja4hCnt" : 4,
+               "ja4h_r" : [
+                  "ge11cn09enus_Host,Connection,Accept,Upgrade-Insecure-Requests,User-Agent,Accept-Encoding,Accept-Language,If-None-Match,If-Modified-Since__ga,fontsize,pac_uid,pgv_pvid__ga=GA1.2.1343945816.1520241679,fontsize=size_n,pac_uid=0_5a9d0be2ebd90,pgv_pvid=9816415136",
+                  "ge11cr08enus_Host,Connection,Accept,User-Agent,Accept-Encoding,Accept-Language,If-None-Match,If-Modified-Since__ga,fontsize,pac_uid,pgv_pvid__ga=GA1.2.1343945816.1520241679,fontsize=size_n,pac_uid=0_5a9d0be2ebd90,pgv_pvid=9816415136",
+                  "ge11cr08enus_Host,Connection,User-Agent,Accept,Accept-Encoding,Accept-Language,If-None-Match,If-Modified-Since__ga,fontsize,pac_uid,pgv_pvid__ga=GA1.2.1343945816.1520241679,fontsize=size_n,pac_uid=0_5a9d0be2ebd90,pgv_pvid=9816415136",
+                  "po11cr11enus_Host,Connection,Content-Length,Cache-Control,Accept,Origin,Upgrade-Insecure-Requests,User-Agent,Content-Type,Accept-Encoding,Accept-Language__ga,fontsize,pac_uid,pgv_pvid__ga=GA1.2.1343945816.1520241679,fontsize=size_n,pac_uid=0_5a9d0be2ebd90,pgv_pvid=9816415136"
+               ],
+               "ja4h_rCnt" : 4,
                "md5" : [
                   "1546e06a87abc6e183260c970e0c3a46",
                   "1f7b84b70902489a0eb663ce31b8c58a",

@@ -35,6 +35,14 @@
                   "www.aol.com"
                ],
                "hostCnt" : 1,
+               "ja4h" : [
+                  "ge11nn030000_32287c24fa5b_000000000000_000000000000"
+               ],
+               "ja4hCnt" : 1,
+               "ja4h_r" : [
+                  "ge11nn030000_User-Agent,Host,Accept__"
+               ],
+               "ja4h_rCnt" : 1,
                "md5" : [
                   "cbd66d3fd40db184cf2af858b4184f87"
                ],

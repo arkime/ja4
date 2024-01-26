@@ -44,6 +44,16 @@
                   "192.168.57.14:8080"
                ],
                "hostCnt" : 2,
+               "ja4h" : [
+                  "ge11cn06zhcn_9854b9e76f70_639e6d2a6f33_1eaf0f5c7e8a",
+                  "po11cr10zhcn_fc93b40e0953_639e6d2a6f33_1eaf0f5c7e8a"
+               ],
+               "ja4hCnt" : 2,
+               "ja4h_r" : [
+                  "ge11cn06zhcn_Host,Connection,Accept,User-Agent,Accept-Encoding,Accept-Language_JSESSIONID,JSESSIONID_JSESSIONID=969AC5FBD069EE6218EB10513726B244,JSESSIONID=400CC78DF5784F303702CC7F02C6122C",
+                  "po11cr10zhcn_Host,Connection,Content-Length,Cache-Control,Accept,Origin,User-Agent,Content-Type,Accept-Encoding,Accept-Language_JSESSIONID,JSESSIONID_JSESSIONID=969AC5FBD069EE6218EB10513726B244,JSESSIONID=400CC78DF5784F303702CC7F02C6122C"
+               ],
+               "ja4h_rCnt" : 2,
                "md5" : [
                   "2b8cd757ab5ffba85acac26c008a1ffc",
                   "3fa07f3ec9f9fefed96e9886f80760bb",

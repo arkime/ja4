@@ -63,6 +63,14 @@
                   "10.000.000.001:1234"
                ],
                "hostCnt" : 2,
+               "ja4h" : [
+                  "ge11cr08engb_505d592ad849_6acb988a0d6e_74e3cda26611"
+               ],
+               "ja4hCnt" : 1,
+               "ja4h_r" : [
+                  "ge11cr08engb_Host,User-Agent,Accept,Accept-Language,Accept-Encoding,Authorization,Connection,If-Modified-Since_cprelogin,cpsession,lang,langedit,zzzzzzzzzzzzzzzzzz_cprelogin=no,cpsession=zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz,lang,langedit,zzzzzzzzzzzzzzzzzz=auto"
+               ],
+               "ja4h_rCnt" : 1,
                "method" : [
                   "GET"
                ],

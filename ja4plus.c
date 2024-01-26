@@ -48,6 +48,14 @@ typedef struct {
 } JA4PlusTCP_t;
 
 typedef struct {
+    GString       *header_fields;
+    uint16_t       cookies;
+    uint16_t       referer;
+    uint16_t       headers;
+    char           state;
+    gchar         *sorted_cookie_fields;
+    gchar         *sorted_cookie_values;
+    gchar          accept_lang[4];
 } JA4PlusHTTP_t;
 
 #define JA4PLUS_TCP_DONE (void *)1UL
@@ -56,8 +64,243 @@ typedef struct {
     JA4PlusHTTP_t *http;
 } JA4PlusData_t;
 
+typedef struct {
+    char      *field;
+    char      *value;
+    uint16_t   flen;
+    uint16_t   vlen;
+} JA4PlusCookie_t;
+
 #define TIMESTAMP_TO_RUSEC(ts) (ts.tv_sec - session->firstPacket.tv_sec) * 1000000 + (ts.tv_usec - session->firstPacket.tv_usec)
 
+/******************************************************************************/
+LOCAL void ja4plus_http_complete(ArkimeSession_t *session, http_parser *parser)
+{
+    if (parser->type != 0)
+        return;
+
+    JA4PlusData_t *ja4plus_data = (JA4PlusData_t *) session->pluginData[ja4plus_plugin_num];
+    if (!ja4plus_data)
+        return;
+
+    JA4PlusHTTP_t *ja4_http = ja4plus_data->http;
+    if (!ja4_http)
+        return;
+
+    char ja4h[52];
+
+    if (!ja4_http->header_fields)
+        return;
+
+    char *method = g_ascii_strdown(http_method_str(parser->method), 2);
+    GChecksum *const checksum = checksums256[session->thread];
+    snprintf(ja4h, sizeof(ja4h), "%s%d%d%c%c%02d%s_",
+             method,
+             parser->http_major,
+             parser->http_minor,
+             (ja4_http->cookies == 0) ? 'n' : 'c',
+             (ja4_http->referer == 0) ? 'n' : 'r',
+             ja4_http->headers,
+             ja4_http->accept_lang
+            );
+
+    g_checksum_update(checksum, (guchar *)ja4_http->header_fields->str, ja4_http->header_fields->len);
+    memcpy(ja4h + 13, g_checksum_get_string(checksum), 12);
+    g_checksum_reset(checksum);
+    ja4h[25] = '_';
+
+    if (ja4_http->cookies) {
+        g_checksum_update(checksum, (guchar *) ja4_http->sorted_cookie_fields, strlen(ja4_http->sorted_cookie_fields));
+        memcpy(ja4h + 26, g_checksum_get_string(checksum), 12);
+        g_checksum_reset(checksum);
+        ja4h[38] = '_';
+
+        g_checksum_update(checksum, (guchar *) ja4_http->sorted_cookie_values, strlen(ja4_http->sorted_cookie_values));
+        memcpy(ja4h + 39, g_checksum_get_string(checksum), 12);
+        g_checksum_reset(checksum);
+    } else {
+        g_strlcpy(ja4h + 26, "000000000000_000000000000", sizeof(ja4h) - 26);
+    }
+    ja4h[51] = 0;
+    arkime_field_string_add(ja4hField, session, ja4h, 51, TRUE);
+
+    if (ja4Raw) {
+        char ja4h_r[1024];
+
+        snprintf(ja4h_r, sizeof(ja4h_r), "%s%d%d%c%c%02d%s_%s_%s_%s",
+                 method,
+                 parser->http_major,
+                 parser->http_minor,
+                 (ja4_http->cookies == 0) ? 'n' : 'c',
+                 (ja4_http->referer == 0) ? 'n' : 'r',
+                 ja4_http->headers,
+                 ja4_http->accept_lang,
+                 ja4_http->header_fields->str,
+                 (ja4_http->sorted_cookie_fields != NULL) ? ja4_http->sorted_cookie_fields : "",
+                 (ja4_http->sorted_cookie_values != NULL) ? ja4_http->sorted_cookie_values : ""
+                );
+        ja4h_r[sizeof(ja4h_r) - 1] = 0;
+        arkime_field_string_add(ja4hRawField, session, ja4h_r, -1, TRUE);
+    }
+    g_free(method);
+    g_string_truncate(ja4_http->header_fields, 0);
+
+    g_free(ja4_http->sorted_cookie_fields);
+    ja4_http->sorted_cookie_fields = 0;
+
+    g_free(ja4_http->sorted_cookie_values);
+    ja4_http->sorted_cookie_values = 0;
+
+    // Reset
+    ja4_http->state = 'o';
+    memcpy(ja4_http->accept_lang, "0000", 4);
+    ja4_http->cookies = 0;
+    ja4_http->referer = 0;
+    ja4_http->headers = 0;
+}
+/******************************************************************************/
+LOCAL void ja4plus_http_header_field_raw (ArkimeSession_t *session, http_parser *hp, const char *at, size_t length)
+{
+    if (!at || hp->type != 0)
+        return;
+
+    JA4PlusData_t *ja4plus_data = (JA4PlusData_t *) session->pluginData[ja4plus_plugin_num];
+    if (!ja4plus_data) {
+        ja4plus_data = session->pluginData[ja4plus_plugin_num] = ARKIME_TYPE_ALLOC0 (JA4PlusData_t);
+    }
+
+    JA4PlusHTTP_t *ja4_http = ja4plus_data->http;
+    if (!ja4plus_data->http) {
+        ja4_http = ja4plus_data->http = ARKIME_TYPE_ALLOC0 (JA4PlusHTTP_t);
+        ja4_http->header_fields = g_string_sized_new(100);
+        ja4_http->state = 'o';
+        memcpy(ja4_http->accept_lang, "0000", 4);
+    }
+
+    char *header_field = g_ascii_strdown(at, length);
+    if (strcmp(header_field, "cookie") == 0) {
+        ja4_http->state = 'c';
+    } else if (strcmp(header_field, "referer") == 0) {
+        ja4_http->referer = 1;
+        ja4_http->state = 'r';
+    } else {
+        if (ja4_http->headers > 0) {
+            g_string_append_len(ja4_http->header_fields, ",", 1);
+        }
+        g_string_append_len(ja4_http->header_fields, at, length);
+        ja4_http->headers++;
+        if (strcmp(header_field, "accept-language") == 0) {
+            ja4_http->state = 'a';
+        } else {
+            ja4_http->state = 'o';
+        }
+    }
+    g_free(header_field);
+}
+/******************************************************************************/
+LOCAL int cookie_cmp(const void *a, const void *b)
+{
+    return strcmp(((JA4PlusCookie_t *)a)->field, ((JA4PlusCookie_t *)b)->field);
+}
+/******************************************************************************/
+LOCAL void ja4plus_http_header_value (ArkimeSession_t *session, http_parser *hp, const char *at, size_t length)
+{
+    if (!at || hp->type != 0)
+        return;
+
+    JA4PlusData_t *ja4plus_data = (JA4PlusData_t *) session->pluginData[ja4plus_plugin_num];
+    JA4PlusHTTP_t *ja4_http = ja4plus_data->http;
+
+    if (ja4_http->state == 'c') {
+        int num = 0;
+        JA4PlusCookie_t cookies[100];
+        const char *start = at;
+        const char *end = at + length;
+        int flen, vlen;
+
+        int totalFlen = 0;
+        int totalVlen = 0;
+        while (1) {
+            while (isspace(*start) && start < end) start++;
+            char *equal = memchr(start, '=', end - start);
+            if (!equal)
+                break;
+            flen = equal - start;
+            cookies[num].field = g_strndup(start, flen); // COPY
+            cookies[num].flen = flen;
+            totalFlen += flen;
+
+            start = memchr(equal + 1, ';', end - (equal + 1));
+            equal++;
+            while (isspace(*equal) && equal < end) equal++;
+            if (equal < end && equal != start) {
+                vlen = start ? start - equal : end - equal;
+                cookies[num].vlen = vlen;
+                totalVlen += vlen;
+
+                cookies[num].value = equal; // NO COPY
+            } else {
+                cookies[num].value = 0;
+                cookies[num].vlen = 0;
+            }
+            num++;
+            if (num == 99)
+                break;
+
+            if(!start)
+                break;
+            start++;
+        }
+
+        ja4_http->cookies = num;
+
+        if (num == 0)
+            return;
+
+        qsort(cookies, num, sizeof(JA4PlusCookie_t), cookie_cmp);
+
+        ja4_http->sorted_cookie_fields = g_malloc(totalFlen + num);
+        ja4_http->sorted_cookie_values = g_malloc(totalFlen + num + totalVlen + num);
+        char *fpos = ja4_http->sorted_cookie_fields;
+        char *fvpos = ja4_http->sorted_cookie_values;
+        for (int i = 0; i < num; i++) {
+            memcpy(fpos, cookies[i].field, cookies[i].flen);
+            fpos += cookies[i].flen;
+            *(fpos++) = ',';
+
+            memcpy(fvpos, cookies[i].field, cookies[i].flen);
+            fvpos += cookies[i].flen;
+
+            if (cookies[i].value) {
+                *(fvpos++) = '=';
+                memcpy(fvpos, cookies[i].value, cookies[i].vlen);
+                fvpos += cookies[i].vlen;
+            }
+            *(fvpos++) = ',';
+        }
+        *(fpos - 1) = 0;
+        *(fvpos - 1) = 0;
+
+        for (int i = 0; i < num; i++) {
+            g_free(cookies[i].field);
+        }
+    }
+
+    if (ja4_http->state == 'a') {
+        char *lang = g_ascii_strdown(at, length);
+        size_t l = 0, a = 0;;
+        while (l < length && a < 4) {
+            if (isspace(lang[l]) || lang[l] == '-') {
+                l++;
+            } else if (lang[l] == ',' || lang[l] == ';') {
+                break;
+            }
+            ja4_http->accept_lang[a] = lang[l];
+            a++;
+            l++;
+        }
+    }
+}
 /******************************************************************************/
 // https://tools.ietf.org/html/draft-davidben-tls-grease-00
 LOCAL int ja4plus_is_grease_value(uint32_t val)
@@ -655,8 +898,10 @@ void ja4plus_plugin_save(ArkimeSession_t *session, int final)
     if (final && ja4plus_data) {
         if (ja4plus_data->tcp && ja4plus_data->tcp != JA4PLUS_TCP_DONE)
             ARKIME_TYPE_FREE(JA4PlusTCP_t, ja4plus_data->tcp);
-        if (ja4plus_data->http)
+        if (ja4plus_data->http) {
+            g_string_free(ja4plus_data->http->header_fields, TRUE);
             ARKIME_TYPE_FREE(JA4PlusHTTP_t, ja4plus_data->http);
+        }
         ARKIME_TYPE_FREE(JA4PlusData_t, ja4plus_data);
         session->pluginData[ja4plus_plugin_num] = NULL;
     }
@@ -677,6 +922,16 @@ void arkime_plugin_init()
                           NULL,
                           NULL,
                           NULL);
+
+    arkime_plugins_set_http_ext_cb("ja4plus",
+                                   NULL,
+                                   NULL,
+                                   NULL,
+                                   ja4plus_http_header_field_raw,
+                                   ja4plus_http_header_value,
+                                   NULL,
+                                   NULL,
+                                   ja4plus_http_complete);
 
     ja4Raw = arkime_config_boolean(NULL, "ja4Raw", TRUE);
 
@@ -741,16 +996,16 @@ void arkime_plugin_init()
                                      (char *)NULL);
 
     ja4hField = arkime_field_define("http", "lotermfield",
-                                      "http.ja4h", "JA4h", "http.ja4h",
-                                      "HTTP JA4h field",
-                                      ARKIME_FIELD_TYPE_STR_GHASH,  ARKIME_FIELD_FLAG_CNT,
-                                      (char *)NULL);
+                                    "http.ja4h", "JA4h", "http.ja4h",
+                                    "HTTP JA4h field",
+                                    ARKIME_FIELD_TYPE_STR_GHASH,  ARKIME_FIELD_FLAG_CNT,
+                                    (char *)NULL);
 
     ja4hRawField = arkime_field_define("http", "lotermfield",
-                                      "http.ja4h_r", "JA4h_r", "http.ja4h_r",
-                                      "HTTP JA4h Raw field",
-                                      ARKIME_FIELD_TYPE_STR_GHASH,  ARKIME_FIELD_FLAG_CNT,
-                                      (char *)NULL);
+                                       "http.ja4h_r", "JA4h_r", "http.ja4h_r",
+                                       "HTTP JA4h Raw field",
+                                       ARKIME_FIELD_TYPE_STR_GHASH,  ARKIME_FIELD_FLAG_CNT,
+                                       (char *)NULL);
     int t;
     for (t = 0; t < config.packetThreads; t++) {
         checksums256[t] = g_checksum_new(G_CHECKSUM_SHA256);

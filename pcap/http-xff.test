@@ -49,6 +49,14 @@
                   "www.xxxxxxxxx.xx"
                ],
                "hostCnt" : 1,
+               "ja4h" : [
+                  "ge11nr050000_6831e58c63e2_000000000000_000000000000"
+               ],
+               "ja4hCnt" : 1,
+               "ja4h_r" : [
+                  "ge11nr050000_Accept-Encoding,X-Forwarded-For,Connection,User-Agent,Host__"
+               ],
+               "ja4h_rCnt" : 1,
                "key" : [
                   "xx"
                ],

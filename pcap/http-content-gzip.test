@@ -57,6 +57,14 @@
                   "xxxxxxxxxxx.xxxxxxx.xxx"
                ],
                "hostCnt" : 1,
+               "ja4h" : [
+                  "ge11cr07enus_76abd7c29187_fc11d6f28e59_6dd01e4b86fc"
+               ],
+               "ja4hCnt" : 1,
+               "ja4h_r" : [
+                  "ge11cr07enus_Host,Connection,User-Agent,Accept,Accept-Encoding,Accept-Language,If-None-Match_xxxxxxxxxx_xxxxxxxxxx=xxx"
+               ],
+               "ja4h_rCnt" : 1,
                "md5" : [
                   "5ff7b2c69c3b22826a717cd5ea4c9f32"
                ],
