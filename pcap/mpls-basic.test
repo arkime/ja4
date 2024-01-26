@@ -359,12 +359,12 @@
             "srcOuiCnt" : 1,
             "srcPayload8" : "fffd03fffb1ffffb",
             "tcp" : {
-               "ja4lc" : "130_255_106",
+               "ja4l" : "130_255_106",
                "ja4ls" : "322_253_305",
-               "ja4tc" : [
+               "ja4t" : [
                   "4128_2_536_00"
                ],
-               "ja4tcCnt" : 1,
+               "ja4tCnt" : 1,
                "ja4ts" : [
                   "4128_2_536_00"
                ],

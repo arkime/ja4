@@ -1110,10 +1110,10 @@
             ],
             "srcOuiCnt" : 1,
             "tcp" : {
-               "ja4tc" : [
+               "ja4t" : [
                   "28800_2-4-8-1-3_1440_7"
                ],
-               "ja4tcCnt" : 1
+               "ja4tCnt" : 1
             },
             "tcpflags" : {
                "ack" : 0,
@@ -1601,10 +1601,10 @@
             ],
             "srcOuiCnt" : 1,
             "tcp" : {
-               "ja4tc" : [
+               "ja4t" : [
                   "28800_2-4-8-1-3_1440_7"
                ],
-               "ja4tcCnt" : 1
+               "ja4tCnt" : 1
             },
             "tcpflags" : {
                "ack" : 0,
@@ -1695,10 +1695,10 @@
             ],
             "srcOuiCnt" : 1,
             "tcp" : {
-               "ja4tc" : [
+               "ja4t" : [
                   "28800_2-4-8-1-3_1440_7"
                ],
-               "ja4tcCnt" : 1
+               "ja4tCnt" : 1
             },
             "tcpflags" : {
                "ack" : 0,
@@ -1789,10 +1789,10 @@
             ],
             "srcOuiCnt" : 1,
             "tcp" : {
-               "ja4tc" : [
+               "ja4t" : [
                   "28800_2-4-8-1-3_1440_7"
                ],
-               "ja4tcCnt" : 1
+               "ja4tCnt" : 1
             },
             "tcpflags" : {
                "ack" : 0,
@@ -1883,10 +1883,10 @@
             ],
             "srcOuiCnt" : 1,
             "tcp" : {
-               "ja4tc" : [
+               "ja4t" : [
                   "28800_2-4-8-1-3_1440_7"
                ],
-               "ja4tcCnt" : 1
+               "ja4tCnt" : 1
             },
             "tcpflags" : {
                "ack" : 0,
@@ -1980,10 +1980,10 @@
             ],
             "srcOuiCnt" : 1,
             "tcp" : {
-               "ja4tc" : [
+               "ja4t" : [
                   "28800_2-4-8-1-3_1440_7"
                ],
-               "ja4tcCnt" : 1
+               "ja4tCnt" : 1
             },
             "tcpflags" : {
                "ack" : 0,
@@ -2077,10 +2077,10 @@
             ],
             "srcOuiCnt" : 1,
             "tcp" : {
-               "ja4tc" : [
+               "ja4t" : [
                   "28800_2-4-8-1-3_1440_7"
                ],
-               "ja4tcCnt" : 1
+               "ja4tCnt" : 1
             },
             "tcpflags" : {
                "ack" : 0,
@@ -2174,10 +2174,10 @@
             ],
             "srcOuiCnt" : 1,
             "tcp" : {
-               "ja4tc" : [
+               "ja4t" : [
                   "28800_2-4-8-1-3_1440_7"
                ],
-               "ja4tcCnt" : 1
+               "ja4tCnt" : 1
             },
             "tcpflags" : {
                "ack" : 0,
@@ -2271,10 +2271,10 @@
             ],
             "srcOuiCnt" : 1,
             "tcp" : {
-               "ja4tc" : [
+               "ja4t" : [
                   "28800_2-4-8-1-3_1440_7"
                ],
-               "ja4tcCnt" : 1
+               "ja4tCnt" : 1
             },
             "tcpflags" : {
                "ack" : 0,
@@ -2368,10 +2368,10 @@
             ],
             "srcOuiCnt" : 1,
             "tcp" : {
-               "ja4tc" : [
+               "ja4t" : [
                   "28800_2-4-8-1-3_1440_7"
                ],
-               "ja4tcCnt" : 1
+               "ja4tCnt" : 1
             },
             "tcpflags" : {
                "ack" : 0,
@@ -2465,10 +2465,10 @@
             ],
             "srcOuiCnt" : 1,
             "tcp" : {
-               "ja4tc" : [
+               "ja4t" : [
                   "28800_2-4-8-1-3_1440_7"
                ],
-               "ja4tcCnt" : 1
+               "ja4tCnt" : 1
             },
             "tcpflags" : {
                "ack" : 0,
@@ -2725,10 +2725,10 @@
             ],
             "srcOuiCnt" : 1,
             "tcp" : {
-               "ja4tc" : [
+               "ja4t" : [
                   "28800_2-4-8-1-3_1440_7"
                ],
-               "ja4tcCnt" : 1
+               "ja4tCnt" : 1
             },
             "tcpflags" : {
                "ack" : 0,
@@ -2908,10 +2908,10 @@
             ],
             "srcOuiCnt" : 1,
             "tcp" : {
-               "ja4tc" : [
+               "ja4t" : [
                   "28800_2-4-8-1-3_1440_7"
                ],
-               "ja4tcCnt" : 1
+               "ja4tCnt" : 1
             },
             "tcpflags" : {
                "ack" : 0,
@@ -3002,10 +3002,10 @@
             ],
             "srcOuiCnt" : 1,
             "tcp" : {
-               "ja4tc" : [
+               "ja4t" : [
                   "28800_2-4-8-1-3_1440_7"
                ],
-               "ja4tcCnt" : 1
+               "ja4tCnt" : 1
             },
             "tcpflags" : {
                "ack" : 0,
@@ -3096,10 +3096,10 @@
             ],
             "srcOuiCnt" : 1,
             "tcp" : {
-               "ja4tc" : [
+               "ja4t" : [
                   "28800_2-4-8-1-3_1440_7"
                ],
-               "ja4tcCnt" : 1
+               "ja4tCnt" : 1
             },
             "tcpflags" : {
                "ack" : 0,
@@ -3190,10 +3190,10 @@
             ],
             "srcOuiCnt" : 1,
             "tcp" : {
-               "ja4tc" : [
+               "ja4t" : [
                   "28800_2-4-8-1-3_1440_7"
                ],
-               "ja4tcCnt" : 1
+               "ja4tCnt" : 1
             },
             "tcpflags" : {
                "ack" : 0,
@@ -3284,10 +3284,10 @@
             ],
             "srcOuiCnt" : 1,
             "tcp" : {
-               "ja4tc" : [
+               "ja4t" : [
                   "28800_2-4-8-1-3_1440_7"
                ],
-               "ja4tcCnt" : 1
+               "ja4tCnt" : 1
             },
             "tcpflags" : {
                "ack" : 0,

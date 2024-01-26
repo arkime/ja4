@@ -99,12 +99,12 @@
             "srcPayload8" : "ffffffffffffffff",
             "srcRIR" : "ARIN",
             "tcp" : {
-               "ja4lc" : "2016_1_2035",
+               "ja4l" : "2016_1_2035",
                "ja4ls" : "1982_255_1979",
-               "ja4tc" : [
+               "ja4t" : [
                   "16384_2-19-0_1440_00"
                ],
-               "ja4tcCnt" : 1,
+               "ja4tCnt" : 1,
                "ja4ts" : [
                   "16384_2-19-0_1440_00"
                ],

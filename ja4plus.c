@@ -17,9 +17,9 @@ extern ArkimeConfig_t        config;
 LOCAL int                    ja4sField;
 LOCAL int                    ja4sRawField;
 LOCAL int                    ja4sshField;
-LOCAL int                    ja4lcField;
+LOCAL int                    ja4lField;
 LOCAL int                    ja4lsField;
-LOCAL int                    ja4tcField;
+LOCAL int                    ja4tField;
 LOCAL int                    ja4tsField;
 LOCAL int                    ja4hField;
 LOCAL int                    ja4hRawField;
@@ -477,11 +477,11 @@ LOCAL uint32_t ja4plus_process_server_hello(ArkimeSession_t *session, const uint
 
     arkime_field_string_add(ja4sField, session, ja4s, 25, TRUE);
 
-    char ja4s_r[13 + 5 * 256];
-    memcpy(ja4s_r, ja4s, 13);
-    memcpy(ja4s_r + 13, tmpBuf, BSB_LENGTH(tmpBSB));
-
     if (ja4Raw) {
+        char ja4s_r[13 + 5 * 256];
+        memcpy(ja4s_r, ja4s, 13);
+        memcpy(ja4s_r + 13, tmpBuf, BSB_LENGTH(tmpBSB));
+
         arkime_field_string_add(ja4sRawField, session, ja4s_r, 13 + BSB_LENGTH(tmpBSB), TRUE);
     }
 
@@ -754,7 +754,7 @@ LOCAL void ja4plus_ja4ts(ArkimeSession_t *session, JA4PlusTCP_t *data, struct tc
     arkime_field_string_add(ja4tsField, session, obuf, -1, TRUE);
 }
 /******************************************************************************/
-LOCAL void ja4plus_ja4tc(ArkimeSession_t *session, JA4PlusTCP_t UNUSED(*data), struct tcphdr *tcph)
+LOCAL void ja4plus_ja4t(ArkimeSession_t *session, JA4PlusTCP_t UNUSED(*data), struct tcphdr *tcph)
 {
     uint8_t  *p = (uint8_t *)tcph + 20;
     uint8_t  *end = (uint8_t *)tcph + tcph->th_off * 4;
@@ -803,7 +803,7 @@ LOCAL void ja4plus_ja4tc(ArkimeSession_t *session, JA4PlusTCP_t UNUSED(*data), s
     }
 
     BSB_EXPORT_u08(obsb, 0);
-    arkime_field_string_add(ja4tcField, session, obuf, -1, TRUE);
+    arkime_field_string_add(ja4tField, session, obuf, -1, TRUE);
 }
 /******************************************************************************/
 LOCAL uint32_t ja4plus_tcp_raw_packet(ArkimeSession_t *session, const uint8_t *UNUSED(d), int UNUSED(l), void *uw)
@@ -849,7 +849,7 @@ LOCAL uint32_t ja4plus_tcp_raw_packet(ArkimeSession_t *session, const uint8_t *U
                 } else {
                     ja4plus_tcp->client_ttl = ip4->ip_ttl;
                 }
-                ja4plus_ja4tc(session, ja4plus_tcp, tcp);
+                ja4plus_ja4t(session, ja4plus_tcp, tcp);
             }
         } else {
             if ((tcp->th_flags & TH_ACK) && (ja4plus_tcp->timestampC == 0))
@@ -862,14 +862,14 @@ LOCAL uint32_t ja4plus_tcp_raw_packet(ArkimeSession_t *session, const uint8_t *U
             } else if (ja4plus_tcp->timestampE != 0) {
                 uint32_t timestampF = TIMESTAMP_TO_RUSEC(packet->ts);
 
-                char ja4lc[100];
-                snprintf(ja4lc, sizeof(ja4lc), "%u_%u_%u",
+                char ja4l[100];
+                snprintf(ja4l, sizeof(ja4l), "%u_%u_%u",
                          (ja4plus_tcp->timestampC - ja4plus_tcp->synAckTimes[ja4plus_tcp->synAckTimesCnt - 1]) / 2,
                          ja4plus_tcp->client_ttl,
                          (timestampF - ja4plus_tcp->timestampE) / 2
                         );
 
-                arkime_field_string_add(ja4lcField, session, ja4lc, -1, TRUE);
+                arkime_field_string_add(ja4lField, session, ja4l, -1, TRUE);
 
                 ARKIME_TYPE_FREE(JA4PlusTCP_t, ja4plus_data->tcp);
                 ja4plus_data->tcp = JA4PLUS_TCP_DONE;
@@ -971,8 +971,8 @@ void arkime_plugin_init()
                                       ARKIME_FIELD_TYPE_STR_ARRAY,  ARKIME_FIELD_FLAG_CNT | ARKIME_FIELD_FLAG_DIFF_FROM_LAST,
                                       (char *)NULL);
 
-    ja4lcField = arkime_field_define("tcp", "lotermfield",
-                                     "tcp.ja4lc", "JA4lc", "tcp.ja4lc",
+    ja4lField = arkime_field_define("tcp", "lotermfield",
+                                     "tcp.ja4l", "JA4l", "tcp.ja4l",
                                      "JA4 Latency Client field",
                                      ARKIME_FIELD_TYPE_STR,  0,
                                      (char *)NULL);
@@ -989,8 +989,8 @@ void arkime_plugin_init()
                                      ARKIME_FIELD_TYPE_STR_GHASH,  ARKIME_FIELD_FLAG_CNT,
                                      (char *)NULL);
 
-    ja4tcField = arkime_field_define("tcp", "lotermfield",
-                                     "tcp.ja4tc", "JA4tc", "tcp.ja4tc",
+    ja4tField = arkime_field_define("tcp", "lotermfield",
+                                     "tcp.ja4t", "JA4t", "tcp.ja4t",
                                      "JA4 TCP Client field",
                                      ARKIME_FIELD_TYPE_STR_GHASH,  ARKIME_FIELD_FLAG_CNT,
                                      (char *)NULL);

@@ -91,10 +91,10 @@
             "tagsCnt" : 1,
             "tcp" : {
                "ja4ls" : "279_0_279",
-               "ja4tc" : [
+               "ja4t" : [
                   "5840_2-4-8-1-3_1460_9"
                ],
-               "ja4tcCnt" : 1
+               "ja4tCnt" : 1
             },
             "tcpflags" : {
                "ack" : 2,
@@ -306,10 +306,10 @@
             "tagsCnt" : 1,
             "tcp" : {
                "ja4ls" : "6510_0_4867",
-               "ja4tc" : [
+               "ja4t" : [
                   "8192_2-1-3-1-1-4_1460_8"
                ],
-               "ja4tcCnt" : 1
+               "ja4tCnt" : 1
             },
             "tcpflags" : {
                "ack" : 3,
