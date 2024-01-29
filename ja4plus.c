@@ -712,7 +712,7 @@ LOCAL void ja4plus_ja4ts(ArkimeSession_t *session, JA4PlusTCP_t *data, struct tc
         BSB hbsb;
         BSB_INIT(hbsb, p, (int)(end - p));
 
-        while (BSB_REMAINING(hbsb) > 1 && !BSB_IS_ERROR(hbsb)) {
+        while (BSB_REMAINING(hbsb) > 0 && !BSB_IS_ERROR(hbsb)) {
             uint8_t next = 0;
             BSB_IMPORT_u08(hbsb, next);
             BSB_EXPORT_sprintf(obsb, "%d-", next);
@@ -779,7 +779,7 @@ LOCAL void ja4plus_ja4t(ArkimeSession_t *session, JA4PlusTCP_t UNUSED(*data), st
         BSB hbsb;
         BSB_INIT(hbsb, p, (int)(end - p));
 
-        while (BSB_REMAINING(hbsb) > 1 && !BSB_IS_ERROR(hbsb)) {
+        while (BSB_REMAINING(hbsb) > 0 && !BSB_IS_ERROR(hbsb)) {
             uint8_t next = 0;
             BSB_IMPORT_u08(hbsb, next);
             BSB_EXPORT_sprintf(obsb, "%d-", next);
