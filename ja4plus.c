@@ -709,8 +709,12 @@ LOCAL void ja4plus_ja4ts(ArkimeSession_t *session, JA4PlusTCP_t *data, struct tc
     if (p == end) {
         BSB_EXPORT_cstr(obsb, "00");
     } else {
-        while (p < end) {
-            uint8_t next = *(p++);
+        BSB hbsb;
+        BSB_INIT(hbsb, p, (int)(end - p));
+
+        while (BSB_REMAINING(hbsb) > 1 && !BSB_IS_ERROR(hbsb)) {
+            uint8_t next = 0;
+            BSB_IMPORT_u08(hbsb, next);
             BSB_EXPORT_sprintf(obsb, "%d-", next);
             if (next == 0) // End of list
                 break;
@@ -718,15 +722,18 @@ LOCAL void ja4plus_ja4ts(ArkimeSession_t *session, JA4PlusTCP_t *data, struct tc
             if (next == 1) // NOOP
                 continue;
 
-            uint8_t size = *(p++);
-            if (size < 2)
+            uint8_t size = 0;
+            BSB_IMPORT_u08(hbsb, size);
+            if (size < 2 || BSB_REMAINING(hbsb) < size - 2)
                 break;
             if (next == 2)
-                mss = ntohs(*(uint16_t *)p);
-            if (next == 3)
-                window_scale = *p;
-            p += (size - 2);
+                BSB_IMPORT_u16(hbsb, mss);
+            else if (next == 3)
+                BSB_IMPORT_u08(hbsb, window_scale);
+            else
+                BSB_IMPORT_skip(hbsb, size - 2);
         }
+
         BSB_EXPORT_rewind(obsb, 1); // remove last -
     }
 
@@ -769,8 +776,12 @@ LOCAL void ja4plus_ja4t(ArkimeSession_t *session, JA4PlusTCP_t UNUSED(*data), st
     if (p == end) {
         BSB_EXPORT_cstr(obsb, "00");
     } else {
-        while (p < end) {
-            uint8_t next = *(p++);
+        BSB hbsb;
+        BSB_INIT(hbsb, p, (int)(end - p));
+
+        while (BSB_REMAINING(hbsb) > 1 && !BSB_IS_ERROR(hbsb)) {
+            uint8_t next = 0;
+            BSB_IMPORT_u08(hbsb, next);
             BSB_EXPORT_sprintf(obsb, "%d-", next);
             if (next == 0) // End of list
                 break;
@@ -778,15 +789,18 @@ LOCAL void ja4plus_ja4t(ArkimeSession_t *session, JA4PlusTCP_t UNUSED(*data), st
             if (next == 1) // NOOP
                 continue;
 
-            uint8_t size = *(p++);
-            if (size < 2)
+            uint8_t size = 0;
+            BSB_IMPORT_u08(hbsb, size);
+            if (size < 2 || BSB_REMAINING(hbsb) < size - 2)
                 break;
             if (next == 2)
-                mss = ntohs(*(uint16_t *)p);
-            if (next == 3)
-                window_scale = *p;
-            p += (size - 2);
+                BSB_IMPORT_u16(hbsb, mss);
+            else if (next == 3)
+                BSB_IMPORT_u08(hbsb, window_scale);
+            else
+                BSB_IMPORT_skip(hbsb, size - 2);
         }
+
         BSB_EXPORT_rewind(obsb, 1); // remove last -
     }
 
@@ -972,10 +986,10 @@ void arkime_plugin_init()
                                       (char *)NULL);
 
     ja4lField = arkime_field_define("tcp", "lotermfield",
-                                     "tcp.ja4l", "JA4l", "tcp.ja4l",
-                                     "JA4 Latency Client field",
-                                     ARKIME_FIELD_TYPE_STR,  0,
-                                     (char *)NULL);
+                                    "tcp.ja4l", "JA4l", "tcp.ja4l",
+                                    "JA4 Latency Client field",
+                                    ARKIME_FIELD_TYPE_STR,  0,
+                                    (char *)NULL);
 
     ja4lsField = arkime_field_define("tcp", "lotermfield",
                                      "tcp.ja4ls", "JA4ls", "tcp.ja4ls",
@@ -990,10 +1004,10 @@ void arkime_plugin_init()
                                      (char *)NULL);
 
     ja4tField = arkime_field_define("tcp", "lotermfield",
-                                     "tcp.ja4t", "JA4t", "tcp.ja4t",
-                                     "JA4 TCP Client field",
-                                     ARKIME_FIELD_TYPE_STR_GHASH,  ARKIME_FIELD_FLAG_CNT,
-                                     (char *)NULL);
+                                    "tcp.ja4t", "JA4t", "tcp.ja4t",
+                                    "JA4 TCP Client field",
+                                    ARKIME_FIELD_TYPE_STR_GHASH,  ARKIME_FIELD_FLAG_CNT,
+                                    (char *)NULL);
 
     ja4hField = arkime_field_define("http", "lotermfield",
                                     "http.ja4h", "JA4h", "http.ja4h",
