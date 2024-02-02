@@ -947,7 +947,7 @@ void arkime_plugin_init()
                                    NULL,
                                    ja4plus_http_complete);
 
-    ja4Raw = arkime_config_boolean(NULL, "ja4Raw", TRUE);
+    ja4Raw = arkime_config_boolean(NULL, "ja4Raw", FALSE);
 
     arkime_parsers_add_named_func("tls_process_server_hello", ja4plus_process_server_hello);
     arkime_parsers_add_named_func("tls_process_certificate_wInfo", ja4plus_process_certificate_wInfo);
