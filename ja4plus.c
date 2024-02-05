@@ -220,8 +220,8 @@ LOCAL void ja4plus_http_header_value (ArkimeSession_t *session, http_parser *hp,
 
         int totalFlen = 0;
         int totalVlen = 0;
-        while (1) {
-            while (isspace(*start) && start < end) start++;
+        while (start < end) {
+            while (start < end && isspace(*start)) start++;
             char *equal = memchr(start, '=', end - start);
             if (!equal)
                 break;
@@ -232,7 +232,7 @@ LOCAL void ja4plus_http_header_value (ArkimeSession_t *session, http_parser *hp,
 
             start = memchr(equal + 1, ';', end - (equal + 1));
             equal++;
-            while (isspace(*equal) && equal < end) equal++;
+            while (equal < end && isspace(*equal)) equal++;
             if (equal < end && equal != start) {
                 vlen = start ? start - equal : end - equal;
                 cookies[num].vlen = vlen;
