@@ -216,7 +216,6 @@ LOCAL void ja4plus_http_header_value (ArkimeSession_t *session, http_parser *hp,
         JA4PlusCookie_t cookies[100];
         const char *start = at;
         const char *end = at + length;
-        int flen, vlen;
 
         int totalFlen = 0;
         int totalVlen = 0;
@@ -225,7 +224,7 @@ LOCAL void ja4plus_http_header_value (ArkimeSession_t *session, http_parser *hp,
             char *equal = memchr(start, '=', end - start);
             if (!equal)
                 break;
-            flen = equal - start;
+            int flen = equal - start;
             cookies[num].field = g_strndup(start, flen); // COPY
             cookies[num].flen = flen;
             totalFlen += flen;
@@ -234,7 +233,7 @@ LOCAL void ja4plus_http_header_value (ArkimeSession_t *session, http_parser *hp,
             equal++;
             while (equal < end && isspace(*equal)) equal++;
             if (equal < end && equal != start) {
-                vlen = start ? start - equal : end - equal;
+                int vlen = start ? start - equal : end - equal;
                 cookies[num].vlen = vlen;
                 totalVlen += vlen;
 
@@ -287,7 +286,7 @@ LOCAL void ja4plus_http_header_value (ArkimeSession_t *session, http_parser *hp,
     }
 
     if (ja4_http->state == 'a') {
-        char *lang = g_ascii_strdown(at, length);
+        const char *lang = g_ascii_strdown(at, length);
         size_t l = 0, a = 0;;
         while (l < length && a < 4) {
             if (isspace(lang[l]) || lang[l] == '-') {
@@ -361,7 +360,6 @@ LOCAL uint32_t ja4plus_process_server_hello(ArkimeSession_t *session, const uint
     uint16_t supportedver;
     BSB_IMPORT_u16(bsb, ver);
     supportedver = ver;
-    supportedver = ver;
     BSB_IMPORT_skip(bsb, 32);     // Random
 
     if(BSB_IS_ERROR(bsb))
@@ -419,15 +417,15 @@ LOCAL uint32_t ja4plus_process_server_hello(ArkimeSession_t *session, const uint
             }
 
             if (etype == 0x10) { // ALPN
-                BSB bsb;
-                BSB_IMPORT_bsb (ebsb, bsb, elen);
+                BSB alpnBsb;
+                BSB_IMPORT_bsb (ebsb, alpnBsb, elen);
 
-                BSB_IMPORT_skip (bsb, 2); // len
+                BSB_IMPORT_skip (alpnBsb, 2); // len
                 uint8_t plen = 0;
-                BSB_IMPORT_u08 (bsb, plen); // len
-                unsigned char *pstr = NULL;
-                BSB_IMPORT_ptr (bsb, pstr, plen);
-                if (plen > 0 && pstr && !BSB_IS_ERROR(bsb)) {
+                BSB_IMPORT_u08 (alpnBsb, plen); // len
+                const unsigned char *pstr = NULL;
+                BSB_IMPORT_ptr (alpnBsb, pstr, plen);
+                if (plen > 0 && pstr && !BSB_IS_ERROR(alpnBsb)) {
                     ja4ALPN[0] = pstr[0];
                     ja4ALPN[1] = pstr[plen - 1];
                 }
@@ -694,12 +692,12 @@ LOCAL uint32_t ja4plus_ssh_ja4ssh(ArkimeSession_t *session, const uint8_t *UNUSE
     return 0;
 }
 /******************************************************************************/
-LOCAL void ja4plus_ja4ts(ArkimeSession_t *session, JA4PlusTCP_t *data, struct tcphdr *tcph)
+LOCAL void ja4plus_ja4ts(ArkimeSession_t *session, JA4PlusTCP_t *data, const struct tcphdr *tcph)
 {
-    uint8_t  *p = (uint8_t *)tcph + 20;
-    uint8_t  *end = (uint8_t *)tcph + tcph->th_off * 4;
-    uint16_t  mss = 0xffff;
-    uint8_t   window_scale = 0xff;
+    uint8_t        *p = (uint8_t *)tcph + 20;
+    const uint8_t  *end = (uint8_t *)tcph + tcph->th_off * 4;
+    uint16_t        mss = 0xffff;
+    uint8_t         window_scale = 0xff;
 
     char obuf[100];
     BSB obsb;
@@ -761,12 +759,12 @@ LOCAL void ja4plus_ja4ts(ArkimeSession_t *session, JA4PlusTCP_t *data, struct tc
     arkime_field_string_add(ja4tsField, session, obuf, -1, TRUE);
 }
 /******************************************************************************/
-LOCAL void ja4plus_ja4t(ArkimeSession_t *session, JA4PlusTCP_t UNUSED(*data), struct tcphdr *tcph)
+LOCAL void ja4plus_ja4t(ArkimeSession_t *session, JA4PlusTCP_t UNUSED(*data), const struct tcphdr *tcph)
 {
-    uint8_t  *p = (uint8_t *)tcph + 20;
-    uint8_t  *end = (uint8_t *)tcph + tcph->th_off * 4;
-    uint16_t  mss = 0xffff;
-    uint8_t   window_scale = 0xff;
+    uint8_t        *p = (uint8_t *)tcph + 20;
+    const uint8_t  *end = (uint8_t *)tcph + tcph->th_off * 4;
+    uint16_t        mss = 0xffff;
+    uint8_t         window_scale = 0xff;
 
     char obuf[100];
     BSB obsb;
@@ -839,9 +837,9 @@ LOCAL uint32_t ja4plus_tcp_raw_packet(ArkimeSession_t *session, const uint8_t *U
     struct tcphdr       *tcphdr = (struct tcphdr *)(packet->pkt + packet->payloadOffset);
     int                  len = packet->payloadLen - 4 * tcphdr->th_off;
 
-    struct ip           *ip4 = (struct ip *)(packet->pkt + packet->ipOffset);
-    struct ip6_hdr      *ip6 = (struct ip6_hdr *)(packet->pkt + packet->ipOffset);
-    struct tcphdr       *tcp = (struct tcphdr *)(packet->pkt + packet->payloadOffset);
+    const struct ip       *ip4 = (struct ip *)(packet->pkt + packet->ipOffset);
+    const struct ip6_hdr  *ip6 = (struct ip6_hdr *)(packet->pkt + packet->ipOffset);
+    const struct tcphdr   *tcp = (struct tcphdr *)(packet->pkt + packet->payloadOffset);
 
     if (len == 0) {
         if (tcp->th_flags & TH_SYN) {
