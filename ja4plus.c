@@ -286,15 +286,16 @@ LOCAL void ja4plus_http_header_value (ArkimeSession_t *session, http_parser *hp,
     }
 
     if (ja4_http->state == 'a') {
-        const char *lang = g_ascii_strdown(at, length);
+        const char *lang = at;
         size_t l = 0, a = 0;;
         while (l < length && a < 4) {
             if (isspace(lang[l]) || lang[l] == '-') {
                 l++;
+                continue;
             } else if (lang[l] == ',' || lang[l] == ';') {
                 break;
             }
-            ja4_http->accept_lang[a] = lang[l];
+            ja4_http->accept_lang[a] = tolower(lang[l]);
             a++;
             l++;
         }
