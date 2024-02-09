@@ -210,7 +210,7 @@ LOCAL void ja4plus_http_complete(ArkimeSession_t *session, http_parser *parser)
 
     char *method = g_ascii_strdown(http_method_str(parser->method), 2);
     GChecksum *const checksum = checksums256[session->thread];
-    snprintf(ja4h, sizeof(ja4h), "%s%d%d%c%c%02d%s_",
+    snprintf(ja4h, sizeof(ja4h), "%s%d%d%c%c%02d%4.4s_",
              method,
              parser->http_major,
              parser->http_minor,
@@ -243,7 +243,7 @@ LOCAL void ja4plus_http_complete(ArkimeSession_t *session, http_parser *parser)
     if (ja4Raw) {
         char ja4h_r[1024];
 
-        snprintf(ja4h_r, sizeof(ja4h_r), "%s%d%d%c%c%02d%s_%s_%s_%s",
+        snprintf(ja4h_r, sizeof(ja4h_r), "%s%d%d%c%c%02d%4.4s_%s_%s_%s",
                  method,
                  parser->http_major,
                  parser->http_minor,
@@ -941,10 +941,15 @@ void ja4plus_plugin_save(ArkimeSession_t *session, int final)
     if (final && ja4plus_data) {
         if (ja4plus_data->tcp && ja4plus_data->tcp != JA4PLUS_TCP_DONE)
             ARKIME_TYPE_FREE(JA4PlusTCP_t, ja4plus_data->tcp);
+
         if (ja4plus_data->http) {
-            g_string_free(ja4plus_data->http->header_value, TRUE);
-            g_string_free(ja4plus_data->http->header_fields, TRUE);
-            ARKIME_TYPE_FREE(JA4PlusHTTP_t, ja4plus_data->http);
+            JA4PlusHTTP_t *ja4_http = ja4plus_data->http;
+
+            g_free(ja4_http->sorted_cookie_fields);
+            g_free(ja4_http->sorted_cookie_values);
+            g_string_free(ja4_http->header_value, TRUE);
+            g_string_free(ja4_http->header_fields, TRUE);
+            ARKIME_TYPE_FREE(JA4PlusHTTP_t, ja4_http);
         }
         ARKIME_TYPE_FREE(JA4PlusData_t, ja4plus_data);
         session->pluginData[ja4plus_plugin_num] = NULL;
