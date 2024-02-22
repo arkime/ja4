@@ -1,6 +1,7 @@
-/* ja4plus.c  -- ja4+ implementation for ja4s and ja4x
+/* ja4plus.c  -- ja4+ implementation
  *
  * Copyright 2023 AOL Inc. All rights reserved.
+ * Portions Copyright 2023 FoxIO
  *
  * SPDX-License-Identifier: FoxIO License 1.1
  *
