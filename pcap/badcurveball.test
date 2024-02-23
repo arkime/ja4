@@ -5,32 +5,6 @@
             "@timestamp" : "SET",
             "cert" : [
                {
-                  "curve" : "corrupt",
-                  "hash" : "f9:ce:21:f0:64:d4:99:f9:e9:95:e8:4d:c7:30:6d:19:62:e1:02:c4",
-                  "issuerCN" : [
-                     "infigo"
-                  ],
-                  "issuerON" : [
-                     "INFIGO IS"
-                  ],
-                  "ja4x" : "2e9214a636bc_2e9214a636bc_795797892f9c",
-                  "ja4x_r" : "550406,550408,55040a,550403_550406,550408,55040a,550403_551d0e,551d23,551d13",
-                  "notAfter" : 1581775250000,
-                  "notBefore" : 1579183250000,
-                  "publicAlgorithm" : "id-ecPublicKey",
-                  "remainingDays" : 28,
-                  "remainingSeconds" : 2481434,
-                  "serial" : "62344031f7ab03e6f9327cde33419cf7fb09df94",
-                  "subjectCN" : [
-                     "infigo"
-                  ],
-                  "subjectON" : [
-                     "INFIGO IS"
-                  ],
-                  "validDays" : 30,
-                  "validSeconds" : 2592000
-               },
-               {
                   "alt" : [
                      "bad.curveballtest.com"
                   ],
@@ -59,6 +33,32 @@
                   ],
                   "validDays" : 730,
                   "validSeconds" : 63072000
+               },
+               {
+                  "curve" : "corrupt",
+                  "hash" : "f9:ce:21:f0:64:d4:99:f9:e9:95:e8:4d:c7:30:6d:19:62:e1:02:c4",
+                  "issuerCN" : [
+                     "infigo"
+                  ],
+                  "issuerON" : [
+                     "INFIGO IS"
+                  ],
+                  "ja4x" : "2e9214a636bc_2e9214a636bc_795797892f9c",
+                  "ja4x_r" : "550406,550408,55040a,550403_550406,550408,55040a,550403_551d0e,551d23,551d13",
+                  "notAfter" : 1581775250000,
+                  "notBefore" : 1579183250000,
+                  "publicAlgorithm" : "id-ecPublicKey",
+                  "remainingDays" : 28,
+                  "remainingSeconds" : 2481434,
+                  "serial" : "62344031f7ab03e6f9327cde33419cf7fb09df94",
+                  "subjectCN" : [
+                     "infigo"
+                  ],
+                  "subjectON" : [
+                     "INFIGO IS"
+                  ],
+                  "validDays" : 30,
+                  "validSeconds" : 2592000
                }
             ],
             "certCnt" : 2,

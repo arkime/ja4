@@ -5,6 +5,37 @@
             "@timestamp" : "SET",
             "cert" : [
                {
+                  "hash" : "a0:31:c4:67:82:e6:e6:c6:62:c2:c8:7c:76:da:9a:a6:2c:ca:bd:8e",
+                  "issuerCN" : [
+                     "digicert high assurance ev root ca"
+                  ],
+                  "issuerON" : [
+                     "DigiCert Inc"
+                  ],
+                  "issuerOU" : [
+                     "www.digicert.com"
+                  ],
+                  "ja4x" : "7d5dbb3783b4_7d5dbb3783b4_9c5875a5c227",
+                  "ja4x_r" : "550406,55040a,55040b,550403_550406,55040a,55040b,550403_551d13,551d0f,551d25,2b06010505070101,551d1f,551d20,551d0e,551d23",
+                  "notAfter" : 1855828800000,
+                  "notBefore" : 1382443200000,
+                  "publicAlgorithm" : "rsaEncryption",
+                  "remainingDays" : 3337,
+                  "remainingSeconds" : 288378187,
+                  "serial" : "04e1e7a4dc5cf2f36dc02b42b85d159f",
+                  "subjectCN" : [
+                     "digicert sha2 high assurance server ca"
+                  ],
+                  "subjectON" : [
+                     "DigiCert Inc"
+                  ],
+                  "subjectOU" : [
+                     "www.digicert.com"
+                  ],
+                  "validDays" : 5479,
+                  "validSeconds" : 473385600
+               },
+               {
                   "alt" : [
                      "lfoup01-b.cloudsink.net",
                      "cloudsink.net",
@@ -38,37 +69,6 @@
                   ],
                   "validDays" : 1100,
                   "validSeconds" : 95083200
-               },
-               {
-                  "hash" : "a0:31:c4:67:82:e6:e6:c6:62:c2:c8:7c:76:da:9a:a6:2c:ca:bd:8e",
-                  "issuerCN" : [
-                     "digicert high assurance ev root ca"
-                  ],
-                  "issuerON" : [
-                     "DigiCert Inc"
-                  ],
-                  "issuerOU" : [
-                     "www.digicert.com"
-                  ],
-                  "ja4x" : "7d5dbb3783b4_7d5dbb3783b4_9c5875a5c227",
-                  "ja4x_r" : "550406,55040a,55040b,550403_550406,55040a,55040b,550403_551d13,551d0f,551d25,2b06010505070101,551d1f,551d20,551d0e,551d23",
-                  "notAfter" : 1855828800000,
-                  "notBefore" : 1382443200000,
-                  "publicAlgorithm" : "rsaEncryption",
-                  "remainingDays" : 3337,
-                  "remainingSeconds" : 288378187,
-                  "serial" : "04e1e7a4dc5cf2f36dc02b42b85d159f",
-                  "subjectCN" : [
-                     "digicert sha2 high assurance server ca"
-                  ],
-                  "subjectON" : [
-                     "DigiCert Inc"
-                  ],
-                  "subjectOU" : [
-                     "www.digicert.com"
-                  ],
-                  "validDays" : 5479,
-                  "validSeconds" : 473385600
                }
             ],
             "certCnt" : 2,

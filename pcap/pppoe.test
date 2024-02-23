@@ -5,32 +5,29 @@
             "@timestamp" : "SET",
             "cert" : [
                {
-                  "hash" : "cc:04:2e:48:2f:29:6a:3a:dc:a4:8b:fb:79:a6:cd:5f:67:8a:c1:e2",
+                  "hash" : "a1:44:6b:ce:0c:87:4d:f0:f2:c3:f6:1d:a5:c9:a2:bc:f9:da:b2:04",
                   "issuerCN" : [
-                     "aol member ca"
+                     "america online root certification authority 1"
                   ],
                   "issuerON" : [
                      "America Online Inc."
                   ],
-                  "ja4x" : "2bab15409345_c9d784bbb12e_121e41c3c35b",
-                  "ja4x_r" : "550406,550408,550407,55040a,550403_550406,550408,550407,55040a,55040b,550403,2a864886f70d010901_551d23,551d0e,551d0f,551d25,551d1f,2b06010505070101,551d20,551d13",
-                  "notAfter" : 1231995540000,
-                  "notBefore" : 1168837200000,
+                  "ja4x" : "a373a9f83c6b_2bab15409345_7a0b71e99dec",
+                  "ja4x_r" : "550406,55040a,550403_550406,550408,550407,55040a,550403_551d0f,551d0e,551d23,551d13,551d20,551d1f",
+                  "notAfter" : 1875288399000,
+                  "notBefore" : 1086369999000,
                   "publicAlgorithm" : "rsaEncryption",
-                  "remainingDays" : 443,
-                  "remainingSeconds" : 38319485,
-                  "serial" : "0119",
+                  "remainingDays" : 7889,
+                  "remainingSeconds" : 681612344,
+                  "serial" : "07",
                   "subjectCN" : [
-                     "kdc.uas.aol.com"
+                     "aol member ca"
                   ],
                   "subjectON" : [
-                     "AOL LLC"
+                     "America Online Inc."
                   ],
-                  "subjectOU" : [
-                     "Core Services"
-                  ],
-                  "validDays" : 730,
-                  "validSeconds" : 63158340
+                  "validDays" : 9131,
+                  "validSeconds" : 788918400
                },
                {
                   "hash" : "39:21:c1:15:c1:5d:0e:ca:5c:cb:5b:c4:f0:7d:21:d8:05:0b:56:6a",
@@ -58,29 +55,32 @@
                   "validSeconds" : 1119710580
                },
                {
-                  "hash" : "a1:44:6b:ce:0c:87:4d:f0:f2:c3:f6:1d:a5:c9:a2:bc:f9:da:b2:04",
+                  "hash" : "cc:04:2e:48:2f:29:6a:3a:dc:a4:8b:fb:79:a6:cd:5f:67:8a:c1:e2",
                   "issuerCN" : [
-                     "america online root certification authority 1"
+                     "aol member ca"
                   ],
                   "issuerON" : [
                      "America Online Inc."
                   ],
-                  "ja4x" : "a373a9f83c6b_2bab15409345_7a0b71e99dec",
-                  "ja4x_r" : "550406,55040a,550403_550406,550408,550407,55040a,550403_551d0f,551d0e,551d23,551d13,551d20,551d1f",
-                  "notAfter" : 1875288399000,
-                  "notBefore" : 1086369999000,
+                  "ja4x" : "2bab15409345_c9d784bbb12e_121e41c3c35b",
+                  "ja4x_r" : "550406,550408,550407,55040a,550403_550406,550408,550407,55040a,55040b,550403,2a864886f70d010901_551d23,551d0e,551d0f,551d25,551d1f,2b06010505070101,551d20,551d13",
+                  "notAfter" : 1231995540000,
+                  "notBefore" : 1168837200000,
                   "publicAlgorithm" : "rsaEncryption",
-                  "remainingDays" : 7889,
-                  "remainingSeconds" : 681612344,
-                  "serial" : "07",
+                  "remainingDays" : 443,
+                  "remainingSeconds" : 38319485,
+                  "serial" : "0119",
                   "subjectCN" : [
-                     "aol member ca"
+                     "kdc.uas.aol.com"
                   ],
                   "subjectON" : [
-                     "America Online Inc."
+                     "AOL LLC"
                   ],
-                  "validDays" : 9131,
-                  "validSeconds" : 788918400
+                  "subjectOU" : [
+                     "Core Services"
+                  ],
+                  "validDays" : 730,
+                  "validSeconds" : 63158340
                }
             ],
             "certCnt" : 3,
