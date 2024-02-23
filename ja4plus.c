@@ -559,7 +559,6 @@ LOCAL void ja4plus_cert_print(int thread, int pos, char *ja4x, BSB *out)
 LOCAL uint32_t ja4plus_process_certificate_wInfo(ArkimeSession_t *session, const uint8_t *data, int len, void *uw)
 {
     // https://github.com/FoxIO-LLC/ja4/blob/main/technical_details/JA4X.md
-    ArkimeCertsInfo_t *info = uw;
 
     uint32_t atag, alen, apc;
     uint8_t *value;
@@ -673,9 +672,9 @@ LOCAL uint32_t ja4plus_process_certificate_wInfo(ArkimeSession_t *session, const
 
     ja4plus_cert_print(session->thread, 2, ja4x, &out);
 
-    arkime_field_certsinfo_update_extra(info, g_strdup("ja4x"), g_strdup(ja4x));
+    arkime_field_certsinfo_update_extra(uw, g_strdup("ja4x"), g_strdup(ja4x));
     if (ja4Raw) {
-        arkime_field_certsinfo_update_extra(info, g_strdup("ja4x_r"), g_strdup(ja4x_r));
+        arkime_field_certsinfo_update_extra(uw, g_strdup("ja4x_r"), g_strdup(ja4x_r));
     }
     return 0;
 
