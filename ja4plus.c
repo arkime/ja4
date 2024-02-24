@@ -134,12 +134,10 @@ LOCAL void ja4plus_http_process_headers (ArkimeSession_t *session)
 
             qsort(cookies, num, sizeof(JA4PlusCookie_t), cookie_cmp);
 
-            if (ja4_http->sorted_cookie_fields)
-                g_free(ja4_http->sorted_cookie_fields);
+            g_free(ja4_http->sorted_cookie_fields);
             ja4_http->sorted_cookie_fields = g_malloc(totalFlen + num);
 
-            if (ja4_http->sorted_cookie_values)
-                g_free(ja4_http->sorted_cookie_fields);
+            g_free(ja4_http->sorted_cookie_values);
             ja4_http->sorted_cookie_values = g_malloc(totalFlen + num + totalVlen + num);
 
             char *fpos = ja4_http->sorted_cookie_fields;
