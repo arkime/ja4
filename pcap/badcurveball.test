@@ -165,6 +165,10 @@
             "srcOuiCnt" : 1,
             "srcPayload8" : "1603010200010001",
             "srcRIR" : "ARIN",
+            "tags" : [
+               "cert.alt test"
+            ],
+            "tagsCnt" : 1,
             "tcp" : {
                "ja4l" : "2177_64_114797",
                "ja4ls" : "781_238_9042",
