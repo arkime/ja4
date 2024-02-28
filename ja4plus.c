@@ -123,7 +123,7 @@ LOCAL void ja4plus_http_process_headers (ArkimeSession_t *session)
             if (num == 99)
                 break;
 
-            if(!start)
+            if (!start)
                 break;
             start++;
         }
@@ -392,7 +392,7 @@ LOCAL uint32_t ja4plus_process_server_hello(ArkimeSession_t *session, const uint
     supportedver = ver;
     BSB_IMPORT_skip(bsb, 32);     // Random
 
-    if(BSB_IS_ERROR(bsb))
+    if (BSB_IS_ERROR(bsb))
         return -1;
 
     /* Parse sessionid, only for SSLv3 - TLSv1.2 */
@@ -565,41 +565,35 @@ LOCAL uint32_t ja4plus_process_certificate_wInfo(ArkimeSession_t *session, const
     BSB_INIT(bsb, data, len);
 
     /* Certificate */
-    if (!(value = arkime_parsers_asn_get_tlv(&bsb, &apc, &atag, &alen)))
-    {
+    if (!(value = arkime_parsers_asn_get_tlv(&bsb, &apc, &atag, &alen))) {
         goto bad_cert;
     }
     BSB_INIT(bsb, value, alen);
 
     /* signedCertificate */
-    if (!(value = arkime_parsers_asn_get_tlv(&bsb, &apc, &atag, &alen)))
-    {
+    if (!(value = arkime_parsers_asn_get_tlv(&bsb, &apc, &atag, &alen))) {
         goto bad_cert;
     }
     BSB_INIT(bsb, value, alen);
 
     /* serialNumber or version*/
-    if (!(value = arkime_parsers_asn_get_tlv(&bsb, &apc, &atag, &alen)))
-    {
+    if (!(value = arkime_parsers_asn_get_tlv(&bsb, &apc, &atag, &alen))) {
         goto bad_cert;
     }
 
     if (apc) {
-        if (!(value = arkime_parsers_asn_get_tlv(&bsb, &apc, &atag, &alen)))
-        {
+        if (!(value = arkime_parsers_asn_get_tlv(&bsb, &apc, &atag, &alen))) {
             goto bad_cert;
         }
     }
 
     /* signature */
-    if (!arkime_parsers_asn_get_tlv(&bsb, &apc, &atag, &alen))
-    {
+    if (!arkime_parsers_asn_get_tlv(&bsb, &apc, &atag, &alen)) {
         goto bad_cert;
     }
 
     /* issuer */
-    if (!(value = arkime_parsers_asn_get_tlv(&bsb, &apc, &atag, &alen)))
-    {
+    if (!(value = arkime_parsers_asn_get_tlv(&bsb, &apc, &atag, &alen))) {
         goto bad_cert;
     }
     BSB out;
@@ -624,25 +618,21 @@ LOCAL uint32_t ja4plus_process_certificate_wInfo(ArkimeSession_t *session, const
     ja4plus_cert_print(session->thread, 0,  ja4x, &out);
 
     /* validity */
-    if (!(value = arkime_parsers_asn_get_tlv(&bsb, &apc, &atag, &alen)))
-    {
+    if (!(value = arkime_parsers_asn_get_tlv(&bsb, &apc, &atag, &alen))) {
         goto bad_cert;
     }
 
     BSB_INIT(tbsb, value, alen);
-    if (!(value = arkime_parsers_asn_get_tlv(&tbsb, &apc, &atag, &alen)))
-    {
+    if (!(value = arkime_parsers_asn_get_tlv(&tbsb, &apc, &atag, &alen))) {
         goto bad_cert;
     }
 
-    if (!(value = arkime_parsers_asn_get_tlv(&tbsb, &apc, &atag, &alen)))
-    {
+    if (!(value = arkime_parsers_asn_get_tlv(&tbsb, &apc, &atag, &alen))) {
         goto bad_cert;
     }
 
     /* subject */
-    if (!(value = arkime_parsers_asn_get_tlv(&bsb, &apc, &atag, &alen)))
-    {
+    if (!(value = arkime_parsers_asn_get_tlv(&bsb, &apc, &atag, &alen))) {
         goto bad_cert;
     }
     BSB_INIT(tbsb, value, alen);
@@ -656,8 +646,7 @@ LOCAL uint32_t ja4plus_process_certificate_wInfo(ArkimeSession_t *session, const
     ja4plus_cert_print(session->thread, 1, ja4x, &out);
 
     /* subjectPublicKeyInfo */
-    if (!(value = arkime_parsers_asn_get_tlv(&bsb, &apc, &atag, &alen)))
-    {
+    if (!(value = arkime_parsers_asn_get_tlv(&bsb, &apc, &atag, &alen))) {
         goto bad_cert;
     }
 
@@ -681,7 +670,8 @@ bad_cert:
 }
 /******************************************************************************/
 // Given a list of numbers find the mode, we ignore numbers > 2048
-LOCAL int ja4plus_ssh_mode(uint16_t *nums, int num) {
+LOCAL int ja4plus_ssh_mode(uint16_t *nums, int num)
+{
     unsigned char  count[2048];
     unsigned short mode = 0;
     unsigned char  modeCount = 0;
