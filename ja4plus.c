@@ -670,7 +670,7 @@ bad_cert:
 }
 /******************************************************************************/
 // Given a list of numbers find the mode, we ignore numbers > 2048
-LOCAL int ja4plus_ssh_mode(uint16_t *nums, int num)
+LOCAL int ja4plus_ssh_mode(const uint16_t *nums, int num)
 {
     unsigned char  count[2048];
     unsigned short mode = 0;
@@ -711,7 +711,7 @@ LOCAL uint32_t ja4plus_ssh_ja4ssh(ArkimeSession_t *session, const uint8_t *UNUSE
     return 0;
 }
 /******************************************************************************/
-LOCAL void ja4plus_ja4ts(ArkimeSession_t *session, JA4PlusTCP_t *data, const struct tcphdr *tcph)
+LOCAL void ja4plus_ja4ts(ArkimeSession_t *session, const JA4PlusTCP_t *data, const struct tcphdr *tcph)
 {
     uint8_t        *p = (uint8_t *)tcph + 20;
     const uint8_t  *end = (uint8_t *)tcph + tcph->th_off * 4;
