@@ -343,7 +343,7 @@ LOCAL int ja4plus_is_grease_value(uint32_t val)
     return 1;
 }
 /******************************************************************************/
-LOCAL void ja4plus_ja4_version(uint16_t ver, char vstr[3])
+LOCAL void ja4plus_ja4_version(uint16_t ver, char dtls, char vstr[3])
 {
     switch (ver) {
     case 0x0100:
@@ -367,16 +367,164 @@ LOCAL void ja4plus_ja4_version(uint16_t ver, char vstr[3])
     case 0x0304:
         memcpy(vstr, "13", 3);
         break;
-    /* case 0x7f00 ... 0x7fff:
-        memcpy(vstr, "13", 3);
-        break; */
+    case 0xfeff:
+        if (dtls)
+            memcpy(vstr, "d1", 3);
+        else
+            memcpy(vstr, "00", 3);
+        break;
+    case 0xfefd:
+        if (dtls)
+            memcpy(vstr, "d2", 3);
+        else
+            memcpy(vstr, "00", 3);
+        break;
+    case 0xfefc:
+        if (dtls)
+            memcpy(vstr, "d3", 3);
+        else
+            memcpy(vstr, "00", 3);
     default:
         memcpy(vstr, "00", 3);
         break;
     }
 }
 /******************************************************************************/
-LOCAL uint32_t ja4plus_process_server_hello(ArkimeSession_t *session, const uint8_t *data, int len, void UNUSED(*uw))
+LOCAL uint32_t ja4plus_dtls_process_server_hello(ArkimeSession_t *session, const uint8_t *data, int len, void UNUSED(*uw))
+{
+    // https://github.com/FoxIO-LLC/ja4/blob/main/technical_details/JA4S.md
+    uint8_t  ja4NumExtensions = 0;
+    uint16_t ja4Extensions[256];
+    uint8_t  ja4ALPN[2] = {'0', '0'};
+    BSB      bsb;
+
+    BSB_INIT(bsb, data, len);
+
+    uint16_t ver = 0;
+    uint16_t supportedver;
+    BSB_IMPORT_u16(bsb, ver);
+    supportedver = ver;
+    BSB_IMPORT_skip(bsb, 32);     // Random
+
+    if (BSB_IS_ERROR(bsb))
+        return -1;
+
+    int skiplen = 0;
+    BSB_IMPORT_u08(bsb, skiplen);   // Session Id Length
+    BSB_IMPORT_skip(bsb, skiplen);  // Session Id
+
+    uint16_t cipher = 0;
+    BSB_IMPORT_u16(bsb, cipher);
+    char cipherHex[5];
+    snprintf(cipherHex, sizeof(cipherHex), "%04x", cipher);
+
+
+    BSB_IMPORT_skip(bsb, 1);
+
+    if (BSB_REMAINING(bsb) > 2) {
+        int etotlen = 0;
+        BSB_IMPORT_u16(bsb, etotlen);  // Extensions Length
+
+        etotlen = MIN(etotlen, BSB_REMAINING(bsb));
+
+        BSB ebsb;
+        BSB_INIT(ebsb, BSB_WORK_PTR(bsb), etotlen);
+
+        while (BSB_REMAINING(ebsb) > 0) {
+            int etype = 0, elen = 0;
+
+            BSB_IMPORT_u16 (ebsb, etype);
+            BSB_IMPORT_u16 (ebsb, elen);
+
+            if (ja4plus_is_grease_value(etype)) {
+                BSB_IMPORT_skip (ebsb, elen);
+                continue;
+            }
+
+            ja4Extensions[ja4NumExtensions] = etype;
+            ja4NumExtensions++;
+
+            if (elen > BSB_REMAINING(ebsb))
+                break;
+
+            if (etype == 0x2b && elen == 2) { // etype 0x2b is supported version
+                BSB_IMPORT_u16(ebsb, supportedver);
+
+                supportedver = MAX(ver, supportedver);
+                continue; // Already processed ebsb above
+            }
+
+            if (etype == 0x10) { // ALPN
+                BSB alpnBsb;
+                BSB_IMPORT_bsb (ebsb, alpnBsb, elen);
+
+                BSB_IMPORT_skip (alpnBsb, 2); // len
+                uint8_t plen = 0;
+                BSB_IMPORT_u08 (alpnBsb, plen); // len
+                const unsigned char *pstr = NULL;
+                BSB_IMPORT_ptr (alpnBsb, pstr, plen);
+                if (plen > 0 && pstr && !BSB_IS_ERROR(alpnBsb)) {
+                    ja4ALPN[0] = pstr[0];
+                    ja4ALPN[1] = pstr[plen - 1];
+                }
+                continue; // Already processed ebsb above
+            }
+            BSB_IMPORT_skip (ebsb, elen);
+        }
+    }
+
+    // JA4s Creation
+    char vstr[3];
+    ja4plus_ja4_version(supportedver, TRUE, vstr);
+
+    char ja4s[26];
+    ja4s[25] = 0;
+    ja4s[0] = 'd';
+    ja4s[1] = vstr[0];
+    ja4s[2] = vstr[1];
+    ja4s[3] = (ja4NumExtensions / 10) + '0';
+    ja4s[4] = (ja4NumExtensions % 10) + '0';
+    ja4s[5] = ja4ALPN[0];
+    ja4s[6] = ja4ALPN[1];
+    ja4s[7] = '_';
+    memcpy(ja4s + 8, cipherHex, 4);
+    ja4s[12] = '_';
+
+    char tmpBuf[5 * 256];
+    BSB tmpBSB;
+
+    BSB_INIT(tmpBSB, tmpBuf, sizeof(tmpBuf));
+    for (int i = 0; i < ja4NumExtensions; i++) {
+        BSB_EXPORT_sprintf(tmpBSB, "%04x,", ja4Extensions[i]);
+    }
+    if (ja4NumExtensions > 0) {
+        BSB_EXPORT_rewind(tmpBSB, 1); // Remove last ,
+    }
+
+    GChecksum *const checksum = checksums256[session->thread];
+
+    if (BSB_LENGTH(tmpBSB) > 0) {
+        g_checksum_update(checksum, (guchar *)tmpBuf, BSB_LENGTH(tmpBSB));
+        memcpy(ja4s + 13, g_checksum_get_string(checksum), 12);
+        g_checksum_reset(checksum);
+    } else {
+        memcpy(ja4s + 13, "000000000000", 12);
+    }
+
+    arkime_field_string_add(ja4sField, session, ja4s, 25, TRUE);
+
+    if (ja4Raw) {
+        char ja4s_r[13 + 5 * 256];
+        memcpy(ja4s_r, ja4s, 13);
+        memcpy(ja4s_r + 13, tmpBuf, BSB_LENGTH(tmpBSB));
+
+        arkime_field_string_add(ja4sRawField, session, ja4s_r, 13 + BSB_LENGTH(tmpBSB), TRUE);
+    }
+
+    return 0;
+}
+/******************************************************************************/
+LOCAL uint32_t ja4plus_tls_process_server_hello(ArkimeSession_t *session, const uint8_t *data, int len, void UNUSED(*uw))
 {
     // https://github.com/FoxIO-LLC/ja4/blob/main/technical_details/JA4S.md
     uint8_t  ja4NumExtensions = 0;
@@ -467,7 +615,7 @@ LOCAL uint32_t ja4plus_process_server_hello(ArkimeSession_t *session, const uint
 
     // JA4s Creation
     char vstr[3];
-    ja4plus_ja4_version(supportedver, vstr);
+    ja4plus_ja4_version(supportedver, FALSE, vstr);
 
     char ja4s[26];
     ja4s[25] = 0;
@@ -972,7 +1120,8 @@ void arkime_plugin_init()
 
     ja4Raw = arkime_config_boolean(NULL, "ja4Raw", FALSE);
 
-    arkime_parsers_add_named_func("tls_process_server_hello", ja4plus_process_server_hello);
+    arkime_parsers_add_named_func("tls_process_server_hello", ja4plus_tls_process_server_hello);
+    arkime_parsers_add_named_func("dtls_process_server_hello", ja4plus_dtls_process_server_hello);
     arkime_parsers_add_named_func("tls_process_certificate_wInfo", ja4plus_process_certificate_wInfo);
     arkime_parsers_add_named_func("ssh_counting200", ja4plus_ssh_ja4ssh);
     arkime_parsers_add_named_func("tcp_raw_packet", ja4plus_tcp_raw_packet);
