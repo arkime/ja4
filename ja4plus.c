@@ -881,8 +881,17 @@ LOCAL void ja4plus_ja4ts(ArkimeSession_t *session, const JA4PlusTCP_t *data, con
             uint8_t next = 0;
             BSB_IMPORT_u08(hbsb, next);
             BSB_EXPORT_sprintf(obsb, "%d-", next);
-            if (next == 0) // End of list
-                break;
+            if (next == 0) { // End of list
+                while (BSB_REMAINING(hbsb) > 0) { // Just keep adding all 0s after
+                    BSB_IMPORT_u08(hbsb, next);
+                    if (next == 0) {
+                        BSB_EXPORT_sprintf(obsb, "%d-", next);
+                    } else {
+                        break;
+                    }
+                }
+              break;
+            }
 
             if (next == 1) // NOOP
                 continue;
@@ -948,8 +957,17 @@ LOCAL void ja4plus_ja4t(ArkimeSession_t *session, JA4PlusTCP_t UNUSED(*data), co
             uint8_t next = 0;
             BSB_IMPORT_u08(hbsb, next);
             BSB_EXPORT_sprintf(obsb, "%d-", next);
-            if (next == 0) // End of list
-                break;
+            if (next == 0) { // End of list
+                while (BSB_REMAINING(hbsb) > 0) { // Just keep adding all 0s after
+                    BSB_IMPORT_u08(hbsb, next);
+                    if (next == 0) {
+                        BSB_EXPORT_sprintf(obsb, "%d-", next);
+                    } else {
+                        break;
+                    }
+                }
+              break;
+            }
 
             if (next == 1) // NOOP
                 continue;
