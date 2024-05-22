@@ -384,6 +384,7 @@ LOCAL void ja4plus_ja4_version(uint16_t ver, char dtls, char vstr[3])
             memcpy(vstr, "d3", 3);
         else
             memcpy(vstr, "00", 3);
+        break;
     default:
         memcpy(vstr, "00", 3);
         break;
