@@ -891,7 +891,7 @@ LOCAL void ja4plus_ja4ts(ArkimeSession_t *session, const JA4PlusTCP_t *data, con
                         break;
                     }
                 }
-              break;
+                break;
             }
 
             if (next == 1) // NOOP
@@ -967,7 +967,7 @@ LOCAL void ja4plus_ja4t(ArkimeSession_t *session, JA4PlusTCP_t UNUSED(*data), co
                         break;
                     }
                 }
-              break;
+                break;
             }
 
             if (next == 1) // NOOP
