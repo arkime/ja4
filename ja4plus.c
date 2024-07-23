@@ -391,6 +391,17 @@ LOCAL void ja4plus_ja4_version(uint16_t ver, char dtls, char vstr[3])
     }
 }
 /******************************************************************************/
+LOCAL void ja4plus_2digit_to_string(int val, char *str)
+{
+    if (val >= 99) {
+        str[0] = '9';
+        str[1] = '9';
+        return;
+    }
+    str[0] = (val / 10) + '0';
+    str[1] = (val % 10) + '0';
+}
+/******************************************************************************/
 LOCAL uint32_t ja4plus_dtls_process_server_hello(ArkimeSession_t *session, const uint8_t *data, int len, void UNUSED(*uw))
 {
     // https://github.com/FoxIO-LLC/ja4/blob/main/technical_details/JA4S.md
@@ -483,8 +494,7 @@ LOCAL uint32_t ja4plus_dtls_process_server_hello(ArkimeSession_t *session, const
     ja4s[0] = 'd';
     ja4s[1] = vstr[0];
     ja4s[2] = vstr[1];
-    ja4s[3] = (ja4NumExtensions / 10) + '0';
-    ja4s[4] = (ja4NumExtensions % 10) + '0';
+    ja4plus_2digit_to_string(ja4NumExtensions, ja4s + 3);
     ja4s[5] = ja4ALPN[0];
     ja4s[6] = ja4ALPN[1];
     ja4s[7] = '_';
@@ -623,8 +633,7 @@ LOCAL uint32_t ja4plus_tls_process_server_hello(ArkimeSession_t *session, const 
     ja4s[0] = (session->ipProtocol == IPPROTO_TCP) ? 't' : 'q';
     ja4s[1] = vstr[0];
     ja4s[2] = vstr[1];
-    ja4s[3] = (ja4NumExtensions / 10) + '0';
-    ja4s[4] = (ja4NumExtensions % 10) + '0';
+    ja4plus_2digit_to_string(ja4NumExtensions, ja4s + 3);
     ja4s[5] = ja4ALPN[0];
     ja4s[6] = ja4ALPN[1];
     ja4s[7] = '_';
