@@ -401,6 +401,23 @@ LOCAL void ja4plus_2digit_to_string(int val, char *str)
     str[0] = (val / 10) + '0';
     str[1] = (val % 10) + '0';
 }
+
+/******************************************************************************/
+LOCAL void ja4plus_alpn_to_ja4alpn(const uint8_t *alpn, int len, uint8_t *ja4alpn)
+{
+    if (len == 0)
+        return;
+
+    len--;  // len now the offset of last byte, which could be 0
+    if (isalnum(alpn[0]) && isalnum(alpn[len])) {
+        ja4alpn[0] = tolower(alpn[0]);
+        ja4alpn[1] = tolower(alpn[len]);
+    } else {
+        ja4alpn[0] = arkime_char_to_hexstr[alpn[0]][0];
+        ja4alpn[1] = arkime_char_to_hexstr[alpn[len]][1];
+    }
+}
+
 /******************************************************************************/
 LOCAL uint32_t ja4plus_dtls_process_server_hello(ArkimeSession_t *session, const uint8_t *data, int len, void UNUSED(*uw))
 {
@@ -476,8 +493,7 @@ LOCAL uint32_t ja4plus_dtls_process_server_hello(ArkimeSession_t *session, const
                 const unsigned char *pstr = NULL;
                 BSB_IMPORT_ptr (alpnBsb, pstr, plen);
                 if (plen > 0 && pstr && !BSB_IS_ERROR(alpnBsb)) {
-                    ja4ALPN[0] = pstr[0];
-                    ja4ALPN[1] = pstr[plen - 1];
+                    ja4plus_alpn_to_ja4alpn(pstr, plen, ja4ALPN);
                 }
                 continue; // Already processed ebsb above
             }
@@ -615,8 +631,7 @@ LOCAL uint32_t ja4plus_tls_process_server_hello(ArkimeSession_t *session, const 
                 const unsigned char *pstr = NULL;
                 BSB_IMPORT_ptr (alpnBsb, pstr, plen);
                 if (plen > 0 && pstr && !BSB_IS_ERROR(alpnBsb)) {
-                    ja4ALPN[0] = pstr[0];
-                    ja4ALPN[1] = pstr[plen - 1];
+                    ja4plus_alpn_to_ja4alpn(pstr, plen, ja4ALPN);
                 }
                 continue; // Already processed ebsb above
             }
@@ -856,7 +871,7 @@ LOCAL uint32_t ja4plus_ssh_ja4ssh(ArkimeSession_t *session, const uint8_t *UNUSE
     char ja4ssh[50];
     BSB bsb;
 
-    SSHInfo_t *ssh = uw;
+    const SSHInfo_t *ssh = uw;
 
     BSB_INIT(bsb, ja4ssh, sizeof(ja4ssh));
     BSB_EXPORT_sprintf(bsb, "c%ds%d_c%ds%d_c%ds%d",
