@@ -1135,6 +1135,24 @@ void ja4plus_plugin_save(ArkimeSession_t *session, int final)
     }
 }
 /******************************************************************************/
+LOCAL void *ja4plus_getcb_ja4x(const ArkimeSession_t *session, int UNUSED(pos))
+{
+#if ARKIME_API_VERSION >= 541
+    return arkime_field_certsinfo_get_extra(session, "cert.ja4x");
+#else
+    return NULL;
+#endif
+}
+/******************************************************************************/
+LOCAL void *ja4plus_getcb_ja4x_r(const ArkimeSession_t *session, int UNUSED(pos))
+{
+#if ARKIME_API_VERSION >= 541
+    return arkime_field_certsinfo_get_extra(session, "ja4x_r");
+#else
+    return NULL;
+#endif
+}
+/******************************************************************************/
 void arkime_plugin_init()
 {
     LOG("JA4+ plugin loaded");
@@ -1188,11 +1206,15 @@ void arkime_plugin_init()
                         0, ARKIME_FIELD_FLAG_FAKE,
                         (char *)NULL);
 
+    arkime_field_by_exp_add_internal("cert.ja4x", ARKIME_FIELD_TYPE_STR_ARRAY, ja4plus_getcb_ja4x, NULL);
+
     arkime_field_define("cert", "termfield",
                         "cert.ja4x_r", "JA4x_r", "cert.ja4x_r",
                         "JA4x_r",
                         0, ARKIME_FIELD_FLAG_FAKE,
                         (char *)NULL);
+
+    arkime_field_by_exp_add_internal("cert.ja4x_r", ARKIME_FIELD_TYPE_STR_ARRAY, ja4plus_getcb_ja4x_r, NULL);
 
     ja4sshField = arkime_field_define("ssh", "lotermfield",
                                       "ssh.ja4ssh", "JA4ssh", "ssh.ja4ssh",
