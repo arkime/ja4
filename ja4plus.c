@@ -1138,7 +1138,7 @@ void ja4plus_plugin_save(ArkimeSession_t *session, int final)
 LOCAL void *ja4plus_getcb_ja4x(const ArkimeSession_t *session, int UNUSED(pos))
 {
 #if ARKIME_API_VERSION >= 541
-    return arkime_field_certsinfo_get_extra(session, "cert.ja4x");
+    return arkime_field_certsinfo_get_extra(session, "ja4x");
 #else
     return NULL;
 #endif
