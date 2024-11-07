@@ -34,6 +34,10 @@
             "dstOuiCnt" : 2,
             "dstPayload8" : "485454502f312e31",
             "dstRIR" : "TEST",
+            "dstTTL" : [
+               59
+            ],
+            "dstTTLCnt" : 1,
             "fileId" : [],
             "firstPacket" : 1454513228371,
             "http" : {
@@ -236,13 +240,17 @@
             ],
             "srcOuiCnt" : 1,
             "srcPayload8" : "474554202f78782f",
+            "srcTTL" : [
+               62
+            ],
+            "srcTTLCnt" : 1,
             "tags" : [
                "dstip",
                "srcip"
             ],
             "tagsCnt" : 2,
             "tcp" : {
-               "ja4ls" : "765_59_13608",
+               "ja4ls" : "765_59",
                "ja4t" : [
                   "14600_2-4-8-1-3_1360_8"
                ],
@@ -262,6 +270,10 @@
                "syn" : 1,
                "syn-ack" : 1,
                "urg" : 0
+            },
+            "tcpseq" : {
+               "dst" : 0,
+               "src" : 2224296586
             },
             "totDataBytes" : 881
          },

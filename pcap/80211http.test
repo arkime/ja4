@@ -24,6 +24,10 @@
             },
             "dstPayload8" : "485454502f312e31",
             "dstRIR" : "APNIC",
+            "dstTTL" : [
+               64
+            ],
+            "dstTTLCnt" : 1,
             "fileId" : [],
             "firstPacket" : 1523241953739,
             "http" : {
@@ -458,13 +462,17 @@
             },
             "srcPayload8" : "474554202f204854",
             "srcRIR" : "ARIN",
+            "srcTTL" : [
+               64
+            ],
+            "srcTTLCnt" : 1,
             "tags" : [
                "http:password"
             ],
             "tagsCnt" : 1,
             "tcp" : {
-               "ja4l" : "5356_64_18253",
-               "ja4ls" : "562_64_4558",
+               "ja4l" : "5356_64",
+               "ja4ls" : "562_64",
                "ja4t" : [
                   "65535_2-4-8-1-3_1460_6"
                ],
@@ -484,6 +492,10 @@
                "syn" : 1,
                "syn-ack" : 1,
                "urg" : 0
+            },
+            "tcpseq" : {
+               "dst" : 0,
+               "src" : 2524188118
             },
             "totDataBytes" : 8028
          },

@@ -17,6 +17,10 @@
                "port" : 80
             },
             "dstPayload8" : "485454502f312e31",
+            "dstTTL" : [
+               228
+            ],
+            "dstTTLCnt" : 1,
             "fileId" : [],
             "firstPacket" : 1467366160266,
             "http" : {
@@ -201,8 +205,12 @@
                "port" : 10882
             },
             "srcPayload8" : "474554202f312048",
+            "srcTTL" : [
+               127
+            ],
+            "srcTTLCnt" : 1,
             "tcp" : {
-               "ja4ls" : "0_228_30500",
+               "ja4ls" : "0_228",
                "ja4ts" : [
                   "29200_2-1-1-4-1-3_1460_7"
                ],
@@ -218,6 +226,9 @@
                "syn" : 0,
                "syn-ack" : 1,
                "urg" : 0
+            },
+            "tcpseq" : {
+               "dst" : 2552120857
             },
             "totDataBytes" : 12679
          },

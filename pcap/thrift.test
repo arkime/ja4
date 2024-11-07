@@ -32,6 +32,10 @@
             "dstOuiCnt" : 1,
             "dstPayload8" : "800100030000001b",
             "dstRIR" : "TEST",
+            "dstTTL" : [
+               61
+            ],
+            "dstTTLCnt" : 1,
             "fileId" : [],
             "firstPacket" : 1463682642097,
             "initRTT" : 1,
@@ -100,6 +104,10 @@
             ],
             "srcOuiCnt" : 1,
             "srcPayload8" : "800100010000001b",
+            "srcTTL" : [
+               60
+            ],
+            "srcTTLCnt" : 1,
             "tags" : [
                "dstip",
                "srcip"
@@ -126,6 +134,10 @@
                "syn" : 1,
                "syn-ack" : 1,
                "urg" : 0
+            },
+            "tcpseq" : {
+               "dst" : 0,
+               "src" : 2552215697
             },
             "totDataBytes" : 144
          },
@@ -155,6 +167,10 @@
                "Palo Alto Networks"
             ],
             "dstOuiCnt" : 1,
+            "dstTTL" : [
+               51
+            ],
+            "dstTTLCnt" : 1,
             "fileId" : [],
             "firstPacket" : 1483833315772,
             "initRTT" : 2,
@@ -209,6 +225,10 @@
             ],
             "srcOuiCnt" : 1,
             "srcPayload8" : "0000010180010001",
+            "srcTTL" : [
+               61
+            ],
+            "srcTTLCnt" : 1,
             "tcp" : {
                "ja4t" : [
                   "14600_2-4-8-1-3_1386_7"
@@ -229,6 +249,10 @@
                "syn" : 1,
                "syn-ack" : 1,
                "urg" : 0
+            },
+            "tcpseq" : {
+               "dst" : 0,
+               "src" : 1598292154
             },
             "totDataBytes" : 261
          },
