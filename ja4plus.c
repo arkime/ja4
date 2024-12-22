@@ -1092,6 +1092,7 @@ LOCAL uint32_t ja4plus_tcp_raw_packet(ArkimeSession_t *session, const uint8_t *U
                                  (ja4plus_tcp->timestampC - ja4plus_tcp->synAckTimes[ja4plus_tcp->synAckTimesCnt - 1]) / 2,
                                  ja4plus_tcp->client_ttl
                                 );
+                        arkime_field_string_add(ja4lField, session, ja4l, -1, TRUE);
                     }
                 } else {
                     if (ja4plus_tcp->timestampC >= ja4plus_tcp->synAckTimes[ja4plus_tcp->synAckTimesCnt - 1]) {
@@ -1100,10 +1101,9 @@ LOCAL uint32_t ja4plus_tcp_raw_packet(ArkimeSession_t *session, const uint8_t *U
                                  ja4plus_tcp->client_ttl,
                                  (timestampF - ja4plus_tcp->timestampE) / 2
                                 );
+                        arkime_field_string_add(ja4lField, session, ja4l, -1, TRUE);
                     }
                 }
-
-                arkime_field_string_add(ja4lField, session, ja4l, -1, TRUE);
 
                 ARKIME_TYPE_FREE(JA4PlusTCP_t, ja4plus_data->tcp);
                 ja4plus_data->tcp = JA4PLUS_TCP_DONE;
