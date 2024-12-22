@@ -1077,25 +1077,31 @@ LOCAL uint32_t ja4plus_tcp_raw_packet(ArkimeSession_t *session, const uint8_t *U
             if ((tcp->th_flags & TH_ACK) && (ja4plus_tcp->timestampC == 0))
                 ja4plus_tcp->timestampC = TIMESTAMP_TO_RUSEC(packet->ts);
         }
-    } else {
+    } else if (ja4plus_tcp->synAckTimesCnt > 0) {
         if (packet->direction == 0) {
             if (ja4plus_tcp->timestampD == 0) {
                 ja4plus_tcp->timestampD = TIMESTAMP_TO_RUSEC(packet->ts);
-            } else if (ja4plus_tcp->timestampE != 0) {
+            } else if (ja4plus_tcp->timestampC != 0 && ja4plus_tcp->timestampE != 0) {
                 uint32_t timestampF = TIMESTAMP_TO_RUSEC(packet->ts);
 
                 char ja4l[100];
-                if (arkime_session_has_protocol(session, "http"))
-                    snprintf(ja4l, sizeof(ja4l), "%u_%u",
-                             (ja4plus_tcp->timestampC - ja4plus_tcp->synAckTimes[ja4plus_tcp->synAckTimesCnt - 1]) / 2,
-                             ja4plus_tcp->client_ttl
-                            );
-                else
-                    snprintf(ja4l, sizeof(ja4l), "%u_%u_%u",
-                             (ja4plus_tcp->timestampC - ja4plus_tcp->synAckTimes[ja4plus_tcp->synAckTimesCnt - 1]) / 2,
-                             ja4plus_tcp->client_ttl,
-                             (timestampF - ja4plus_tcp->timestampE) / 2
-                            );
+
+                if (arkime_session_has_protocol(session, "http")) {
+                    if (ja4plus_tcp->timestampC >= ja4plus_tcp->synAckTimes[ja4plus_tcp->synAckTimesCnt - 1]) {
+                        snprintf(ja4l, sizeof(ja4l), "%u_%u",
+                                 (ja4plus_tcp->timestampC - ja4plus_tcp->synAckTimes[ja4plus_tcp->synAckTimesCnt - 1]) / 2,
+                                 ja4plus_tcp->client_ttl
+                                );
+                    }
+                } else {
+                    if (ja4plus_tcp->timestampC >= ja4plus_tcp->synAckTimes[ja4plus_tcp->synAckTimesCnt - 1]) {
+                        snprintf(ja4l, sizeof(ja4l), "%u_%u_%u",
+                                 (ja4plus_tcp->timestampC - ja4plus_tcp->synAckTimes[ja4plus_tcp->synAckTimesCnt - 1]) / 2,
+                                 ja4plus_tcp->client_ttl,
+                                 (timestampF - ja4plus_tcp->timestampE) / 2
+                                );
+                    }
+                }
 
                 arkime_field_string_add(ja4lField, session, ja4l, -1, TRUE);
 

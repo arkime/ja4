@@ -1549,9 +1549,6 @@
                255
             ],
             "srcTTLCnt" : 1,
-            "tcp" : {
-               "ja4ls" : "1182075_0_1182075"
-            },
             "tcpflags" : {
                "ack" : 4,
                "dstZero" : 0,
