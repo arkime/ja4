@@ -1084,25 +1084,22 @@ LOCAL uint32_t ja4plus_tcp_raw_packet(ArkimeSession_t *session, const uint8_t *U
             } else if (ja4plus_tcp->timestampC != 0 && ja4plus_tcp->timestampE != 0) {
                 uint32_t timestampF = TIMESTAMP_TO_RUSEC(packet->ts);
 
-                char ja4l[100];
+                if (ja4plus_tcp->timestampC >= ja4plus_tcp->synAckTimes[ja4plus_tcp->synAckTimesCnt - 1]) {
+                    char ja4l[100];
 
-                if (arkime_session_has_protocol(session, "http")) {
-                    if (ja4plus_tcp->timestampC >= ja4plus_tcp->synAckTimes[ja4plus_tcp->synAckTimesCnt - 1]) {
+                    if (arkime_session_has_protocol(session, "http")) {
                         snprintf(ja4l, sizeof(ja4l), "%u_%u",
                                  (ja4plus_tcp->timestampC - ja4plus_tcp->synAckTimes[ja4plus_tcp->synAckTimesCnt - 1]) / 2,
                                  ja4plus_tcp->client_ttl
                                 );
-                        arkime_field_string_add(ja4lField, session, ja4l, -1, TRUE);
-                    }
-                } else {
-                    if (ja4plus_tcp->timestampC >= ja4plus_tcp->synAckTimes[ja4plus_tcp->synAckTimesCnt - 1]) {
+                    } else {
                         snprintf(ja4l, sizeof(ja4l), "%u_%u_%u",
                                  (ja4plus_tcp->timestampC - ja4plus_tcp->synAckTimes[ja4plus_tcp->synAckTimesCnt - 1]) / 2,
                                  ja4plus_tcp->client_ttl,
                                  (timestampF - ja4plus_tcp->timestampE) / 2
                                 );
-                        arkime_field_string_add(ja4lField, session, ja4l, -1, TRUE);
                     }
+                    arkime_field_string_add(ja4lField, session, ja4l, -1, TRUE);
                 }
 
                 ARKIME_TYPE_FREE(JA4PlusTCP_t, ja4plus_data->tcp);
@@ -1112,20 +1109,23 @@ LOCAL uint32_t ja4plus_tcp_raw_packet(ArkimeSession_t *session, const uint8_t *U
             if (ja4plus_tcp->timestampE == 0) {
                 ja4plus_tcp->timestampE = TIMESTAMP_TO_RUSEC(packet->ts);
 
-                char ja4ls[100];
-                if (arkime_session_has_protocol(session, "http"))
-                    snprintf(ja4ls, sizeof(ja4ls), "%u_%u",
-                             (ja4plus_tcp->synAckTimes[ja4plus_tcp->synAckTimesCnt - 1] - ja4plus_tcp->timestampA) / 2,
-                             ja4plus_tcp->server_ttl
-                            );
-                else
-                    snprintf(ja4ls, sizeof(ja4ls), "%u_%u_%u",
-                             (ja4plus_tcp->synAckTimes[ja4plus_tcp->synAckTimesCnt - 1] - ja4plus_tcp->timestampA) / 2,
-                             ja4plus_tcp->server_ttl,
-                             (ja4plus_tcp->timestampE - ja4plus_tcp->timestampD) / 2
-                            );
+                if (ja4plus_tcp->synAckTimes[ja4plus_tcp->synAckTimesCnt - 1] >= ja4plus_tcp->timestampA) {
+                    char ja4ls[100];
 
-                arkime_field_string_add(ja4lsField, session, ja4ls, -1, TRUE);
+                    if (arkime_session_has_protocol(session, "http")) {
+                        snprintf(ja4ls, sizeof(ja4ls), "%u_%u",
+                                 (ja4plus_tcp->synAckTimes[ja4plus_tcp->synAckTimesCnt - 1] - ja4plus_tcp->timestampA) / 2,
+                                 ja4plus_tcp->server_ttl
+                                );
+                    } else {
+                        snprintf(ja4ls, sizeof(ja4ls), "%u_%u_%u",
+                                 (ja4plus_tcp->synAckTimes[ja4plus_tcp->synAckTimesCnt - 1] - ja4plus_tcp->timestampA) / 2,
+                                 ja4plus_tcp->server_ttl,
+                                 (ja4plus_tcp->timestampE - ja4plus_tcp->timestampD) / 2
+                                );
+                    }
+                    arkime_field_string_add(ja4lsField, session, ja4ls, -1, TRUE);
+                }
             }
         }
     }
