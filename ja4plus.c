@@ -349,7 +349,7 @@ LOCAL void ja4plus_ja4_version(uint16_t ver, char dtls, char vstr[3])
     case 0x0100:
         memcpy(vstr, "s1", 3);
         break;
-    case 0x0200:
+    case 0x0002:
         memcpy(vstr, "s2", 3);
         break;
     case 0x0300:
