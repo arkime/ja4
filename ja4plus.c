@@ -94,14 +94,14 @@ LOCAL void ja4plus_http_process_headers (ArkimeSession_t *session)
         const char *start = ja4_http->header_value->str;
         const char *end = start + ja4_http->header_value->len;
 
-        int totalFlen = 0;
-        int totalVlen = 0;
+        uint32_t totalFlen = 0;
+        uint32_t totalVlen = 0;
         while (start < end) {
             while (start < end && isspace(*start)) start++;
             char *equal = memchr(start, '=', end - start);
             if (!equal)
                 break;
-            int flen = equal - start;
+            uint32_t flen = equal - start;
             cookies[num].field = g_strndup(start, flen); // COPY
             cookies[num].flen = flen;
             totalFlen += flen;
@@ -130,7 +130,7 @@ LOCAL void ja4plus_http_process_headers (ArkimeSession_t *session)
 
         ja4_http->cookies = num;
 
-        if (num != 0) {
+        if (num > 0) {
 
             qsort(cookies, num, sizeof(JA4PlusCookie_t), cookie_cmp);
 
@@ -1079,8 +1079,6 @@ LOCAL uint32_t ja4plus_tcp_raw_packet(ArkimeSession_t *session, const uint8_t *U
             if (ja4plus_tcp->timestampD == 0) {
                 ja4plus_tcp->timestampD = TIMESTAMP_TO_RUSEC(packet->ts);
             } else if (ja4plus_tcp->timestampC != 0 && ja4plus_tcp->timestampE != 0) {
-                uint32_t timestampF = TIMESTAMP_TO_RUSEC(packet->ts);
-
                 if (ja4plus_tcp->timestampC >= ja4plus_tcp->synAckTimes[ja4plus_tcp->synAckTimesCnt - 1]) {
                     char ja4l[100];
 
@@ -1090,6 +1088,7 @@ LOCAL uint32_t ja4plus_tcp_raw_packet(ArkimeSession_t *session, const uint8_t *U
                                  ja4plus_tcp->client_ttl
                                 );
                     } else {
+                        uint32_t timestampF = TIMESTAMP_TO_RUSEC(packet->ts);
                         snprintf(ja4l, sizeof(ja4l), "%u_%u_%u",
                                  (ja4plus_tcp->timestampC - ja4plus_tcp->synAckTimes[ja4plus_tcp->synAckTimesCnt - 1]) / 2,
                                  ja4plus_tcp->client_ttl,
