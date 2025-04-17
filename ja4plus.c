@@ -30,6 +30,7 @@ LOCAL int                    ja4plus_plugin_num;
 LOCAL GChecksum             *checksums256[ARKIME_MAX_PACKET_THREADS];
 extern uint8_t               arkime_char_to_hexstr[256][3];
 LOCAL gboolean               ja4Raw;
+LOCAL gboolean               ja4hOmitZeroSections;
 
 #define JA4PLUS_SYN_ACK_COUNT 4
 typedef struct {
@@ -187,6 +188,42 @@ LOCAL void ja4plus_http_process_headers (ArkimeSession_t *session)
 /* An http msg is complete, process the headers and create the ja4h */
 LOCAL void ja4plus_http_complete(ArkimeSession_t *session, http_parser *parser)
 {
+    /* See thirdparty/http_parser.h */
+#define HTTP_METHODS 26
+    static const char *methods[HTTP_METHODS] = {
+        "de",
+        "ge",
+        "he",
+        "po",
+        "pu",
+
+        "co",
+        "op",
+        "tr",
+
+        "cy",
+        "lo",
+        "ml",
+        "mo",
+        "pf",
+        "pp",
+        "se",
+        "uo",
+
+        "rp",
+        "ma",
+        "ct",
+        "me",
+
+        "ms",
+        "no",
+        "su",
+        "us",
+
+        "pa",
+        "pr"
+    };
+
     if (parser->type != 0)
         return;
 
@@ -207,7 +244,7 @@ LOCAL void ja4plus_http_complete(ArkimeSession_t *session, http_parser *parser)
         ja4plus_http_process_headers(session);
     }
 
-    char *method = g_ascii_strdown(http_method_str(parser->method), 2);
+    const char *method = parser->method < HTTP_METHODS ? methods[parser->method] : "00";
     GChecksum *const checksum = checksums256[session->thread];
     snprintf(ja4h, sizeof(ja4h), "%s%d%d%c%c%02d%4.4s_",
              method,
@@ -233,6 +270,8 @@ LOCAL void ja4plus_http_complete(ArkimeSession_t *session, http_parser *parser)
         g_checksum_update(checksum, (guchar *) ja4_http->sorted_cookie_values, strlen(ja4_http->sorted_cookie_values));
         memcpy(ja4h + 39, g_checksum_get_string(checksum), 12);
         g_checksum_reset(checksum);
+    } else if (ja4hOmitZeroSections) {
+        g_strlcpy(ja4h + 26, "_", sizeof(ja4h) - 26);
     } else {
         g_strlcpy(ja4h + 26, "000000000000_000000000000", sizeof(ja4h) - 26);
     }
@@ -257,7 +296,6 @@ LOCAL void ja4plus_http_complete(ArkimeSession_t *session, http_parser *parser)
         ja4h_r[sizeof(ja4h_r) - 1] = 0;
         arkime_field_string_add(ja4hRawField, session, ja4h_r, -1, TRUE);
     }
-    g_free(method);
     g_string_truncate(ja4_http->header_fields, 0);
 
     g_free(ja4_http->sorted_cookie_fields);
@@ -1194,6 +1232,7 @@ void arkime_plugin_init()
                                    ja4plus_http_complete);
 
     ja4Raw = arkime_config_boolean(NULL, "ja4Raw", FALSE);
+    ja4hOmitZeroSections = arkime_config_boolean(NULL, "ja4hOmitZeroSections", FALSE);
 
     arkime_parsers_add_named_func("tls_process_server_hello", ja4plus_tls_process_server_hello);
     arkime_parsers_add_named_func("dtls_process_server_hello", ja4plus_dtls_process_server_hello);
