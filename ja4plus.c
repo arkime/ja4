@@ -218,7 +218,7 @@ LOCAL void ja4plus_http_complete(ArkimeSession_t *session, http_parser *parser)
         "ms",
         "no",
         "su",
-        "us",
+        "un",
 
         "pa",
         "pr"
@@ -1121,7 +1121,7 @@ LOCAL uint32_t ja4plus_tcp_raw_packet(ArkimeSession_t *session, const uint8_t *U
                     char ja4l[100];
 
                     if (arkime_session_has_protocol(session, "http")) {
-                        snprintf(ja4l, sizeof(ja4l), "%u_%u",
+                        snprintf(ja4l, sizeof(ja4l), "%u_%u_tcp",
                                  (ja4plus_tcp->timestampC - ja4plus_tcp->synAckTimes[ja4plus_tcp->synAckTimesCnt - 1]) / 2,
                                  ja4plus_tcp->client_ttl
                                 );
@@ -1147,7 +1147,7 @@ LOCAL uint32_t ja4plus_tcp_raw_packet(ArkimeSession_t *session, const uint8_t *U
                     char ja4ls[100];
 
                     if (arkime_session_has_protocol(session, "http")) {
-                        snprintf(ja4ls, sizeof(ja4ls), "%u_%u",
+                        snprintf(ja4ls, sizeof(ja4ls), "%u_%u_tcp",
                                  (ja4plus_tcp->synAckTimes[ja4plus_tcp->synAckTimesCnt - 1] - ja4plus_tcp->timestampA) / 2,
                                  ja4plus_tcp->server_ttl
                                 );
