@@ -1166,7 +1166,7 @@ LOCAL uint32_t ja4plus_tcp_raw_packet(ArkimeSession_t *session, const uint8_t *U
     return 0;
 }
 /******************************************************************************/
-void ja4plus_plugin_save(ArkimeSession_t *session, int final)
+LOCAL void ja4plus_plugin_save(ArkimeSession_t *session, int final)
 {
     JA4PlusData_t *ja4plus_data = session->pluginData[ja4plus_plugin_num];
     if (final && ja4plus_data) {
