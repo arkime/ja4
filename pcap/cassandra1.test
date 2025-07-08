@@ -31,6 +31,7 @@
                58
             ],
             "dstTTLCnt" : 1,
+            "ethertype" : 2048,
             "fileId" : [],
             "firstPacket" : 1466085103886,
             "initRTT" : 5,
@@ -43,8 +44,8 @@
                "packets" : 4,
                "vlan" : {
                   "id" : [
-                     300,
-                     50
+                     50,
+                     300
                   ],
                   "id-cnt" : 2
                }

@@ -32,6 +32,7 @@
                53
             ],
             "dstTTLCnt" : 1,
+            "ethertype" : 2048,
             "fileId" : [],
             "firstPacket" : 1483459978959,
             "initRTT" : 171,
@@ -44,8 +45,8 @@
                "packets" : 6,
                "vlan" : {
                   "id" : [
-                     300,
-                     50
+                     50,
+                     300
                   ],
                   "id-cnt" : 2
                }
@@ -165,6 +166,7 @@
                52
             ],
             "dstTTLCnt" : 1,
+            "ethertype" : 2048,
             "fileId" : [],
             "firstPacket" : 1483558834969,
             "initRTT" : 81,
@@ -177,8 +179,8 @@
                "packets" : 6,
                "vlan" : {
                   "id" : [
-                     300,
-                     50
+                     50,
+                     300
                   ],
                   "id-cnt" : 2
                }
@@ -294,6 +296,7 @@
                56
             ],
             "dstTTLCnt" : 1,
+            "ethertype" : 2048,
             "fileId" : [],
             "firstPacket" : 1483726705497,
             "initRTT" : 3,
@@ -415,6 +418,7 @@
                50
             ],
             "dstTTLCnt" : 1,
+            "ethertype" : 2048,
             "fileId" : [],
             "firstPacket" : 1483737232974,
             "initRTT" : 2,
@@ -539,6 +543,7 @@
                "61"
             ],
             "dstTTLCnt" : 2,
+            "ethertype" : 2048,
             "fileId" : [],
             "firstPacket" : 1483814916005,
             "initRTT" : 51,
@@ -551,8 +556,8 @@
                "packets" : 7,
                "vlan" : {
                   "id" : [
-                     300,
-                     50
+                     50,
+                     300
                   ],
                   "id-cnt" : 2
                }
