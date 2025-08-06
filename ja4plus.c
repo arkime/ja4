@@ -24,6 +24,7 @@ LOCAL int                    ja4tField;
 LOCAL int                    ja4tsField;
 LOCAL int                    ja4hField;
 LOCAL int                    ja4hRawField;
+LOCAL int                    ja4dField;
 
 
 LOCAL int                    ja4plus_plugin_num;
@@ -1205,6 +1206,184 @@ LOCAL void *ja4plus_getcb_ja4x_r(const ArkimeSession_t *session, int UNUSED(pos)
 #endif
 }
 /******************************************************************************/
+LOCAL int ja4plus_dhcp_udp_parser(ArkimeSession_t *session, void *UNUSED(uw), const uint8_t *data, int len, int UNUSED(which))
+{
+    if (len < 256 || (data[0] != 1 && data[0] != 2) || ARKIME_SESSION_v6(session) || memcmp(data + 236, "\x63\x82\x53\x63", 4) != 0)
+        return 0;
+
+    int msgType = 0;
+
+    char maxSize[7];
+    g_strlcpy(maxSize, "00", sizeof(maxSize));
+
+    char options[1000];
+    BSB  oBSB;
+    BSB_INIT(oBSB, options, sizeof(options));
+
+    char parameters[1000];
+    BSB  pBSB;
+    BSB_INIT(pBSB, parameters, sizeof(parameters));
+
+    BSB bsb;
+    BSB_INIT(bsb, data, len);
+
+    // header + 236 offset + magic len - 4 skip - u32 import
+    BSB_IMPORT_skip(bsb, 4 + 4 + 236 + 4 - 4 - 4);
+    while (BSB_REMAINING(bsb) >= 2) {
+        int t = 0;
+        int l = 0;
+        BSB_IMPORT_u08(bsb, t);
+        if (t == 255) // End Tag, no length
+            break;
+        BSB_IMPORT_u08(bsb, l);
+        if (BSB_IS_ERROR(bsb) || l > BSB_REMAINING(bsb) || l == 0)
+            break;
+        uint8_t *v = 0;
+        BSB_IMPORT_ptr(bsb, v, l);
+
+        switch (t) {
+        case 53:
+            msgType = v[0];
+            continue;
+        case 55: // Parameter Request List
+            for (int i = 0; i < l; i++) {
+                if (i > 0) {
+                    BSB_EXPORT_u08(pBSB, '-');
+                }
+                BSB_EXPORT_sprintf(pBSB, "%d", v[i]);
+            }
+            break;
+        case 57: // Maximum DHCP Message Size
+            if (l == 2) {
+                uint16_t size = 0;
+                memcpy(&size, v, 2);
+                snprintf(maxSize, sizeof(maxSize), "%d", htons(size));
+            }
+            break;
+        } /* switch */
+
+        if (BSB_LENGTH(oBSB) > 0) {
+            BSB_EXPORT_u08(oBSB, '-');
+        }
+        BSB_EXPORT_sprintf(oBSB, "%d", t);
+    }
+
+    options[BSB_LENGTH(oBSB)] = 0;
+    if (BSB_LENGTH(pBSB) == 0) {
+        snprintf(parameters, sizeof(parameters), "00");
+    } else {
+        parameters[BSB_LENGTH(pBSB)] = 0;
+    }
+    char ja4d[2048];
+    snprintf(ja4d, sizeof(ja4d), "4-%d-%s_%s_%s", msgType, maxSize, options, parameters);
+    arkime_field_string_add(ja4dField, session, ja4d, -1, TRUE);
+
+    return 0;
+}
+/******************************************************************************/
+LOCAL void ja4plus_dhcp_udp_classify(ArkimeSession_t *session, const uint8_t *data, int len, int UNUSED(which), void *UNUSED(uw))
+{
+
+    if (len < 256 || ARKIME_SESSION_v6(session) || memcmp(data + 236, "\x63\x82\x53\x63", 4) != 0)
+        return;
+
+    arkime_parsers_register(session, ja4plus_dhcp_udp_parser, 0, 0);
+}
+/******************************************************************************/
+LOCAL int ja4plus_dhcpv6_udp_parser(ArkimeSession_t *session, void *UNUSED(uw), const uint8_t *data, int len, int UNUSED(which))
+{
+    if (len < 46 || data[0] == 0 ||  data[0] > 11 || !ARKIME_SESSION_v6(session))
+        return 0;
+
+    int msgType = data[0];
+
+    char maxSize[7];
+    g_strlcpy(maxSize, "00", sizeof(maxSize));
+
+    char options[1000];
+    BSB  oBSB;
+    BSB_INIT(oBSB, options, sizeof(options));
+
+    char parameters[1000];
+    BSB  pBSB;
+    BSB_INIT(pBSB, parameters, sizeof(parameters));
+
+    BSB bsb;
+    BSB_INIT(bsb, data, len);
+
+    BSB_IMPORT_skip(bsb, 4);
+    while (BSB_REMAINING(bsb) >= 4) {
+        int t = 0;
+        int l = 0;
+        BSB_IMPORT_u16(bsb, t);
+        BSB_IMPORT_u16(bsb, l);
+        if (BSB_IS_ERROR(bsb) || l > BSB_REMAINING(bsb))
+            break;
+        uint8_t *v = 0;
+        BSB_IMPORT_ptr(bsb, v, l);
+
+        if (BSB_LENGTH(oBSB) > 0) {
+            BSB_EXPORT_u08(oBSB, '-');
+        }
+        BSB_EXPORT_sprintf(oBSB, "%d", t);
+
+        switch (t) {
+        case 1:
+            snprintf(maxSize, sizeof(maxSize), "%d", l);
+            break;
+        case 6:
+            for (int i = 0; i < l; i += 2) {
+                uint16_t option;
+                memcpy(&option, v + i, 2);
+                if (i > 0) {
+                    BSB_EXPORT_u08(pBSB, '-');
+                }
+                BSB_EXPORT_sprintf(pBSB, "%d", htons(option));
+            }
+            break;
+        case 3:
+        case 25: {
+            BSB ibsb;
+            BSB_INIT(ibsb, v, l);
+            BSB_IMPORT_skip(ibsb, 12);
+            while (BSB_REMAINING(ibsb) >= 4) {
+                int it = 0;
+                int il = 0;
+                BSB_IMPORT_u16(ibsb, it);
+                BSB_IMPORT_u16(ibsb, il);
+                if (BSB_IS_ERROR(ibsb) || il > BSB_REMAINING(ibsb))
+                    break;
+                BSB_IMPORT_skip(ibsb, il);
+                if (BSB_LENGTH(oBSB) > 0) {
+                    BSB_EXPORT_u08(oBSB, '-');
+                }
+                BSB_EXPORT_sprintf(oBSB, "%d", it);
+            }
+            break;
+        }
+        } /* switch */
+    }
+
+    options[BSB_LENGTH(oBSB)] = 0;
+    if (BSB_LENGTH(pBSB) == 0) {
+        snprintf(parameters, sizeof(parameters), "00");
+    } else {
+        parameters[BSB_LENGTH(pBSB)] = 0;
+    }
+    char ja4d[2048];
+    snprintf(ja4d, sizeof(ja4d), "6-%d-%s_%s_%s", msgType, maxSize, options, parameters);
+    arkime_field_string_add(ja4dField, session, ja4d, -1, TRUE);
+
+    return 0;
+}
+/******************************************************************************/
+LOCAL void ja4plus_dhcpv6_udp_classify(ArkimeSession_t *session, const uint8_t *data, int len, int UNUSED(which), void *UNUSED(uw))
+{
+    if (len < 46 || data[0] == 0 ||  data[0] > 11 || !ARKIME_SESSION_v6(session))
+        return;
+    arkime_parsers_register(session, ja4plus_dhcpv6_udp_parser, 0, 0);
+}
+/******************************************************************************/
 void arkime_plugin_init()
 {
     LOG("JA4+ plugin loaded");
@@ -1310,8 +1489,17 @@ void arkime_plugin_init()
                                        "HTTP JA4h Raw field",
                                        ARKIME_FIELD_TYPE_STR_GHASH,  ARKIME_FIELD_FLAG_CNT,
                                        (char *)NULL);
+
+    ja4dField = arkime_field_define("dhcp", "lotermfield",
+                                    "dhcp.ja4d", "JA4d", "dhcp.ja4d",
+                                    "DHCP JA4d field",
+                                    ARKIME_FIELD_TYPE_STR_GHASH,  ARKIME_FIELD_FLAG_CNT,
+                                    (char *)NULL);
     int t;
     for (t = 0; t < config.packetThreads; t++) {
         checksums256[t] = g_checksum_new(G_CHECKSUM_SHA256);
     }
+
+    arkime_parsers_classifier_register_port("dhcpv6",  NULL, 547, ARKIME_PARSERS_PORT_UDP, ja4plus_dhcpv6_udp_classify);
+    arkime_parsers_classifier_register_port("dhcp",  NULL, 67, ARKIME_PARSERS_PORT_UDP, ja4plus_dhcp_udp_classify);
 }
