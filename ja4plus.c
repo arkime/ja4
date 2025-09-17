@@ -62,7 +62,7 @@ typedef struct {
     gchar          accept_lang[4];
 } JA4PlusHTTP_t;
 
-#define JA4PLUS_TCP_DONE (void *)1UL
+#define JA4PLUS_TCP_DONE GINT_TO_POINTER(1)
 typedef struct {
     JA4PlusTCP_t  *tcp;
     JA4PlusHTTP_t *http;
@@ -1238,7 +1238,7 @@ LOCAL int ja4plus_dhcp_udp_parser(ArkimeSession_t *session, void *UNUSED(uw), co
         BSB_IMPORT_u08(bsb, l);
         if (BSB_IS_ERROR(bsb) || l > BSB_REMAINING(bsb) || l == 0)
             break;
-        uint8_t *v = 0;
+        const uint8_t *v = 0;
         BSB_IMPORT_ptr(bsb, v, l);
 
         switch (t) {
