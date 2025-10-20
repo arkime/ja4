@@ -1208,13 +1208,38 @@ LOCAL void *ja4plus_getcb_ja4x_r(const ArkimeSession_t *session, int UNUSED(pos)
 /******************************************************************************/
 LOCAL int ja4plus_dhcp_udp_parser(ArkimeSession_t *session, void *UNUSED(uw), const uint8_t *data, int len, int UNUSED(which))
 {
+    static char *messageType[] = {
+        "00000",
+        "disco",
+        "offer",
+        "reqst",
+        "decln",
+        "dpack",
+        "dpnak",
+        "relse",
+        "infor",
+        "frenw",
+        "lqery",
+        "lunas",
+        "lunkn",
+        "lactv",
+        "blklq",
+        "lqdon",
+        "actlq",
+        "lqsta",
+        "dhtls"
+    };
+
+
     if (len < 256 || (data[0] != 1 && data[0] != 2) || ARKIME_SESSION_v6(session) || memcmp(data + 236, "\x63\x82\x53\x63", 4) != 0)
         return 0;
 
     int msgType = 0;
+    char requestIp = 'n';
+    char fqdn = 'n';
 
     char maxSize[7];
-    g_strlcpy(maxSize, "00", sizeof(maxSize));
+    g_strlcpy(maxSize, "0000", sizeof(maxSize));
 
     char options[1000];
     BSB  oBSB;
@@ -1242,6 +1267,9 @@ LOCAL int ja4plus_dhcp_udp_parser(ArkimeSession_t *session, void *UNUSED(uw), co
         BSB_IMPORT_ptr(bsb, v, l);
 
         switch (t) {
+        case 50:
+            requestIp = 'i';
+            continue;
         case 53:
             msgType = v[0];
             continue;
@@ -1257,9 +1285,12 @@ LOCAL int ja4plus_dhcp_udp_parser(ArkimeSession_t *session, void *UNUSED(uw), co
             if (l == 2) {
                 uint16_t size = 0;
                 memcpy(&size, v, 2);
-                snprintf(maxSize, sizeof(maxSize), "%d", htons(size));
+                snprintf(maxSize, sizeof(maxSize), "%04d", htons(size));
             }
             break;
+        case 81:
+            fqdn = 'd';
+            continue;
         } /* switch */
 
         if (BSB_LENGTH(oBSB) > 0) {
@@ -1275,7 +1306,11 @@ LOCAL int ja4plus_dhcp_udp_parser(ArkimeSession_t *session, void *UNUSED(uw), co
         parameters[BSB_LENGTH(pBSB)] = 0;
     }
     char ja4d[2048];
-    snprintf(ja4d, sizeof(ja4d), "4-%d-%s_%s_%s", msgType, maxSize, options, parameters);
+    if (msgType <= 18)
+        snprintf(ja4d, sizeof(ja4d), "4%s%s%c%c_%s_%s", messageType[msgType], maxSize, requestIp, fqdn, options, parameters);
+    else
+        snprintf(ja4d, sizeof(ja4d), "4%05d%s%c%c_%s_%s", msgType, maxSize, requestIp, fqdn, options, parameters);
+
     arkime_field_string_add(ja4dField, session, ja4d, -1, TRUE);
 
     return 0;
@@ -1292,13 +1327,57 @@ LOCAL void ja4plus_dhcp_udp_classify(ArkimeSession_t *session, const uint8_t *da
 /******************************************************************************/
 LOCAL int ja4plus_dhcpv6_udp_parser(ArkimeSession_t *session, void *UNUSED(uw), const uint8_t *data, int len, int UNUSED(which))
 {
+    static char *messageType[] = {
+        "00000",
+        "solct",
+        "advrt",
+        "reqst",
+        "confm",
+        "renew",
+        "rebnd",
+        "reply",
+        "relse",
+        "decln",
+        "recon",
+        "inreq",
+        "rlayf",
+        "rlayr",
+        "query",
+        "qrply",
+        "qdone",
+        "qdata",
+        "rereq",
+        "rrply",
+        "v4qry",
+        "v4res",
+        "acqry",
+        "sttls",
+        "bdudp",
+        "brply",
+        "poreq",
+        "pores",
+        "urqst",
+        "ureqa",
+        "udone",
+        "conne",
+        "connr",
+        "dconn",
+        "state",
+        "conta",
+        "arinf",
+        "arrep"
+    };
+
+
     if (len < 46 || data[0] == 0 ||  data[0] > 11 || !ARKIME_SESSION_v6(session))
         return 0;
 
     int msgType = data[0];
+    char requestIp = 'n';
+    char fqdn = 'n';
 
     char maxSize[7];
-    g_strlcpy(maxSize, "00", sizeof(maxSize));
+    g_strlcpy(maxSize, "0000", sizeof(maxSize));
 
     char options[1000];
     BSB  oBSB;
@@ -1329,7 +1408,7 @@ LOCAL int ja4plus_dhcpv6_udp_parser(ArkimeSession_t *session, void *UNUSED(uw), 
 
         switch (t) {
         case 1:
-            snprintf(maxSize, sizeof(maxSize), "%d", l);
+            snprintf(maxSize, sizeof(maxSize), "%04d", l);
             break;
         case 6:
             for (int i = 0; i < l; i += 2) {
@@ -1358,7 +1437,19 @@ LOCAL int ja4plus_dhcpv6_udp_parser(ArkimeSession_t *session, void *UNUSED(uw), 
                     BSB_EXPORT_u08(oBSB, '-');
                 }
                 BSB_EXPORT_sprintf(oBSB, "%d", it);
+                if (t == 3 && it == 3) {
+                    requestIp = 'i';
+                }
             }
+            break;
+        }
+        case 39: {
+            uint16_t flags = 0;
+            BSB ibsb;
+            BSB_INIT(ibsb, v, l);
+            BSB_IMPORT_u16(ibsb, flags);
+            if (!BSB_IS_ERROR(ibsb) && flags == 0)
+                fqdn = 'd';
             break;
         }
         } /* switch */
@@ -1371,7 +1462,10 @@ LOCAL int ja4plus_dhcpv6_udp_parser(ArkimeSession_t *session, void *UNUSED(uw), 
         parameters[BSB_LENGTH(pBSB)] = 0;
     }
     char ja4d[2048];
-    snprintf(ja4d, sizeof(ja4d), "6-%d-%s_%s_%s", msgType, maxSize, options, parameters);
+    if (msgType <= 18)
+        snprintf(ja4d, sizeof(ja4d), "6%s%s%c%c_%s_%s", messageType[msgType], maxSize, requestIp, fqdn, options, parameters);
+    else
+        snprintf(ja4d, sizeof(ja4d), "6%05d%s%c%c_%s_%s", msgType, maxSize, requestIp, fqdn, options, parameters);
     arkime_field_string_add(ja4dField, session, ja4d, -1, TRUE);
 
     return 0;
