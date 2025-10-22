@@ -25,6 +25,7 @@ LOCAL int                    ja4tsField;
 LOCAL int                    ja4hField;
 LOCAL int                    ja4hRawField;
 LOCAL int                    ja4dField;
+LOCAL int                    ja4d6Field;
 
 
 LOCAL int                    ja4plus_plugin_num;
@@ -1307,9 +1308,9 @@ LOCAL int ja4plus_dhcp_udp_parser(ArkimeSession_t *session, void *UNUSED(uw), co
     }
     char ja4d[2048];
     if (msgType <= 18)
-        snprintf(ja4d, sizeof(ja4d), "4%s%s%c%c_%s_%s", messageType[msgType], maxSize, requestIp, fqdn, options, parameters);
+        snprintf(ja4d, sizeof(ja4d), "%s%s%c%c_%s_%s", messageType[msgType], maxSize, requestIp, fqdn, options, parameters);
     else
-        snprintf(ja4d, sizeof(ja4d), "4%05d%s%c%c_%s_%s", msgType, maxSize, requestIp, fqdn, options, parameters);
+        snprintf(ja4d, sizeof(ja4d), "%05d%s%c%c_%s_%s", msgType, maxSize, requestIp, fqdn, options, parameters);
 
     arkime_field_string_add(ja4dField, session, ja4d, -1, TRUE);
 
@@ -1461,12 +1462,12 @@ LOCAL int ja4plus_dhcpv6_udp_parser(ArkimeSession_t *session, void *UNUSED(uw), 
     } else {
         parameters[BSB_LENGTH(pBSB)] = 0;
     }
-    char ja4d[2048];
+    char ja4d6[2048];
     if (msgType <= 18)
-        snprintf(ja4d, sizeof(ja4d), "6%s%s%c%c_%s_%s", messageType[msgType], maxSize, requestIp, fqdn, options, parameters);
+        snprintf(ja4d6, sizeof(ja4d6), "%s%s%c%c_%s_%s", messageType[msgType], maxSize, requestIp, fqdn, options, parameters);
     else
-        snprintf(ja4d, sizeof(ja4d), "6%05d%s%c%c_%s_%s", msgType, maxSize, requestIp, fqdn, options, parameters);
-    arkime_field_string_add(ja4dField, session, ja4d, -1, TRUE);
+        snprintf(ja4d6, sizeof(ja4d6), "%05d%s%c%c_%s_%s", msgType, maxSize, requestIp, fqdn, options, parameters);
+    arkime_field_string_add(ja4d6Field, session, ja4d6, -1, TRUE);
 
     return 0;
 }
@@ -1587,6 +1588,12 @@ void arkime_plugin_init()
     ja4dField = arkime_field_define("dhcp", "lotermfield",
                                     "dhcp.ja4d", "JA4d", "dhcp.ja4d",
                                     "DHCP JA4d field",
+                                    ARKIME_FIELD_TYPE_STR_GHASH,  ARKIME_FIELD_FLAG_CNT,
+                                    (char *)NULL);
+
+    ja4d6Field = arkime_field_define("dhcp", "lotermfield",
+                                    "dhcp.ja4d6", "JA4d6", "dhcp.ja4d6",
+                                    "DHCP JA4d6 field",
                                     ARKIME_FIELD_TYPE_STR_GHASH,  ARKIME_FIELD_FLAG_CNT,
                                     (char *)NULL);
     int t;
