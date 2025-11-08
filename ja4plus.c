@@ -1207,7 +1207,7 @@ LOCAL void *ja4plus_getcb_ja4x_r(const ArkimeSession_t *session, int UNUSED(pos)
 #endif
 }
 /******************************************************************************/
-LOCAL int ja4plus_dhcp_udp_parser(ArkimeSession_t *session, void *UNUSED(uw), const uint8_t *data, int len, int UNUSED(which))
+LOCAL int ja4plus_dhcp_udp_parser(ArkimeSession_t *session, void *UNUSED(uw), const uint8_t *data, int len)
 {
     static char *messageType[] = {
         "00000",
@@ -1316,17 +1316,9 @@ LOCAL int ja4plus_dhcp_udp_parser(ArkimeSession_t *session, void *UNUSED(uw), co
 
     return 0;
 }
-/******************************************************************************/
-LOCAL void ja4plus_dhcp_udp_classify(ArkimeSession_t *session, const uint8_t *data, int len, int UNUSED(which), void *UNUSED(uw))
-{
 
-    if (len < 256 || ARKIME_SESSION_v6(session) || memcmp(data + 236, "\x63\x82\x53\x63", 4) != 0)
-        return;
-
-    arkime_parsers_register(session, ja4plus_dhcp_udp_parser, 0, 0);
-}
 /******************************************************************************/
-LOCAL int ja4plus_dhcpv6_udp_parser(ArkimeSession_t *session, void *UNUSED(uw), const uint8_t *data, int len, int UNUSED(which))
+LOCAL int ja4plus_dhcpv6_udp_parser(ArkimeSession_t *session, void *UNUSED(uw), const uint8_t *data, int len)
 {
     static char *messageType[] = {
         "00000",
@@ -1370,7 +1362,7 @@ LOCAL int ja4plus_dhcpv6_udp_parser(ArkimeSession_t *session, void *UNUSED(uw), 
     };
 
 
-    if (len < 46 || data[0] == 0 ||  data[0] > 11 || !ARKIME_SESSION_v6(session))
+    if (len < 46 || data[0] == 0 ||  data[0] > 11)
         return 0;
 
     int msgType = data[0];
@@ -1472,11 +1464,13 @@ LOCAL int ja4plus_dhcpv6_udp_parser(ArkimeSession_t *session, void *UNUSED(uw), 
     return 0;
 }
 /******************************************************************************/
-LOCAL void ja4plus_dhcpv6_udp_classify(ArkimeSession_t *session, const uint8_t *data, int len, int UNUSED(which), void *UNUSED(uw))
+LOCAL uint32_t ja4plus_dhcp_packet(ArkimeSession_t *session, const uint8_t *d, int l, void UNUSED(*uw))
 {
-    if (len < 46 || data[0] == 0 ||  data[0] > 11 || !ARKIME_SESSION_v6(session))
-        return;
-    arkime_parsers_register(session, ja4plus_dhcpv6_udp_parser, 0, 0);
+    if (IN6_IS_ADDR_V4MAPPED(&session->addr1)) {
+        return ja4plus_dhcp_udp_parser(session, NULL, d, l);
+    } else {
+        return ja4plus_dhcpv6_udp_parser(session, NULL, d, l);
+    }
 }
 /******************************************************************************/
 void arkime_plugin_init()
@@ -1513,6 +1507,7 @@ void arkime_plugin_init()
     arkime_parsers_add_named_func("tls_process_certificate_wInfo", ja4plus_process_certificate_wInfo);
     arkime_parsers_add_named_func("ssh_counting200", ja4plus_ssh_ja4ssh);
     arkime_parsers_add_named_func("tcp_raw_packet", ja4plus_tcp_raw_packet);
+    arkime_parsers_add_named_func("dhcp_packet", ja4plus_dhcp_packet);
 
     ja4sField = arkime_field_define("tls", "lotermfield",
                                     "tls.ja4s", "JA4s", "tls.ja4s",
@@ -1592,15 +1587,12 @@ void arkime_plugin_init()
                                     (char *)NULL);
 
     ja4d6Field = arkime_field_define("dhcp", "lotermfield",
-                                    "dhcp.ja4d6", "JA4d6", "dhcp.ja4d6",
-                                    "DHCP JA4d6 field",
-                                    ARKIME_FIELD_TYPE_STR_GHASH,  ARKIME_FIELD_FLAG_CNT,
-                                    (char *)NULL);
+                                     "dhcp.ja4d6", "JA4d6", "dhcp.ja4d6",
+                                     "DHCP JA4d6 field",
+                                     ARKIME_FIELD_TYPE_STR_GHASH,  ARKIME_FIELD_FLAG_CNT,
+                                     (char *)NULL);
     int t;
     for (t = 0; t < config.packetThreads; t++) {
         checksums256[t] = g_checksum_new(G_CHECKSUM_SHA256);
     }
-
-    arkime_parsers_classifier_register_port("dhcpv6",  NULL, 547, ARKIME_PARSERS_PORT_UDP, ja4plus_dhcpv6_udp_classify);
-    arkime_parsers_classifier_register_port("dhcp",  NULL, 67, ARKIME_PARSERS_PORT_UDP, ja4plus_dhcp_udp_classify);
 }
