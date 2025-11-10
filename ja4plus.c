@@ -1404,7 +1404,7 @@ LOCAL int ja4plus_dhcpv6_udp_parser(ArkimeSession_t *session, void *UNUSED(uw), 
             snprintf(maxSize, sizeof(maxSize), "%04d", l);
             break;
         case 6:
-            for (int i = 0; i < l; i += 2) {
+            for (int i = 0; i < l - 1; i += 2) {
                 uint16_t option;
                 memcpy(&option, v + i, 2);
                 if (i > 0) {
