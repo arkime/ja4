@@ -1209,7 +1209,7 @@ LOCAL void *ja4plus_getcb_ja4x_r(const ArkimeSession_t *session, int UNUSED(pos)
 /******************************************************************************/
 LOCAL int ja4plus_dhcp_udp_parser(ArkimeSession_t *session, void *UNUSED(uw), const uint8_t *data, int len)
 {
-    static char *messageType[] = {
+    static const char *messageType[] = {
         "00000",
         "disco",
         "offer",
@@ -1301,13 +1301,13 @@ LOCAL int ja4plus_dhcp_udp_parser(ArkimeSession_t *session, void *UNUSED(uw), co
     }
 
     options[BSB_LENGTH(oBSB)] = 0;
-    if (BSB_LENGTH(pBSB) == 0) {
+    if (BSB_LENGTH(pBSB) <= 0) {
         snprintf(parameters, sizeof(parameters), "00");
     } else {
-        parameters[BSB_LENGTH(pBSB)] = 0;
+        parameters[MIN(sizeof(parameters) - 1, (unsigned long)BSB_LENGTH(pBSB))] = 0;
     }
     char ja4d[2048];
-    if (msgType <= 18)
+    if (msgType < ARRAY_LEN(messageType))
         snprintf(ja4d, sizeof(ja4d), "%s%s%c%c_%s_%s", messageType[msgType], maxSize, requestIp, fqdn, options, parameters);
     else
         snprintf(ja4d, sizeof(ja4d), "%05d%s%c%c_%s_%s", msgType, maxSize, requestIp, fqdn, options, parameters);
@@ -1320,7 +1320,7 @@ LOCAL int ja4plus_dhcp_udp_parser(ArkimeSession_t *session, void *UNUSED(uw), co
 /******************************************************************************/
 LOCAL int ja4plus_dhcpv6_udp_parser(ArkimeSession_t *session, void *UNUSED(uw), const uint8_t *data, int len)
 {
-    static char *messageType[] = {
+    static const char *messageType[] = {
         "00000",
         "solct",
         "advrt",
@@ -1449,13 +1449,13 @@ LOCAL int ja4plus_dhcpv6_udp_parser(ArkimeSession_t *session, void *UNUSED(uw), 
     }
 
     options[BSB_LENGTH(oBSB)] = 0;
-    if (BSB_LENGTH(pBSB) == 0) {
+    if (BSB_LENGTH(pBSB) <= 0) {
         snprintf(parameters, sizeof(parameters), "00");
     } else {
-        parameters[BSB_LENGTH(pBSB)] = 0;
+        parameters[MIN(sizeof(parameters) - 1, (unsigned long)BSB_LENGTH(pBSB))] = 0;
     }
     char ja4d6[2048];
-    if (msgType <= 18)
+    if (msgType < ARRAY_LEN(messageType))
         snprintf(ja4d6, sizeof(ja4d6), "%s%s%c%c_%s_%s", messageType[msgType], maxSize, requestIp, fqdn, options, parameters);
     else
         snprintf(ja4d6, sizeof(ja4d6), "%05d%s%c%c_%s_%s", msgType, maxSize, requestIp, fqdn, options, parameters);
