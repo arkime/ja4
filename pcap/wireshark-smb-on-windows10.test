@@ -32,7 +32,7 @@
             "initRTT" : 6,
             "ipProtocol" : 6,
             "lastPacket" : 1476605364001,
-            "length" : 12,
+            "length" : 11,
             "network" : {
                "bytes" : 1935,
                "community_id" : "1:lQu4eItRVzJPMdKYJOGUd2KVJeY=",
@@ -65,6 +65,10 @@
                1995,
                2065
             ],
+            "packetRange" : {
+               "gte" : 1476605363990,
+               "lte" : 1476605364001
+            },
             "protocol" : [
                "tcp"
             ],
@@ -159,7 +163,7 @@
             "initRTT" : 32,
             "ipProtocol" : 6,
             "lastPacket" : 1476605374755,
-            "length" : 10723,
+            "length" : 10724,
             "network" : {
                "bytes" : 3490,
                "community_id" : "1:PowNG+/w9R70G1zQYppCilWCIbA=",
@@ -218,6 +222,10 @@
                5869,
                5939
             ],
+            "packetRange" : {
+               "gte" : 1476605364031,
+               "lte" : 1476605374755
+            },
             "protocol" : [
                "tcp"
             ],
@@ -313,7 +321,7 @@
             "initRTT" : 0,
             "ipProtocol" : 6,
             "lastPacket" : 1476605590447,
-            "length" : 39,
+            "length" : 40,
             "network" : {
                "bytes" : 3220,
                "community_id" : "1:7EjKwu6VE2HejmmkTkVsoQRRkj0=",
@@ -348,6 +356,10 @@
                9204,
                9351
             ],
+            "packetRange" : {
+               "gte" : 1476605590407,
+               "lte" : 1476605590447
+            },
             "protocol" : [
                "smb",
                "tcp"
@@ -478,6 +490,10 @@
                11865,
                12012
             ],
+            "packetRange" : {
+               "gte" : 1476605590466,
+               "lte" : 1476605590475
+            },
             "protocol" : [
                "smb",
                "tcp"
@@ -577,7 +593,7 @@
             "initRTT" : 0,
             "ipProtocol" : 6,
             "lastPacket" : 1476605590486,
-            "length" : 8,
+            "length" : 9,
             "network" : {
                "bytes" : 2501,
                "community_id" : "1:3D68jHlALqsdpOsFfp8ihYNK5MQ=",
@@ -608,6 +624,10 @@
                14526,
                14673
             ],
+            "packetRange" : {
+               "gte" : 1476605590477,
+               "lte" : 1476605590486
+            },
             "protocol" : [
                "smb",
                "tcp"
@@ -707,7 +727,7 @@
             "initRTT" : 0,
             "ipProtocol" : 6,
             "lastPacket" : 1476605590497,
-            "length" : 7,
+            "length" : 8,
             "network" : {
                "bytes" : 2501,
                "community_id" : "1:/nskZOe9Zhua0NmhHfb58gTs3QU=",
@@ -738,6 +758,10 @@
                17187,
                17334
             ],
+            "packetRange" : {
+               "gte" : 1476605590489,
+               "lte" : 1476605590497
+            },
             "protocol" : [
                "smb",
                "tcp"
@@ -872,6 +896,10 @@
                20611,
                20758
             ],
+            "packetRange" : {
+               "gte" : 1476605609916,
+               "lte" : 1476605609933
+            },
             "protocol" : [
                "smb",
                "tcp"
@@ -1054,6 +1082,10 @@
                28990,
                29061
             ],
+            "packetRange" : {
+               "gte" : 1476605761415,
+               "lte" : 1476605881504
+            },
             "protocol" : [
                "smb",
                "tcp"

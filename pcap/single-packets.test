@@ -122,6 +122,10 @@
             "packetPos" : [
                24
             ],
+            "packetRange" : {
+               "gte" : 1532525510773,
+               "lte" : 1532525510773
+            },
             "protocol" : [
                "http",
                "tcp"
@@ -328,6 +332,10 @@
             "packetPos" : [
                668
             ],
+            "packetRange" : {
+               "gte" : 1532525512112,
+               "lte" : 1532525512112
+            },
             "protocol" : [
                "http",
                "tcp"
@@ -496,6 +504,10 @@
             "packetPos" : [
                2062
             ],
+            "packetRange" : {
+               "gte" : 1532525512547,
+               "lte" : 1532525512547
+            },
             "protocol" : [
                "http",
                "tcp"
@@ -687,6 +699,10 @@
             "packetPos" : [
                2532
             ],
+            "packetRange" : {
+               "gte" : 1532525514170,
+               "lte" : 1532525514170
+            },
             "protocol" : [
                "http",
                "tcp"
@@ -883,6 +899,10 @@
             "packetPos" : [
                3218
             ],
+            "packetRange" : {
+               "gte" : 1532525525879,
+               "lte" : 1532525525879
+            },
             "protocol" : [
                "http",
                "tcp"
@@ -1088,6 +1108,10 @@
             "packetPos" : [
                3866
             ],
+            "packetRange" : {
+               "gte" : 1532525528386,
+               "lte" : 1532525528386
+            },
             "protocol" : [
                "http",
                "tcp"
@@ -1259,6 +1283,10 @@
             "packetPos" : [
                4698
             ],
+            "packetRange" : {
+               "gte" : 1532525533174,
+               "lte" : 1532525533174
+            },
             "protocol" : [
                "http",
                "tcp"
@@ -1454,6 +1482,10 @@
             "packetPos" : [
                5272
             ],
+            "packetRange" : {
+               "gte" : 1532525534767,
+               "lte" : 1532525534767
+            },
             "protocol" : [
                "http",
                "tcp"
@@ -1592,6 +1624,10 @@
             "packetPos" : [
                6213
             ],
+            "packetRange" : {
+               "gte" : 1532525539024,
+               "lte" : 1532525539024
+            },
             "protocol" : [
                "http",
                "tcp"

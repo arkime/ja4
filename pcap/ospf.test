@@ -49,6 +49,10 @@
             "packetPos" : [
                24
             ],
+            "packetRange" : {
+               "gte" : 1571662508236,
+               "lte" : 1571662508236
+            },
             "protocol" : [
                "syslog",
                "udp"
@@ -120,7 +124,7 @@
             "firstPacket" : 1571662508569,
             "ipProtocol" : 103,
             "lastPacket" : 1571662612317,
-            "length" : 103749,
+            "length" : 103748,
             "network" : {
                "bytes" : 13804,
                "packets" : 203
@@ -536,6 +540,10 @@
                112432,
                114334
             ],
+            "packetRange" : {
+               "gte" : 1571662508569,
+               "lte" : 1571662612317
+            },
             "protocol" : [
                "pim"
             ],
@@ -611,7 +619,7 @@
             "firstPacket" : 1571662508795,
             "ipProtocol" : 89,
             "lastPacket" : 1571662609191,
-            "length" : 100397,
+            "length" : 100396,
             "network" : {
                "bytes" : 4876,
                "packets" : 54
@@ -729,6 +737,10 @@
                110103,
                110285
             ],
+            "packetRange" : {
+               "gte" : 1571662508795,
+               "lte" : 1571662609191
+            },
             "protocol" : [
                "ospf"
             ],
@@ -953,6 +965,10 @@
                112516,
                114046
             ],
+            "packetRange" : {
+               "gte" : 1571662509461,
+               "lte" : 1571662612261
+            },
             "protocol" : [
                "isis"
             ],
@@ -1025,6 +1041,10 @@
                83684,
                101939
             ],
+            "packetRange" : {
+               "gte" : 1571662511903,
+               "lte" : 1571662601886
+            },
             "protocol" : [
                "lldp"
             ],
@@ -1102,6 +1122,10 @@
             "packetPos" : [
                8060
             ],
+            "packetRange" : {
+               "gte" : 1571662515683,
+               "lte" : 1571662515683
+            },
             "protocol" : [
                "tcp"
             ],
@@ -1244,6 +1268,10 @@
                72788,
                73056
             ],
+            "packetRange" : {
+               "gte" : 1571662515687,
+               "lte" : 1571662576902
+            },
             "protocol" : [
                "icmp"
             ],
@@ -1307,7 +1335,7 @@
             "firstPacket" : 1571662521545,
             "ipProtocol" : 6,
             "lastPacket" : 1571662581526,
-            "length" : 59982,
+            "length" : 59981,
             "network" : {
                "bytes" : 217,
                "community_id" : "1:JIBYd0nkQ+UkLGn+xWIqRaO7GJE=",
@@ -1324,6 +1352,10 @@
                48587,
                79226
             ],
+            "packetRange" : {
+               "gte" : 1571662521545,
+               "lte" : 1571662581526
+            },
             "protocol" : [
                "tcp"
             ],
@@ -1400,7 +1432,7 @@
             "firstPacket" : 1571662538526,
             "ipProtocol" : 6,
             "lastPacket" : 1571662598506,
-            "length" : 59981,
+            "length" : 59980,
             "network" : {
                "bytes" : 217,
                "community_id" : "1:dKsI1tGUA4VrhlTRxJK45S2SfEs=",
@@ -1417,6 +1449,10 @@
                46445,
                98003
             ],
+            "packetRange" : {
+               "gte" : 1571662538526,
+               "lte" : 1571662598506
+            },
             "protocol" : [
                "tcp"
             ],
@@ -1501,7 +1537,7 @@
             "firstPacket" : 1571662548073,
             "ipProtocol" : 6,
             "lastPacket" : 1571662610443,
-            "length" : 62369,
+            "length" : 62370,
             "network" : {
                "bytes" : 604,
                "community_id" : "1:tqiALxHxk3fn9otJ1Y+Kp9SkxtI=",
@@ -1528,6 +1564,10 @@
                112081,
                112182
             ],
+            "packetRange" : {
+               "gte" : 1571662548073,
+               "lte" : 1571662610443
+            },
             "protocol" : [
                "tcp"
             ],
@@ -1623,6 +1663,10 @@
             "packetPos" : [
                58410
             ],
+            "packetRange" : {
+               "gte" : 1571662567185,
+               "lte" : 1571662567185
+            },
             "protocol" : [
                "tcp"
             ],
@@ -1725,6 +1769,10 @@
             "packetPos" : [
                58678
             ],
+            "packetRange" : {
+               "gte" : 1571662567189,
+               "lte" : 1571662567189
+            },
             "protocol" : [
                "tcp"
             ],
@@ -1827,6 +1875,10 @@
             "packetPos" : [
                58946
             ],
+            "packetRange" : {
+               "gte" : 1571662567192,
+               "lte" : 1571662567192
+            },
             "protocol" : [
                "tcp"
             ],
@@ -1929,6 +1981,10 @@
             "packetPos" : [
                59214
             ],
+            "packetRange" : {
+               "gte" : 1571662567195,
+               "lte" : 1571662567195
+            },
             "protocol" : [
                "tcp"
             ],
@@ -2034,6 +2090,10 @@
             "packetPos" : [
                59482
             ],
+            "packetRange" : {
+               "gte" : 1571662567263,
+               "lte" : 1571662567263
+            },
             "protocol" : [
                "tcp"
             ],
@@ -2139,6 +2199,10 @@
             "packetPos" : [
                59750
             ],
+            "packetRange" : {
+               "gte" : 1571662567268,
+               "lte" : 1571662567268
+            },
             "protocol" : [
                "tcp"
             ],
@@ -2244,6 +2308,10 @@
             "packetPos" : [
                60018
             ],
+            "packetRange" : {
+               "gte" : 1571662567273,
+               "lte" : 1571662567273
+            },
             "protocol" : [
                "tcp"
             ],
@@ -2349,6 +2417,10 @@
             "packetPos" : [
                60286
             ],
+            "packetRange" : {
+               "gte" : 1571662567276,
+               "lte" : 1571662567276
+            },
             "protocol" : [
                "tcp"
             ],
@@ -2454,6 +2526,10 @@
             "packetPos" : [
                60554
             ],
+            "packetRange" : {
+               "gte" : 1571662567279,
+               "lte" : 1571662567279
+            },
             "protocol" : [
                "tcp"
             ],
@@ -2559,6 +2635,10 @@
             "packetPos" : [
                60822
             ],
+            "packetRange" : {
+               "gte" : 1571662567282,
+               "lte" : 1571662567282
+            },
             "protocol" : [
                "tcp"
             ],
@@ -2669,6 +2749,10 @@
                65352,
                65454
             ],
+            "packetRange" : {
+               "gte" : 1571662572190,
+               "lte" : 1571662572192
+            },
             "protocol" : [
                "icmp"
             ],
@@ -2751,6 +2835,10 @@
             "packetPos" : [
                65744
             ],
+            "packetRange" : {
+               "gte" : 1571662572491,
+               "lte" : 1571662572491
+            },
             "protocol" : [
                "ntp",
                "udp"
@@ -2842,6 +2930,10 @@
             "packetPos" : [
                66044
             ],
+            "packetRange" : {
+               "gte" : 1571662572665,
+               "lte" : 1571662572665
+            },
             "protocol" : [
                "tcp"
             ],
@@ -2947,6 +3039,10 @@
             "packetPos" : [
                68178
             ],
+            "packetRange" : {
+               "gte" : 1571662574339,
+               "lte" : 1571662574339
+            },
             "protocol" : [
                "ntp",
                "udp"
@@ -3038,6 +3134,10 @@
             "packetPos" : [
                71706
             ],
+            "packetRange" : {
+               "gte" : 1571662575795,
+               "lte" : 1571662575795
+            },
             "protocol" : [
                "tcp"
             ],
@@ -3140,6 +3240,10 @@
             "packetPos" : [
                72142
             ],
+            "packetRange" : {
+               "gte" : 1571662576891,
+               "lte" : 1571662576891
+            },
             "protocol" : [
                "tcp"
             ],
@@ -3242,6 +3346,10 @@
             "packetPos" : [
                72410
             ],
+            "packetRange" : {
+               "gte" : 1571662576896,
+               "lte" : 1571662576896
+            },
             "protocol" : [
                "tcp"
             ],
@@ -3344,6 +3452,10 @@
             "packetPos" : [
                72678
             ],
+            "packetRange" : {
+               "gte" : 1571662576898,
+               "lte" : 1571662576898
+            },
             "protocol" : [
                "tcp"
             ],
@@ -3446,6 +3558,10 @@
             "packetPos" : [
                72946
             ],
+            "packetRange" : {
+               "gte" : 1571662576901,
+               "lte" : 1571662576901
+            },
             "protocol" : [
                "tcp"
             ],
@@ -3558,6 +3674,10 @@
                87517,
                88776
             ],
+            "packetRange" : {
+               "gte" : 1571662578777,
+               "lte" : 1571662589211
+            },
             "protocol" : [
                "syslog",
                "udp"
@@ -3650,6 +3770,10 @@
             "packetPos" : [
                89675
             ],
+            "packetRange" : {
+               "gte" : 1571662591197,
+               "lte" : 1571662591197
+            },
             "protocol" : [
                "icmp"
             ],
@@ -3706,7 +3830,7 @@
             "firstPacket" : 1571662595101,
             "ipProtocol" : 2,
             "lastPacket" : 1571662599715,
-            "length" : 4613,
+            "length" : 4614,
             "network" : {
                "bytes" : 188,
                "packets" : 3
@@ -3722,6 +3846,10 @@
                97843,
                99979
             ],
+            "packetRange" : {
+               "gte" : 1571662595101,
+               "lte" : 1571662599715
+            },
             "protocol" : [
                "igmp"
             ],

@@ -55,6 +55,10 @@
                176,
                252
             ],
+            "packetRange" : {
+               "gte" : 1093521678945,
+               "lte" : 1093521678945
+            },
             "protocol" : [
                "tcp"
             ],
@@ -230,6 +234,10 @@
                3594,
                3670
             ],
+            "packetRange" : {
+               "gte" : 1093521681696,
+               "lte" : 1093522067391
+            },
             "protocol" : [
                "modbus",
                "tcp"
@@ -323,7 +331,7 @@
             "initRTT" : 0,
             "ipProtocol" : 6,
             "lastPacket" : 1093521976747,
-            "length" : 23256,
+            "length" : 23257,
             "modbus" : {
                "funccode" : [
                   43
@@ -368,6 +376,10 @@
                2940,
                3016
             ],
+            "packetRange" : {
+               "gte" : 1093521953490,
+               "lte" : 1093521976747
+            },
             "protocol" : [
                "modbus",
                "tcp"
@@ -467,7 +479,7 @@
             "initRTT" : 0,
             "ipProtocol" : 6,
             "lastPacket" : 1093522503198,
-            "length" : 177095,
+            "length" : 177096,
             "modbus" : {
                "funccode" : [
                   "1",
@@ -543,6 +555,10 @@
                5567,
                5643
             ],
+            "packetRange" : {
+               "gte" : 1093522326102,
+               "lte" : 1093522503198
+            },
             "protocol" : [
                "modbus",
                "tcp"
@@ -636,7 +652,7 @@
             "initRTT" : 0,
             "ipProtocol" : 6,
             "lastPacket" : 1093523023116,
-            "length" : 76563,
+            "length" : 76562,
             "network" : {
                "bytes" : 1806,
                "community_id" : "1:wIutTfE+u89XTDjHPTfWqx+x6Ss=",
@@ -677,6 +693,10 @@
                7613,
                7689
             ],
+            "packetRange" : {
+               "gte" : 1093522946554,
+               "lte" : 1093523023116
+            },
             "protocol" : [
                "tcp"
             ],
@@ -853,6 +873,10 @@
                10029,
                10105
             ],
+            "packetRange" : {
+               "gte" : 1093523065562,
+               "lte" : 1093523220676
+            },
             "protocol" : [
                "modbus",
                "tcp"
@@ -1814,6 +1838,10 @@
                37760,
                37839
             ],
+            "packetRange" : {
+               "gte" : 1153491879610,
+               "lte" : 1153491974091
+            },
             "protocol" : [
                "modbus",
                "tcp"
@@ -3727,6 +3755,10 @@
                154239,
                154321
             ],
+            "packetRange" : {
+               "gte" : 1342774499588,
+               "lte" : 1342774524572
+            },
             "protocol" : [
                "modbus",
                "tcp"
