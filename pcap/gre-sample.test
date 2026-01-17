@@ -116,7 +116,9 @@
                },
                "bytes" : 488,
                "geo" : {
-                  "country_iso_code" : "US"
+                  "city_name" : "Newport",
+                  "country_iso_code" : "US",
+                  "region_iso_code" : "PA"
                },
                "ip" : "66.59.111.190",
                "mac" : [
@@ -261,7 +263,9 @@
                },
                "bytes" : 114,
                "geo" : {
-                  "country_iso_code" : "US"
+                  "city_name" : "Newport",
+                  "country_iso_code" : "US",
+                  "region_iso_code" : "PA"
                },
                "ip" : "66.59.111.190",
                "mac" : [
@@ -442,7 +446,9 @@
                },
                "bytes" : 2040,
                "geo" : {
-                  "country_iso_code" : "US"
+                  "city_name" : "Newport",
+                  "country_iso_code" : "US",
+                  "region_iso_code" : "PA"
                },
                "ip" : "66.59.111.190",
                "mac" : [
@@ -632,7 +638,9 @@
                },
                "bytes" : 198,
                "geo" : {
-                  "country_iso_code" : "US"
+                  "city_name" : "Newport",
+                  "country_iso_code" : "US",
+                  "region_iso_code" : "PA"
                },
                "ip" : "66.59.111.190",
                "mac" : [
@@ -693,7 +701,9 @@
                },
                "bytes" : 114,
                "geo" : {
-                  "country_iso_code" : "US"
+                  "city_name" : "Newport",
+                  "country_iso_code" : "US",
+                  "region_iso_code" : "PA"
                },
                "ip" : "66.59.111.182",
                "mac" : [
@@ -774,7 +784,9 @@
                },
                "bytes" : 114,
                "geo" : {
-                  "country_iso_code" : "US"
+                  "city_name" : "Newport",
+                  "country_iso_code" : "US",
+                  "region_iso_code" : "PA"
                },
                "ip" : "66.59.111.190",
                "mac" : [
@@ -843,7 +855,9 @@
                },
                "bytes" : 114,
                "geo" : {
-                  "country_iso_code" : "US"
+                  "city_name" : "Hanover",
+                  "country_iso_code" : "US",
+                  "region_iso_code" : "NH"
                },
                "ip" : "129.170.17.4",
                "mac" : [
@@ -924,7 +938,9 @@
                },
                "bytes" : 114,
                "geo" : {
-                  "country_iso_code" : "US"
+                  "city_name" : "Newport",
+                  "country_iso_code" : "US",
+                  "region_iso_code" : "PA"
                },
                "ip" : "66.59.111.190",
                "mac" : [

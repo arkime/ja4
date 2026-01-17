@@ -1081,7 +1081,7 @@ LOCAL uint32_t ja4plus_tcp_raw_packet(ArkimeSession_t *session, const uint8_t *U
     }
 
     ArkimePacket_t      *packet = (ArkimePacket_t *)uw;
-    struct tcphdr       *tcphdr = (struct tcphdr *)(packet->pkt + packet->payloadOffset);
+    const struct tcphdr *tcphdr = (struct tcphdr *)(packet->pkt + packet->payloadOffset);
     int                  len = packet->payloadLen - 4 * tcphdr->th_off;
 
     const struct ip       *ip4 = (struct ip *)(packet->pkt + packet->ipOffset);
