@@ -1232,7 +1232,7 @@ LOCAL int ja4plus_dhcp_udp_parser(ArkimeSession_t *session, void *UNUSED(uw), co
     };
 
 
-    if (len < 256 || (data[0] != 1 && data[0] != 2) || ARKIME_SESSION_v6(session) || memcmp(data + 236, "\x63\x82\x53\x63", 4) != 0)
+    if (len < 256 || (data[0] != 1 && data[0] != 2) || ARKIME_SESSION_IS_v6(session) || memcmp(data + 236, "\x63\x82\x53\x63", 4) != 0)
         return 0;
 
     int msgType = 0;
