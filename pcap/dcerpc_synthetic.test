@@ -14,10 +14,9 @@
      "msgType" : [
       "bind",
       "bind-ack",
-      "request",
-      "response"
+      "request"
      ],
-     "msgTypeCnt" : 4,
+     "msgTypeCnt" : 3,
      "opnum" : [
       3
      ],
@@ -39,7 +38,7 @@
        "name" : "This is neat"
       }
      },
-     "bytes" : 242,
+     "bytes" : 262,
      "geo" : {
       "country_iso_code" : "RU"
      },
@@ -65,7 +64,7 @@
     "lastPacket" : 1700000006000,
     "length" : 6000,
     "network" : {
-     "bytes" : 574,
+     "bytes" : 594,
      "community_id" : "1:IA6kxrrd5N9uuGx/m/b1DlL6ob0=",
      "packets" : 7
     },
@@ -75,7 +74,7 @@
      70,
      70,
      142,
-     106,
+     126,
      114,
      114
     ],
@@ -85,8 +84,8 @@
      164,
      234,
      376,
-     482,
-     596
+     502,
+     616
     ],
     "packetRange" : {
      "gte" : 1700000000000,
@@ -171,10 +170,9 @@
      "msgType" : [
       "bind",
       "bind-ack",
-      "fault",
       "request"
      ],
-     "msgTypeCnt" : 4,
+     "msgTypeCnt" : 3,
      "opnum" : [
       5
      ],
@@ -189,7 +187,7 @@
      "versionCnt" : 1
     },
     "destination" : {
-     "bytes" : 226,
+     "bytes" : 246,
      "ip" : "10.0.1.1",
      "mac" : [
       "6a:70:c5:af:f1:f9",
@@ -212,7 +210,7 @@
     "lastPacket" : 1700000013000,
     "length" : 6000,
     "network" : {
-     "bytes" : 558,
+     "bytes" : 578,
      "community_id" : "1:NF/49kUnDOl27Zg+YZN1tgKMk74=",
      "packets" : 7
     },
@@ -222,18 +220,18 @@
      70,
      70,
      142,
-     106,
+     126,
      114,
      98
     ],
     "packetPos" : [
-     710,
-     780,
-     850,
-     920,
-     1062,
-     1168,
-     1282
+     730,
+     800,
+     870,
+     940,
+     1082,
+     1208,
+     1322
     ],
     "packetRange" : {
      "gte" : 1700000007000,
@@ -313,10 +311,9 @@
      "interfaceCnt" : 1,
      "msgType" : [
       "bind",
-      "bind-ack",
-      "bind-nak"
+      "bind-ack"
      ],
-     "msgTypeCnt" : 3,
+     "msgTypeCnt" : 2,
      "uuid" : [
       "12345678-1234-abcd-ef00-01234567cffb"
      ],
@@ -327,7 +324,7 @@
      "versionCnt" : 1
     },
     "destination" : {
-     "bytes" : 222,
+     "bytes" : 242,
      "ip" : "10.0.2.1",
      "mac" : [
       "6a:70:c5:af:f1:f9",
@@ -350,7 +347,7 @@
     "lastPacket" : 1700000019000,
     "length" : 5000,
     "network" : {
-     "bytes" : 456,
+     "bytes" : 476,
      "community_id" : "1:gAqSflDFFyTMfrpzuCrFV9GzPD8=",
      "packets" : 6
     },
@@ -360,16 +357,16 @@
      70,
      70,
      142,
-     106,
+     126,
      94
     ],
     "packetPos" : [
-     1380,
-     1450,
-     1520,
-     1590,
-     1732,
-     1838
+     1420,
+     1490,
+     1560,
+     1630,
+     1772,
+     1898
     ],
     "packetRange" : {
      "gte" : 1700000014000,
@@ -448,11 +445,10 @@
      "interfaceCnt" : 1,
      "msgType" : [
       "alter-context",
-      "alter-context-resp",
       "bind",
       "bind-ack"
      ],
-     "msgTypeCnt" : 4,
+     "msgTypeCnt" : 3,
      "uuid" : [
       "367abb81-9844-35f1-ad32-98f038001003"
      ],
@@ -463,7 +459,7 @@
      "versionCnt" : 1
     },
     "destination" : {
-     "bytes" : 234,
+     "bytes" : 274,
      "ip" : "10.0.3.1",
      "mac" : [
       "6a:70:c5:af:f1:f9",
@@ -486,7 +482,7 @@
     "lastPacket" : 1700000026000,
     "length" : 6000,
     "network" : {
-     "bytes" : 594,
+     "bytes" : 634,
      "community_id" : "1:u/k251q0JMSZlpo6E2joZKujOE4=",
      "packets" : 7
     },
@@ -496,18 +492,18 @@
      70,
      70,
      142,
-     106,
+     126,
      142,
-     106
+     126
     ],
     "packetPos" : [
-     1932,
-     2002,
-     2072,
-     2142,
-     2284,
-     2390,
-     2532
+     1992,
+     2062,
+     2132,
+     2202,
+     2344,
+     2470,
+     2612
     ],
     "packetRange" : {
      "gte" : 1700000020000,
@@ -521,7 +517,7 @@
     "protocolCnt" : 3,
     "segmentCnt" : 1,
     "server" : {
-     "bytes" : 72
+     "bytes" : 92
     },
     "source" : {
      "bytes" : 360,
@@ -566,7 +562,7 @@
      "dst" : 0,
      "src" : 1000
     },
-    "totDataBytes" : 216
+    "totDataBytes" : 236
    },
    "header" : {
     "index" : {
@@ -588,10 +584,9 @@
      "msgType" : [
       "bind",
       "bind-ack",
-      "request",
-      "shutdown"
+      "request"
      ],
-     "msgTypeCnt" : 4,
+     "msgTypeCnt" : 3,
      "opnum" : [
       21
      ],
@@ -606,7 +601,7 @@
      "versionCnt" : 1
     },
     "destination" : {
-     "bytes" : 222,
+     "bytes" : 242,
      "ip" : "10.0.4.1",
      "mac" : [
       "6a:70:c5:af:f1:f9",
@@ -629,7 +624,7 @@
     "lastPacket" : 1700000033000,
     "length" : 6000,
     "network" : {
-     "bytes" : 554,
+     "bytes" : 574,
      "community_id" : "1:Om6UsXoSuOrWLR7V4Mb87OPm2pU=",
      "packets" : 7
     },
@@ -639,18 +634,18 @@
      70,
      70,
      142,
-     106,
+     126,
      114,
      94
     ],
     "packetPos" : [
-     2638,
-     2708,
-     2778,
-     2848,
-     2990,
-     3096,
-     3210
+     2738,
+     2808,
+     2878,
+     2948,
+     3090,
+     3216,
+     3330
     ],
     "packetRange" : {
      "gte" : 1700000027000,
@@ -749,7 +744,7 @@
      "versionCnt" : 1
     },
     "destination" : {
-     "bytes" : 144,
+     "bytes" : 164,
      "ip" : "10.0.5.1",
      "mac" : [
       "6a:70:c5:af:f1:f9",
@@ -772,7 +767,7 @@
     "lastPacket" : 1700000040000,
     "length" : 6000,
     "network" : {
-     "bytes" : 554,
+     "bytes" : 574,
      "community_id" : "1:0mty3p813H7EYIH4qA1GOWRTgSk=",
      "packets" : 7
     },
@@ -782,18 +777,18 @@
      70,
      70,
      142,
-     106,
+     126,
      114,
      94
     ],
     "packetPos" : [
-     3304,
-     3374,
-     3444,
-     3514,
-     3656,
-     3762,
-     3876
+     3424,
+     3494,
+     3564,
+     3634,
+     3776,
+     3902,
+     4016
     ],
     "packetRange" : {
      "gte" : 1700000034000,
@@ -807,7 +802,7 @@
     "protocolCnt" : 3,
     "segmentCnt" : 1,
     "server" : {
-     "bytes" : 36
+     "bytes" : 56
     },
     "source" : {
      "bytes" : 410,
@@ -852,7 +847,7 @@
      "dst" : 0,
      "src" : 1000
     },
-    "totDataBytes" : 176
+    "totDataBytes" : 196
    },
    "header" : {
     "index" : {
@@ -892,7 +887,7 @@
      "versionCnt" : 1
     },
     "destination" : {
-     "bytes" : 144,
+     "bytes" : 164,
      "ip" : "10.0.6.1",
      "mac" : [
       "6a:70:c5:af:f1:f9",
@@ -915,7 +910,7 @@
     "lastPacket" : 1700000047000,
     "length" : 6000,
     "network" : {
-     "bytes" : 554,
+     "bytes" : 574,
      "community_id" : "1:58V06cL5Od30xv0DPBUkvPSQw8M=",
      "packets" : 7
     },
@@ -925,18 +920,18 @@
      70,
      70,
      142,
-     106,
+     126,
      114,
      94
     ],
     "packetPos" : [
-     3970,
-     4040,
      4110,
      4180,
-     4322,
-     4428,
-     4542
+     4250,
+     4320,
+     4462,
+     4588,
+     4702
     ],
     "packetRange" : {
      "gte" : 1700000041000,
@@ -950,7 +945,7 @@
     "protocolCnt" : 3,
     "segmentCnt" : 1,
     "server" : {
-     "bytes" : 36
+     "bytes" : 56
     },
     "source" : {
      "bytes" : 410,
@@ -995,7 +990,7 @@
      "dst" : 0,
      "src" : 1000
     },
-    "totDataBytes" : 176
+    "totDataBytes" : 196
    },
    "header" : {
     "index" : {
@@ -1017,10 +1012,9 @@
      "msgType" : [
       "bind",
       "bind-ack",
-      "request",
-      "response"
+      "request"
      ],
-     "msgTypeCnt" : 4,
+     "msgTypeCnt" : 3,
      "opnum" : [
       7
      ],
@@ -1035,7 +1029,7 @@
      "versionCnt" : 1
     },
     "destination" : {
-     "bytes" : 242,
+     "bytes" : 262,
      "ip" : "10.0.7.1",
      "mac" : [
       "6a:70:c5:af:f1:f9",
@@ -1058,7 +1052,7 @@
     "lastPacket" : 1700000054000,
     "length" : 6000,
     "network" : {
-     "bytes" : 574,
+     "bytes" : 594,
      "community_id" : "1:XZeavn6i18rZaBeUfjBuHnqPPyw=",
      "packets" : 7
     },
@@ -1068,18 +1062,18 @@
      70,
      70,
      142,
-     106,
+     126,
      114,
      114
     ],
     "packetPos" : [
-     4636,
-     4706,
-     4776,
-     4846,
-     4988,
-     5094,
-     5208
+     4796,
+     4866,
+     4936,
+     5006,
+     5148,
+     5274,
+     5388
     ],
     "packetRange" : {
      "gte" : 1700000048000,
@@ -1160,10 +1154,9 @@
      "msgType" : [
       "bind",
       "bind-ack",
-      "request",
-      "response"
+      "request"
      ],
-     "msgTypeCnt" : 4,
+     "msgTypeCnt" : 3,
      "opnum" : [
       8
      ],
@@ -1178,7 +1171,7 @@
      "versionCnt" : 1
     },
     "destination" : {
-     "bytes" : 242,
+     "bytes" : 262,
      "ip" : "10.0.8.1",
      "mac" : [
       "6a:70:c5:af:f1:f9",
@@ -1201,7 +1194,7 @@
     "lastPacket" : 1700000061000,
     "length" : 6000,
     "network" : {
-     "bytes" : 574,
+     "bytes" : 594,
      "community_id" : "1:myIvKByUY2z5aiw7XUpduvPu6+o=",
      "packets" : 7
     },
@@ -1211,18 +1204,18 @@
      70,
      70,
      142,
-     106,
+     126,
      114,
      114
     ],
     "packetPos" : [
-     5322,
-     5392,
-     5462,
-     5532,
-     5674,
-     5780,
-     5894
+     5502,
+     5572,
+     5642,
+     5712,
+     5854,
+     5980,
+     6094
     ],
     "packetRange" : {
      "gte" : 1700000055000,
@@ -1303,10 +1296,9 @@
      "msgType" : [
       "bind",
       "bind-ack",
-      "request",
-      "response"
+      "request"
      ],
-     "msgTypeCnt" : 4,
+     "msgTypeCnt" : 3,
      "opnum" : [
       9
      ],
@@ -1321,7 +1313,7 @@
      "versionCnt" : 1
     },
     "destination" : {
-     "bytes" : 242,
+     "bytes" : 262,
      "ip" : "10.0.9.1",
      "mac" : [
       "6a:70:c5:af:f1:f9",
@@ -1344,7 +1336,7 @@
     "lastPacket" : 1700000068000,
     "length" : 6000,
     "network" : {
-     "bytes" : 574,
+     "bytes" : 594,
      "community_id" : "1:2BD3tikFIZfw5BMv7QFi3gJSkd4=",
      "packets" : 7
     },
@@ -1354,18 +1346,18 @@
      70,
      70,
      142,
-     106,
+     126,
      114,
      114
     ],
     "packetPos" : [
-     6008,
-     6078,
-     6148,
-     6218,
-     6360,
-     6466,
-     6580
+     6208,
+     6278,
+     6348,
+     6418,
+     6560,
+     6686,
+     6800
     ],
     "packetRange" : {
      "gte" : 1700000062000,
@@ -1446,10 +1438,9 @@
      "msgType" : [
       "bind",
       "bind-ack",
-      "request",
-      "response"
+      "request"
      ],
-     "msgTypeCnt" : 4,
+     "msgTypeCnt" : 3,
      "opnum" : [
       10
      ],
@@ -1464,7 +1455,7 @@
      "versionCnt" : 1
     },
     "destination" : {
-     "bytes" : 242,
+     "bytes" : 262,
      "ip" : "10.0.10.1",
      "mac" : [
       "6a:70:c5:af:f1:f9",
@@ -1487,7 +1478,7 @@
     "lastPacket" : 1700000075000,
     "length" : 6000,
     "network" : {
-     "bytes" : 574,
+     "bytes" : 594,
      "community_id" : "1:5JjpBewGQWQj6tWi0+cdIXQlOvs=",
      "packets" : 7
     },
@@ -1497,18 +1488,18 @@
      70,
      70,
      142,
-     106,
+     126,
      114,
      114
     ],
     "packetPos" : [
-     6694,
-     6764,
-     6834,
-     6904,
-     7046,
-     7152,
-     7266
+     6914,
+     6984,
+     7054,
+     7124,
+     7266,
+     7392,
+     7506
     ],
     "packetRange" : {
      "gte" : 1700000069000,
@@ -1589,10 +1580,9 @@
      "msgType" : [
       "bind",
       "bind-ack",
-      "request",
-      "response"
+      "request"
      ],
-     "msgTypeCnt" : 4,
+     "msgTypeCnt" : 3,
      "opnum" : [
       11
      ],
@@ -1607,7 +1597,7 @@
      "versionCnt" : 1
     },
     "destination" : {
-     "bytes" : 242,
+     "bytes" : 262,
      "ip" : "10.0.11.1",
      "mac" : [
       "6a:70:c5:af:f1:f9",
@@ -1630,7 +1620,7 @@
     "lastPacket" : 1700000082000,
     "length" : 6000,
     "network" : {
-     "bytes" : 574,
+     "bytes" : 594,
      "community_id" : "1:+ak26MiqSukQiFKoGADMZMre6RY=",
      "packets" : 7
     },
@@ -1640,18 +1630,18 @@
      70,
      70,
      142,
-     106,
+     126,
      114,
      114
     ],
     "packetPos" : [
-     7380,
-     7450,
-     7520,
-     7590,
-     7732,
-     7838,
-     7952
+     7620,
+     7690,
+     7760,
+     7830,
+     7972,
+     8098,
+     8212
     ],
     "packetRange" : {
      "gte" : 1700000076000,
@@ -1732,10 +1722,9 @@
      "msgType" : [
       "bind",
       "bind-ack",
-      "request",
-      "response"
+      "request"
      ],
-     "msgTypeCnt" : 4,
+     "msgTypeCnt" : 3,
      "opnum" : [
       12
      ],
@@ -1750,7 +1739,7 @@
      "versionCnt" : 1
     },
     "destination" : {
-     "bytes" : 242,
+     "bytes" : 262,
      "ip" : "10.0.12.1",
      "mac" : [
       "6a:70:c5:af:f1:f9",
@@ -1773,7 +1762,7 @@
     "lastPacket" : 1700000089000,
     "length" : 6000,
     "network" : {
-     "bytes" : 574,
+     "bytes" : 594,
      "community_id" : "1:LG5VrP5NTP4cSVuOWOWUy16Rf7o=",
      "packets" : 7
     },
@@ -1783,18 +1772,18 @@
      70,
      70,
      142,
-     106,
+     126,
      114,
      114
     ],
     "packetPos" : [
-     8066,
-     8136,
-     8206,
-     8276,
-     8418,
-     8524,
-     8638
+     8326,
+     8396,
+     8466,
+     8536,
+     8678,
+     8804,
+     8918
     ],
     "packetRange" : {
      "gte" : 1700000083000,
@@ -1875,10 +1864,9 @@
      "msgType" : [
       "bind",
       "bind-ack",
-      "request",
-      "response"
+      "request"
      ],
-     "msgTypeCnt" : 4,
+     "msgTypeCnt" : 3,
      "opnum" : [
       13
      ],
@@ -1893,7 +1881,7 @@
      "versionCnt" : 1
     },
     "destination" : {
-     "bytes" : 242,
+     "bytes" : 262,
      "ip" : "10.0.13.1",
      "mac" : [
       "6a:70:c5:af:f1:f9",
@@ -1916,7 +1904,7 @@
     "lastPacket" : 1700000096000,
     "length" : 6000,
     "network" : {
-     "bytes" : 574,
+     "bytes" : 594,
      "community_id" : "1:9E3teBYK7ibl2uiSRkHPETcsuRY=",
      "packets" : 7
     },
@@ -1926,18 +1914,18 @@
      70,
      70,
      142,
-     106,
+     126,
      114,
      114
     ],
     "packetPos" : [
-     8752,
-     8822,
-     8892,
-     8962,
-     9104,
-     9210,
-     9324
+     9032,
+     9102,
+     9172,
+     9242,
+     9384,
+     9510,
+     9624
     ],
     "packetRange" : {
      "gte" : 1700000090000,
@@ -2018,10 +2006,9 @@
      "msgType" : [
       "bind",
       "bind-ack",
-      "request",
-      "response"
+      "request"
      ],
-     "msgTypeCnt" : 4,
+     "msgTypeCnt" : 3,
      "opnum" : [
       14
      ],
@@ -2036,7 +2023,7 @@
      "versionCnt" : 1
     },
     "destination" : {
-     "bytes" : 242,
+     "bytes" : 262,
      "ip" : "10.0.14.1",
      "mac" : [
       "6a:70:c5:af:f1:f9",
@@ -2059,7 +2046,7 @@
     "lastPacket" : 1700000103000,
     "length" : 6000,
     "network" : {
-     "bytes" : 574,
+     "bytes" : 594,
      "community_id" : "1:y8Bz2TdtWIDAff9K22LkEAAIPVo=",
      "packets" : 7
     },
@@ -2069,18 +2056,18 @@
      70,
      70,
      142,
-     106,
+     126,
      114,
      114
     ],
     "packetPos" : [
-     9438,
-     9508,
-     9578,
-     9648,
-     9790,
-     9896,
-     10010
+     9738,
+     9808,
+     9878,
+     9948,
+     10090,
+     10216,
+     10330
     ],
     "packetRange" : {
      "gte" : 1700000097000,
@@ -2161,10 +2148,9 @@
      "msgType" : [
       "bind",
       "bind-ack",
-      "request",
-      "response"
+      "request"
      ],
-     "msgTypeCnt" : 4,
+     "msgTypeCnt" : 3,
      "opnum" : [
       15
      ],
@@ -2179,7 +2165,7 @@
      "versionCnt" : 1
     },
     "destination" : {
-     "bytes" : 242,
+     "bytes" : 262,
      "ip" : "10.0.15.1",
      "mac" : [
       "6a:70:c5:af:f1:f9",
@@ -2202,7 +2188,7 @@
     "lastPacket" : 1700000110000,
     "length" : 6000,
     "network" : {
-     "bytes" : 574,
+     "bytes" : 594,
      "community_id" : "1:DH3sS0GpDtk8LETDNd1hZ7IaGV8=",
      "packets" : 7
     },
@@ -2212,18 +2198,18 @@
      70,
      70,
      142,
-     106,
+     126,
      114,
      114
     ],
     "packetPos" : [
-     10124,
-     10194,
-     10264,
-     10334,
-     10476,
-     10582,
-     10696
+     10444,
+     10514,
+     10584,
+     10654,
+     10796,
+     10922,
+     11036
     ],
     "packetRange" : {
      "gte" : 1700000104000,
@@ -2304,10 +2290,9 @@
      "msgType" : [
       "bind",
       "bind-ack",
-      "request",
-      "response"
+      "request"
      ],
-     "msgTypeCnt" : 4,
+     "msgTypeCnt" : 3,
      "opnum" : [
       16
      ],
@@ -2322,7 +2307,7 @@
      "versionCnt" : 1
     },
     "destination" : {
-     "bytes" : 242,
+     "bytes" : 262,
      "ip" : "10.0.16.1",
      "mac" : [
       "6a:70:c5:af:f1:f9",
@@ -2345,7 +2330,7 @@
     "lastPacket" : 1700000117000,
     "length" : 6000,
     "network" : {
-     "bytes" : 574,
+     "bytes" : 594,
      "community_id" : "1:DQqcbOuY5/aAxjU+RBkbttu/FZ8=",
      "packets" : 7
     },
@@ -2355,18 +2340,18 @@
      70,
      70,
      142,
-     106,
+     126,
      114,
      114
     ],
     "packetPos" : [
-     10810,
-     10880,
-     10950,
-     11020,
-     11162,
-     11268,
-     11382
+     11150,
+     11220,
+     11290,
+     11360,
+     11502,
+     11628,
+     11742
     ],
     "packetRange" : {
      "gte" : 1700000111000,
@@ -2443,10 +2428,9 @@
      "msgType" : [
       "bind",
       "bind-ack",
-      "request",
-      "response"
+      "request"
      ],
-     "msgTypeCnt" : 4,
+     "msgTypeCnt" : 3,
      "opnum" : [
       99
      ],
@@ -2461,7 +2445,7 @@
      "versionCnt" : 1
     },
     "destination" : {
-     "bytes" : 242,
+     "bytes" : 262,
      "ip" : "10.0.17.1",
      "mac" : [
       "6a:70:c5:af:f1:f9",
@@ -2484,7 +2468,7 @@
     "lastPacket" : 1700000124000,
     "length" : 6000,
     "network" : {
-     "bytes" : 574,
+     "bytes" : 594,
      "community_id" : "1:6ohqZThvRYe/wfHsyrOrK6zCC/U=",
      "packets" : 7
     },
@@ -2494,18 +2478,18 @@
      70,
      70,
      142,
-     106,
+     126,
      114,
      114
     ],
     "packetPos" : [
-     11496,
-     11566,
-     11636,
-     11706,
-     11848,
-     11954,
-     12068
+     11856,
+     11926,
+     11996,
+     12066,
+     12208,
+     12334,
+     12448
     ],
     "packetRange" : {
      "gte" : 1700000118000,
