@@ -3220,7 +3220,7 @@
    "body" : {
     "@timestamp" : "SET",
     "client" : {
-     "bytes" : 58
+     "bytes" : 54
     },
     "destination" : {
      "bytes" : 0,
@@ -3276,7 +3276,7 @@
      64
     ],
     "srcTTLCnt" : 1,
-    "totDataBytes" : 58
+    "totDataBytes" : 54
    },
    "header" : {
     "index" : {
@@ -11128,7 +11128,7 @@
    "body" : {
     "@timestamp" : "SET",
     "client" : {
-     "bytes" : 58
+     "bytes" : 54
     },
     "destination" : {
      "bytes" : 0,
@@ -11184,7 +11184,7 @@
      64
     ],
     "srcTTLCnt" : 1,
-    "totDataBytes" : 58
+    "totDataBytes" : 54
    },
    "header" : {
     "index" : {
