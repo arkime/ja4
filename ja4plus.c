@@ -81,7 +81,18 @@ typedef struct {
 /******************************************************************************/
 LOCAL int cookie_cmp(const void *a, const void *b)
 {
-    return strcmp(((JA4PlusCookie_t *)a)->field, ((JA4PlusCookie_t *)b)->field);
+    const JA4PlusCookie_t *ca = (JA4PlusCookie_t *)a;
+    const JA4PlusCookie_t *cb = (JA4PlusCookie_t *)b;
+    int rc = strcmp(ca->field, cb->field);
+    if (rc != 0)
+        return rc;
+
+    // Tiebreaker: sort by value when cookie names are equal
+    int minlen = ca->vlen < cb->vlen ? ca->vlen : cb->vlen;
+    rc = memcmp(ca->value ? ca->value : "", cb->value ? cb->value : "", minlen);
+    if (rc != 0)
+        return rc;
+    return ca->vlen - cb->vlen;
 }
 
 /******************************************************************************/
@@ -152,9 +163,9 @@ LOCAL void ja4plus_http_process_headers (ArkimeSession_t *session)
 
                 memcpy(fvpos, cookies[i].field, cookies[i].flen);
                 fvpos += cookies[i].flen;
+                *(fvpos++) = '=';
 
                 if (cookies[i].value) {
-                    *(fvpos++) = '=';
                     memcpy(fvpos, cookies[i].value, cookies[i].vlen);
                     fvpos += cookies[i].vlen;
                 }
@@ -254,7 +265,7 @@ LOCAL void ja4plus_http_complete(ArkimeSession_t *session, http_parser *parser)
              parser->http_minor,
              (ja4_http->cookies == 0) ? 'n' : 'c',
              (ja4_http->referer == 0) ? 'n' : 'r',
-             ja4_http->headers,
+             MIN(ja4_http->headers, 99),
              ja4_http->accept_lang
             );
 
@@ -272,13 +283,14 @@ LOCAL void ja4plus_http_complete(ArkimeSession_t *session, http_parser *parser)
         g_checksum_update(checksum, (guchar *) ja4_http->sorted_cookie_values, strlen(ja4_http->sorted_cookie_values));
         memcpy(ja4h + 39, g_checksum_get_string(checksum), 12);
         g_checksum_reset(checksum);
+        arkime_field_string_add(ja4hField, session, ja4h, 51, TRUE);
     } else if (ja4hOmitZeroSections) {
         g_strlcpy(ja4h + 26, "_", sizeof(ja4h) - 26);
+        arkime_field_string_add(ja4hField, session, ja4h, 27, TRUE);
     } else {
         g_strlcpy(ja4h + 26, "000000000000_000000000000", sizeof(ja4h) - 26);
+        arkime_field_string_add(ja4hField, session, ja4h, 51, TRUE);
     }
-    ja4h[51] = 0;
-    arkime_field_string_add(ja4hField, session, ja4h, 51, TRUE);
 
     if (ja4Raw) {
         char ja4h_r[1024];
@@ -289,7 +301,7 @@ LOCAL void ja4plus_http_complete(ArkimeSession_t *session, http_parser *parser)
                  parser->http_minor,
                  (ja4_http->cookies == 0) ? 'n' : 'c',
                  (ja4_http->referer == 0) ? 'n' : 'r',
-                 ja4_http->headers,
+                 MIN(ja4_http->headers, 99),
                  ja4_http->accept_lang,
                  ja4_http->header_fields->str,
                  (ja4_http->sorted_cookie_fields != NULL) ? ja4_http->sorted_cookie_fields : "",
@@ -447,8 +459,8 @@ LOCAL void ja4plus_alpn_to_ja4alpn(const uint8_t *alpn, int len, uint8_t *ja4alp
 
     len--;  // len now the offset of last byte, which could be 0
     if (isalnum(alpn[0]) && isalnum(alpn[len])) {
-        ja4alpn[0] = tolower(alpn[0]);
-        ja4alpn[1] = tolower(alpn[len]);
+        ja4alpn[0] = alpn[0];
+        ja4alpn[1] = alpn[len];
     } else {
         ja4alpn[0] = arkime_char_to_hexstr[alpn[0]][0];
         ja4alpn[1] = arkime_char_to_hexstr[alpn[len]][1];
@@ -507,8 +519,8 @@ LOCAL uint32_t ja4plus_dtls_process_server_hello(ArkimeSession_t *session, const
                 continue;
             }
 
-            ja4Extensions[ja4NumExtensions] = etype;
-            ja4NumExtensions++;
+            if (ja4NumExtensions < ARRAY_LEN(ja4Extensions))
+                ja4Extensions[ja4NumExtensions++] = etype;
 
             if (elen > BSB_REMAINING(ebsb))
                 break;
@@ -645,8 +657,8 @@ LOCAL uint32_t ja4plus_tls_process_server_hello(ArkimeSession_t *session, const 
                 continue;
             }
 
-            ja4Extensions[ja4NumExtensions] = etype;
-            ja4NumExtensions++;
+            if (ja4NumExtensions < ARRAY_LEN(ja4Extensions))
+                ja4Extensions[ja4NumExtensions++] = etype;
 
             if (elen > BSB_REMAINING(ebsb))
                 break;
@@ -934,7 +946,7 @@ LOCAL void ja4plus_ja4ts(ArkimeSession_t *session, const JA4PlusTCP_t *data, con
     BSB_INIT(obsb, obuf, sizeof(obuf));
     BSB_EXPORT_sprintf(obsb, "%d_", ntohs(tcph->th_win));
     if (p == end) {
-        BSB_EXPORT_cstr(obsb, "00");
+        // no TCP options - empty string
     } else {
         BSB hbsb;
         BSB_INIT(hbsb, p, (int)(end - p));
@@ -974,13 +986,13 @@ LOCAL void ja4plus_ja4ts(ArkimeSession_t *session, const JA4PlusTCP_t *data, con
     }
 
     if (mss == 0xffff) {
-        BSB_EXPORT_cstr(obsb, "_00");
+        BSB_EXPORT_cstr(obsb, "_0");
     } else {
         BSB_EXPORT_sprintf(obsb, "_%d", mss);
     }
 
     if (window_scale == 0xff) {
-        BSB_EXPORT_cstr(obsb, "_00");
+        BSB_EXPORT_cstr(obsb, "_0");
     } else {
         BSB_EXPORT_sprintf(obsb, "_%d", window_scale);
     }
@@ -1010,7 +1022,7 @@ LOCAL void ja4plus_ja4t(ArkimeSession_t *session, JA4PlusTCP_t UNUSED(*data), co
     BSB_INIT(obsb, obuf, sizeof(obuf));
     BSB_EXPORT_sprintf(obsb, "%d_", ntohs(tcph->th_win));
     if (p == end) {
-        BSB_EXPORT_cstr(obsb, "00");
+        // no TCP options - empty string
     } else {
         BSB hbsb;
         BSB_INIT(hbsb, p, (int)(end - p));
@@ -1050,13 +1062,13 @@ LOCAL void ja4plus_ja4t(ArkimeSession_t *session, JA4PlusTCP_t UNUSED(*data), co
     }
 
     if (mss == 0xffff) {
-        BSB_EXPORT_cstr(obsb, "_00");
+        BSB_EXPORT_cstr(obsb, "_0");
     } else {
         BSB_EXPORT_sprintf(obsb, "_%d", mss);
     }
 
     if (window_scale == 0xff) {
-        BSB_EXPORT_cstr(obsb, "_00");
+        BSB_EXPORT_cstr(obsb, "_0");
     } else {
         BSB_EXPORT_sprintf(obsb, "_%d", window_scale);
     }
@@ -1261,6 +1273,8 @@ LOCAL int ja4plus_dhcp_udp_parser(ArkimeSession_t *session, void *UNUSED(uw), co
         BSB_IMPORT_u08(bsb, t);
         if (t == 255) // End Tag, no length
             break;
+        if (t == 0) // Pad, no length
+            continue;
         BSB_IMPORT_u08(bsb, l);
         if (BSB_IS_ERROR(bsb) || l > BSB_REMAINING(bsb) || l == 0)
             break;
@@ -1286,7 +1300,7 @@ LOCAL int ja4plus_dhcp_udp_parser(ArkimeSession_t *session, void *UNUSED(uw), co
             if (l == 2) {
                 uint16_t size = 0;
                 memcpy(&size, v, 2);
-                snprintf(maxSize, sizeof(maxSize), "%04d", htons(size));
+                snprintf(maxSize, sizeof(maxSize), "%04d", ntohs(size));
             }
             break;
         case 81:
@@ -1410,7 +1424,7 @@ LOCAL int ja4plus_dhcpv6_udp_parser(ArkimeSession_t *session, void *UNUSED(uw), 
                 if (i > 0) {
                     BSB_EXPORT_u08(pBSB, '-');
                 }
-                BSB_EXPORT_sprintf(pBSB, "%d", htons(option));
+                BSB_EXPORT_sprintf(pBSB, "%d", ntohs(option));
             }
             break;
         case 3:
@@ -1437,10 +1451,10 @@ LOCAL int ja4plus_dhcpv6_udp_parser(ArkimeSession_t *session, void *UNUSED(uw), 
             break;
         }
         case 39: {
-            uint16_t flags = 0;
+            uint8_t flags = 0;
             BSB ibsb;
             BSB_INIT(ibsb, v, l);
-            BSB_IMPORT_u16(ibsb, flags);
+            BSB_IMPORT_u08(ibsb, flags);
             if (!BSB_IS_ERROR(ibsb) && flags == 0)
                 fqdn = 'd';
             break;
