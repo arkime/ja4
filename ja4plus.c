@@ -471,7 +471,7 @@ LOCAL void ja4plus_alpn_to_ja4alpn(const uint8_t *alpn, int len, uint8_t *ja4alp
 LOCAL uint32_t ja4plus_dtls_process_server_hello(ArkimeSession_t *session, const uint8_t *data, int len, void UNUSED(*uw))
 {
     // https://github.com/FoxIO-LLC/ja4/blob/main/technical_details/JA4S.md
-    uint8_t  ja4NumExtensions = 0;
+    int      ja4NumExtensions = 0;
     uint16_t ja4Extensions[256];
     uint8_t  ja4ALPN[2] = {'0', '0'};
     BSB      bsb;
@@ -603,7 +603,7 @@ LOCAL uint32_t ja4plus_dtls_process_server_hello(ArkimeSession_t *session, const
 LOCAL uint32_t ja4plus_tls_process_server_hello(ArkimeSession_t *session, const uint8_t *data, int len, void UNUSED(*uw))
 {
     // https://github.com/FoxIO-LLC/ja4/blob/main/technical_details/JA4S.md
-    uint8_t  ja4NumExtensions = 0;
+    int      ja4NumExtensions = 0;
     uint16_t ja4Extensions[256];
     uint8_t  ja4ALPN[2] = {'0', '0'};
     BSB      bsb;
