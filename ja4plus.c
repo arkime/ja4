@@ -1314,7 +1314,11 @@ LOCAL int ja4plus_dhcp_udp_parser(ArkimeSession_t *session, void *UNUSED(uw), co
         BSB_EXPORT_sprintf(oBSB, "%d", t);
     }
 
-    options[BSB_LENGTH(oBSB)] = 0;
+    if (BSB_LENGTH(oBSB) <= 0) {
+        snprintf(options, sizeof(options), "00");
+    } else {
+        options[BSB_LENGTH(oBSB)] = 0;
+    }
     if (BSB_LENGTH(pBSB) <= 0) {
         snprintf(parameters, sizeof(parameters), "00");
     } else {
@@ -1462,7 +1466,11 @@ LOCAL int ja4plus_dhcpv6_udp_parser(ArkimeSession_t *session, void *UNUSED(uw), 
         } /* switch */
     }
 
-    options[BSB_LENGTH(oBSB)] = 0;
+    if (BSB_LENGTH(oBSB) <= 0) {
+        snprintf(options, sizeof(options), "00");
+    } else {
+        options[BSB_LENGTH(oBSB)] = 0;
+    }
     if (BSB_LENGTH(pBSB) <= 0) {
         snprintf(parameters, sizeof(parameters), "00");
     } else {

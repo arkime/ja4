@@ -113,7 +113,10 @@
     },
     "tcpflags" : {
      "ack" : 1,
+     "ae" : 0,
+     "cwr" : 0,
      "dstZero" : 0,
+     "ece" : 0,
      "fin" : 0,
      "psh" : 2,
      "rst" : 0,
@@ -287,7 +290,10 @@
     },
     "tcpflags" : {
      "ack" : 1,
+     "ae" : 0,
+     "cwr" : 0,
      "dstZero" : 0,
+     "ece" : 0,
      "fin" : 0,
      "psh" : 2,
      "rst" : 0,
