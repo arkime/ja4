@@ -391,7 +391,7 @@
    },
    "header" : {
     "index" : {
-     "_index" : "tests_sessions3-991111"
+     "_index" : "tests_sessions3-99m11"
     }
    }
   },
@@ -494,7 +494,7 @@
    },
    "header" : {
     "index" : {
-     "_index" : "tests_sessions3-991111"
+     "_index" : "tests_sessions3-99m11"
     }
    }
   },
@@ -632,7 +632,7 @@
    },
    "header" : {
     "index" : {
-     "_index" : "tests_sessions3-991111"
+     "_index" : "tests_sessions3-99m11"
     }
    }
   },
@@ -735,7 +735,7 @@
    },
    "header" : {
     "index" : {
-     "_index" : "tests_sessions3-991111"
+     "_index" : "tests_sessions3-99m11"
     }
    }
   },
@@ -863,7 +863,7 @@
    },
    "header" : {
     "index" : {
-     "_index" : "tests_sessions3-991111"
+     "_index" : "tests_sessions3-99m11"
     }
    }
   },
@@ -966,7 +966,7 @@
    },
    "header" : {
     "index" : {
-     "_index" : "tests_sessions3-991111"
+     "_index" : "tests_sessions3-99m11"
     }
    }
   }

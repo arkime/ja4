@@ -148,7 +148,7 @@
    },
    "header" : {
     "index" : {
-     "_index" : "tests_sessions3-100920"
+     "_index" : "tests_sessions3-10m09"
     }
    }
   },
@@ -232,7 +232,7 @@
    },
    "header" : {
     "index" : {
-     "_index" : "tests_sessions3-110816"
+     "_index" : "tests_sessions3-11m08"
     }
    }
   },
@@ -312,7 +312,7 @@
    },
    "header" : {
     "index" : {
-     "_index" : "tests_sessions3-110816"
+     "_index" : "tests_sessions3-11m08"
     }
    }
   },
@@ -470,7 +470,7 @@
    },
    "header" : {
     "index" : {
-     "_index" : "tests_sessions3-110816"
+     "_index" : "tests_sessions3-11m08"
     }
    }
   }
