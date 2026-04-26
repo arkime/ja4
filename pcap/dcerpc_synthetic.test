@@ -118,9 +118,10 @@
     ],
     "srcTTLCnt" : 1,
     "tags" : [
+     "dcerpc:bad-fraglen",
      "srcip"
     ],
-    "tagsCnt" : 1,
+    "tagsCnt" : 2,
     "tcp" : {
      "ja4l" : "500000_64_500000",
      "ja4ls" : "500000_64_500000",
@@ -1126,6 +1127,10 @@
      64
     ],
     "srcTTLCnt" : 1,
+    "tags" : [
+     "dcerpc:bad-fraglen"
+    ],
+    "tagsCnt" : 1,
     "tcp" : {
      "ja4l" : "500000_64_500000",
      "ja4ls" : "500000_64_500000",
@@ -1271,6 +1276,10 @@
      64
     ],
     "srcTTLCnt" : 1,
+    "tags" : [
+     "dcerpc:bad-fraglen"
+    ],
+    "tagsCnt" : 1,
     "tcp" : {
      "ja4l" : "500000_64_500000",
      "ja4ls" : "500000_64_500000",
@@ -1416,6 +1425,10 @@
      64
     ],
     "srcTTLCnt" : 1,
+    "tags" : [
+     "dcerpc:bad-fraglen"
+    ],
+    "tagsCnt" : 1,
     "tcp" : {
      "ja4l" : "500000_64_500000",
      "ja4ls" : "500000_64_500000",
@@ -1561,6 +1574,10 @@
      64
     ],
     "srcTTLCnt" : 1,
+    "tags" : [
+     "dcerpc:bad-fraglen"
+    ],
+    "tagsCnt" : 1,
     "tcp" : {
      "ja4l" : "500000_64_500000",
      "ja4ls" : "500000_64_500000",
@@ -1706,6 +1723,10 @@
      64
     ],
     "srcTTLCnt" : 1,
+    "tags" : [
+     "dcerpc:bad-fraglen"
+    ],
+    "tagsCnt" : 1,
     "tcp" : {
      "ja4l" : "500000_64_500000",
      "ja4ls" : "500000_64_500000",
@@ -1851,6 +1872,10 @@
      64
     ],
     "srcTTLCnt" : 1,
+    "tags" : [
+     "dcerpc:bad-fraglen"
+    ],
+    "tagsCnt" : 1,
     "tcp" : {
      "ja4l" : "500000_64_500000",
      "ja4ls" : "500000_64_500000",
@@ -1996,6 +2021,10 @@
      64
     ],
     "srcTTLCnt" : 1,
+    "tags" : [
+     "dcerpc:bad-fraglen"
+    ],
+    "tagsCnt" : 1,
     "tcp" : {
      "ja4l" : "500000_64_500000",
      "ja4ls" : "500000_64_500000",
@@ -2141,6 +2170,10 @@
      64
     ],
     "srcTTLCnt" : 1,
+    "tags" : [
+     "dcerpc:bad-fraglen"
+    ],
+    "tagsCnt" : 1,
     "tcp" : {
      "ja4l" : "500000_64_500000",
      "ja4ls" : "500000_64_500000",
@@ -2286,6 +2319,10 @@
      64
     ],
     "srcTTLCnt" : 1,
+    "tags" : [
+     "dcerpc:bad-fraglen"
+    ],
+    "tagsCnt" : 1,
     "tcp" : {
      "ja4l" : "500000_64_500000",
      "ja4ls" : "500000_64_500000",
@@ -2431,6 +2468,10 @@
      64
     ],
     "srcTTLCnt" : 1,
+    "tags" : [
+     "dcerpc:bad-fraglen"
+    ],
+    "tagsCnt" : 1,
     "tcp" : {
      "ja4l" : "500000_64_500000",
      "ja4ls" : "500000_64_500000",
@@ -2571,6 +2612,10 @@
      64
     ],
     "srcTTLCnt" : 1,
+    "tags" : [
+     "dcerpc:bad-fraglen"
+    ],
+    "tagsCnt" : 1,
     "tcp" : {
      "ja4l" : "500000_64_500000",
      "ja4ls" : "500000_64_500000",
