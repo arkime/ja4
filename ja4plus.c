@@ -946,7 +946,7 @@ LOCAL void ja4plus_ja4ts(ArkimeSession_t *session, const JA4PlusTCP_t *data, con
     BSB_INIT(obsb, obuf, sizeof(obuf));
     BSB_EXPORT_sprintf(obsb, "%d_", ntohs(tcph->th_win));
     if (p == end) {
-        // no TCP options - empty string
+        BSB_EXPORT_cstr(obsb, "00");
     } else {
         BSB hbsb;
         BSB_INIT(hbsb, p, (int)(end - p));
@@ -986,13 +986,13 @@ LOCAL void ja4plus_ja4ts(ArkimeSession_t *session, const JA4PlusTCP_t *data, con
     }
 
     if (mss == 0xffff) {
-        BSB_EXPORT_cstr(obsb, "_0");
+        BSB_EXPORT_cstr(obsb, "_00");
     } else {
         BSB_EXPORT_sprintf(obsb, "_%d", mss);
     }
 
     if (window_scale == 0xff) {
-        BSB_EXPORT_cstr(obsb, "_0");
+        BSB_EXPORT_cstr(obsb, "_00");
     } else {
         BSB_EXPORT_sprintf(obsb, "_%d", window_scale);
     }
@@ -1022,7 +1022,7 @@ LOCAL void ja4plus_ja4t(ArkimeSession_t *session, JA4PlusTCP_t UNUSED(*data), co
     BSB_INIT(obsb, obuf, sizeof(obuf));
     BSB_EXPORT_sprintf(obsb, "%d_", ntohs(tcph->th_win));
     if (p == end) {
-        // no TCP options - empty string
+        BSB_EXPORT_cstr(obsb, "00");
     } else {
         BSB hbsb;
         BSB_INIT(hbsb, p, (int)(end - p));
@@ -1062,13 +1062,13 @@ LOCAL void ja4plus_ja4t(ArkimeSession_t *session, JA4PlusTCP_t UNUSED(*data), co
     }
 
     if (mss == 0xffff) {
-        BSB_EXPORT_cstr(obsb, "_0");
+        BSB_EXPORT_cstr(obsb, "_00");
     } else {
         BSB_EXPORT_sprintf(obsb, "_%d", mss);
     }
 
     if (window_scale == 0xff) {
-        BSB_EXPORT_cstr(obsb, "_0");
+        BSB_EXPORT_cstr(obsb, "_00");
     } else {
         BSB_EXPORT_sprintf(obsb, "_%d", window_scale);
     }
