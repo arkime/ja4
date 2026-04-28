@@ -250,9 +250,10 @@
     ],
     "srcTTLCnt" : 1,
     "tags" : [
+     "socks:auth-failed",
      "socks:password"
     ],
-    "tagsCnt" : 1,
+    "tagsCnt" : 2,
     "tcp" : {
      "ja4l" : "17_64_40",
      "ja4ls" : "303_64_268",
