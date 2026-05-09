@@ -38,6 +38,12 @@
       "2"
      ],
      "funcCnt" : 3,
+     "funcName" : [
+      "Read",
+      "Response",
+      "Write"
+     ],
+     "funcNameCnt" : 3,
      "src" : [
       "1",
       "2"
@@ -183,6 +189,12 @@
       "13"
      ],
      "funcCnt" : 3,
+     "funcName" : [
+      "ColdRestart",
+      "Read",
+      "Response"
+     ],
+     "funcNameCnt" : 3,
      "src" : [
       "10",
       "20"
