@@ -5341,7 +5341,9 @@
         "class" : "IN",
         "name" : "example.org",
         "ttl" : 3600,
-        "txt" : "v=spf1 include:_spf.example.org ~all",
+        "txt" : [
+         "v=spf1 include:_spf.example.org ~all"
+        ],
         "type" : "TXT"
        }
       ],
