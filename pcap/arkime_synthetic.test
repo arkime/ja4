@@ -14515,6 +14515,10 @@
       ""
      ]
     },
+    "tags" : [
+     "stun:nat-discovered"
+    ],
+    "tagsCnt" : 1,
     "totDataBytes" : 148
    },
    "header" : {
