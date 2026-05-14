@@ -10006,6 +10006,23 @@
     "ethertype" : 2048,
     "fileId" : [],
     "firstPacket" : 1737752637000,
+    "ftp" : {
+     "banner" : [
+      "Welcome to Example FTP Server"
+     ],
+     "bannerCnt" : 1,
+     "command" : [
+      "PASS",
+      "USER"
+     ],
+     "commandCnt" : 2,
+     "responseCode" : [
+      "220",
+      "230",
+      "331"
+     ],
+     "responseCodeCnt" : 3
+    },
     "initRTT" : 1000,
     "ipProtocol" : 6,
     "lastPacket" : 1737752644000,
@@ -10065,6 +10082,10 @@
      64
     ],
     "srcTTLCnt" : 1,
+    "tags" : [
+     "ftp:password"
+    ],
+    "tagsCnt" : 1,
     "tcp" : {
      "ja4l" : "500000_64_1500000",
      "ja4ls" : "500000_64_1500000",
