@@ -71,7 +71,7 @@ typedef struct {
 
 typedef struct {
     char      *field;
-    char      *value;
+    const char *value;
     uint16_t   flen;
     uint16_t   vlen;
 } JA4PlusCookie_t;
@@ -112,7 +112,7 @@ LOCAL void ja4plus_http_process_headers (ArkimeSession_t *session)
         uint32_t totalVlen = 0;
         while (start < end) {
             while (start < end && isspace(*start)) start++;
-            char *equal = memchr(start, '=', end - start);
+            const char *equal = memchr(start, '=', end - start);
             if (!equal)
                 break;
             uint32_t flen = equal - start;
