@@ -1659,12 +1659,12 @@
      "uriCnt" : 1
     },
     "ipProtocol" : 6,
-    "lastPacket" : 1700000070017,
-    "length" : 6,
+    "lastPacket" : 1700000070018,
+    "length" : 7,
     "network" : {
-     "bytes" : 440,
+     "bytes" : 494,
      "community_id" : "1:yfl2SI444B97BXyi6t2FmqoepDA=",
-     "packets" : 7
+     "packets" : 8
     },
     "node" : "test",
     "packetLen" : [
@@ -1672,6 +1672,7 @@
      70,
      109,
      93,
+     70,
      70,
      70,
      70
@@ -1683,11 +1684,12 @@
      7447,
      7540,
      7610,
-     7680
+     7680,
+     7750
     ],
     "packetRange" : {
      "gte" : 1700000070011,
-     "lte" : 1700000070017
+     "lte" : 1700000070018
     },
     "protocol" : [
      "http",
@@ -1699,7 +1701,7 @@
      "bytes" : 23
     },
     "source" : {
-     "bytes" : 255,
+     "bytes" : 309,
      "geo" : {
       "country_iso_code" : "US"
      },
@@ -1708,7 +1710,7 @@
       "00:11:22:33:44:01"
      ],
      "mac-cnt" : 1,
-     "packets" : 4,
+     "packets" : 5,
      "port" : 40009
     },
     "srcOui" : [
@@ -1722,6 +1724,10 @@
     "srcTTLCnt" : 1,
     "tcp" : {
      "ja4ls" : "0_64_tcp",
+     "ja4t" : [
+      "8192_00_00_00"
+     ],
+     "ja4tCnt" : 1,
      "ja4ts" : [
       "8192_00_00_00"
      ],
@@ -1737,119 +1743,15 @@
      "psh" : 2,
      "rst" : 0,
      "srcZero" : 0,
-     "syn" : 0,
+     "syn" : 1,
      "syn-ack" : 1,
      "urg" : 0
     },
     "tcpseq" : {
-     "dst" : 31000
-    },
-    "totDataBytes" : 62
-   },
-   "header" : {
-    "index" : {
-     "_index" : "tests_sessions3-23m11"
-    }
-   }
-  },
-  {
-   "body" : {
-    "@timestamp" : "SET",
-    "client" : {
-     "bytes" : 0
-    },
-    "destination" : {
-     "bytes" : 0,
-     "geo" : {
-      "country_iso_code" : "US"
-     },
-     "ip" : "10.180.156.2",
-     "mac" : [
-      "00:11:22:33:44:02"
-     ],
-     "mac-cnt" : 1,
-     "packets" : 0,
-     "port" : 80
-    },
-    "dstOui" : [
-     "CIMSYS Inc"
-    ],
-    "dstOuiCnt" : 1,
-    "ethertype" : 2048,
-    "fileId" : [],
-    "firstPacket" : 1700000070018,
-    "ipProtocol" : 6,
-    "lastPacket" : 1700000070018,
-    "length" : 0,
-    "network" : {
-     "bytes" : 54,
-     "community_id" : "1:yfl2SI444B97BXyi6t2FmqoepDA=",
-     "packets" : 1
-    },
-    "node" : "test",
-    "packetLen" : [
-     70
-    ],
-    "packetPos" : [
-     7750
-    ],
-    "packetRange" : {
-     "gte" : 1700000070018,
-     "lte" : 1700000070018
-    },
-    "protocol" : [
-     "tcp"
-    ],
-    "protocolCnt" : 1,
-    "segmentCnt" : 1,
-    "server" : {
-     "bytes" : 0
-    },
-    "source" : {
-     "bytes" : 54,
-     "geo" : {
-      "country_iso_code" : "US"
-     },
-     "ip" : "10.180.156.1",
-     "mac" : [
-      "00:11:22:33:44:01"
-     ],
-     "mac-cnt" : 1,
-     "packets" : 1,
-     "port" : 40009
-    },
-    "srcOui" : [
-     "CIMSYS Inc"
-    ],
-    "srcOuiCnt" : 1,
-    "srcTTL" : [
-     64
-    ],
-    "srcTTLCnt" : 1,
-    "tcp" : {
-     "ja4t" : [
-      "8192_00_00_00"
-     ],
-     "ja4tCnt" : 1
-    },
-    "tcpflags" : {
-     "ack" : 0,
-     "ae" : 0,
-     "cwr" : 0,
-     "dstZero" : 0,
-     "ece" : 0,
-     "fin" : 0,
-     "psh" : 0,
-     "rst" : 0,
-     "srcZero" : 0,
-     "syn" : 1,
-     "syn-ack" : 0,
-     "urg" : 0
-    },
-    "tcpseq" : {
+     "dst" : 31000,
      "src" : 30000
     },
-    "totDataBytes" : 0
+    "totDataBytes" : 62
    },
    "header" : {
     "index" : {
