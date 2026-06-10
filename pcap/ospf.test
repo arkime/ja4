@@ -3037,7 +3037,7 @@
      "port" : 123
     },
     "srcDscp" : [
-     11
+     46
     ],
     "srcDscpCnt" : 1,
     "srcOui" : [
@@ -3262,7 +3262,7 @@
      "port" : 123
     },
     "srcDscp" : [
-     11
+     46
     ],
     "srcDscpCnt" : 1,
     "srcOui" : [
