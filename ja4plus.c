@@ -201,42 +201,6 @@ LOCAL void ja4plus_http_process_headers (ArkimeSession_t *session)
 /* An http msg is complete, process the headers and create the ja4h */
 LOCAL void ja4plus_http_complete(ArkimeSession_t *session, http_parser *parser)
 {
-    /* See thirdparty/http_parser.h */
-#define HTTP_METHODS 26
-    static const char *methods[HTTP_METHODS] = {
-        "de",
-        "ge",
-        "he",
-        "po",
-        "pu",
-
-        "co",
-        "op",
-        "tr",
-
-        "cy",
-        "lo",
-        "ml",
-        "mo",
-        "pf",
-        "pp",
-        "se",
-        "uo",
-
-        "rp",
-        "ma",
-        "ct",
-        "me",
-
-        "ms",
-        "no",
-        "su",
-        "un",
-
-        "pa",
-        "pr"
-    };
-
     if (parser->type != 0)
         return;
 
@@ -257,7 +221,14 @@ LOCAL void ja4plus_http_complete(ArkimeSession_t *session, http_parser *parser)
         ja4plus_http_process_headers(session);
     }
 
-    const char *method = parser->method < HTTP_METHODS ? methods[parser->method] : "00";
+    // JA4H method code: first two characters of the method lowercased,
+    // matching the FoxIO reference implementations
+    char method[3] = "00";
+    const char *methodStr = http_method_str(parser->method);
+    if (methodStr && methodStr[0] != '<' && methodStr[0] && methodStr[1]) {
+        method[0] = tolower(methodStr[0]);
+        method[1] = tolower(methodStr[1]);
+    }
     GChecksum *const checksum = checksums256[session->thread];
     snprintf(ja4h, sizeof(ja4h), "%s%d%d%c%c%02d%4.4s_",
              method,
@@ -1000,7 +971,7 @@ LOCAL void ja4plus_ja4ts(ArkimeSession_t *session, const JA4PlusTCP_t *data, con
     if (data->synAckTimesCnt > 1) {
         BSB_EXPORT_cstr(obsb, "_");
         for (int i = 1; i < data->synAckTimesCnt; i++) {
-            BSB_EXPORT_sprintf(obsb, "%.0f-", round ((data->synAckTimes[i] - data->synAckTimes[i - 1]) / 1000000));
+            BSB_EXPORT_sprintf(obsb, "%.0f-", round ((data->synAckTimes[i] - data->synAckTimes[i - 1]) / 1000000.0));
         }
         BSB_EXPORT_rewind(obsb, 1); // remove last -
     }
