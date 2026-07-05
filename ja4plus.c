@@ -497,9 +497,13 @@ LOCAL uint32_t ja4plus_dtls_process_server_hello(ArkimeSession_t *session, const
                 break;
 
             if (etype == 0x2b && elen == 2) { // etype 0x2b is supported version
-                BSB_IMPORT_u16(ebsb, supportedver);
+                uint16_t sv = 0;
+                BSB_IMPORT_u16(ebsb, sv);
 
-                supportedver = MAX(ver, supportedver);
+                // The extension replaces the header version per the JA4 spec;
+                // MAX() would pick the wrong one for DTLS where values descend
+                if (!ja4plus_is_grease_value(sv))
+                    supportedver = sv;
                 continue; // Already processed ebsb above
             }
 
@@ -635,9 +639,13 @@ LOCAL uint32_t ja4plus_tls_process_server_hello(ArkimeSession_t *session, const 
                 break;
 
             if (etype == 0x2b && elen == 2) { // etype 0x2b is supported version
-                BSB_IMPORT_u16(ebsb, supportedver);
+                uint16_t sv = 0;
+                BSB_IMPORT_u16(ebsb, sv);
 
-                supportedver = MAX(ver, supportedver);
+                // The extension replaces the header version per the JA4 spec;
+                // MAX() would pick the wrong one for DTLS where values descend
+                if (!ja4plus_is_grease_value(sv))
+                    supportedver = sv;
                 continue; // Already processed ebsb above
             }
 
@@ -792,7 +800,7 @@ LOCAL uint32_t ja4plus_process_certificate_wInfo(ArkimeSession_t *session, const
     BSB out;
     char outbuf[1000];
     char ja4x[39];
-    char ja4x_r[1000];
+    char ja4x_r[3100]; // 3 sections of up to ~1000 + separators
     ja4x[12] = ja4x[25] = '_';
     ja4x[38] = 0;
 
@@ -853,7 +861,7 @@ LOCAL uint32_t ja4plus_process_certificate_wInfo(ArkimeSession_t *session, const
     ja4plus_cert_print(session->thread, 2, ja4x, &out);
 
     arkime_field_certsinfo_update_extra(uw, g_strdup("ja4x"), g_strdup(ja4x));
-    if (ja4Raw) {
+    if (ja4Raw && BSB_NOT_ERROR(ja4x_rbsb)) {
         arkime_field_certsinfo_update_extra(uw, g_strdup("ja4x_r"), g_strdup(ja4x_r));
     }
     return 0;
@@ -1392,6 +1400,11 @@ LOCAL int ja4plus_dhcpv6_udp_parser(ArkimeSession_t *session, void *UNUSED(uw), 
         case 1:
             snprintf(maxSize, sizeof(maxSize), "%04d", l);
             break;
+        case 4:
+            // IA_TA presence keys the requested-ip flag (matches the FoxIO
+            // wireshark reference dhcpv6.iata handling)
+            requestIp = 'i';
+            break;
         case 6:
             for (int i = 0; i < l - 1; i += 2) {
                 uint16_t option;
@@ -1419,18 +1432,14 @@ LOCAL int ja4plus_dhcpv6_udp_parser(ArkimeSession_t *session, void *UNUSED(uw), 
                     BSB_EXPORT_u08(oBSB, '-');
                 }
                 BSB_EXPORT_sprintf(oBSB, "%d", it);
-                if (t == 3 && it == 3) {
-                    requestIp = 'i';
-                }
             }
             break;
         }
         case 39: {
-            uint8_t flags = 0;
-            BSB ibsb;
-            BSB_INIT(ibsb, v, l);
-            BSB_IMPORT_u08(ibsb, flags);
-            if (!BSB_IS_ERROR(ibsb) && flags == 0)
+            // FQDN flag keys on a client domain name being present (matches
+            // the FoxIO wireshark reference dhcpv6.client_domain), not on
+            // the flags byte being 0
+            if (l > 1)
                 fqdn = 'd';
             break;
         }
