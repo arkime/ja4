@@ -541,7 +541,7 @@ LOCAL uint32_t ja4plus_dtls_process_server_hello(ArkimeSession_t *session, const
     memcpy(ja4s + 8, cipherHex, 4);
     ja4s[12] = '_';
 
-    char tmpBuf[5 * 256];
+    char tmpBuf[5 * 256 + 1];  // 256 "%04x," entries + snprintf NUL
     BSB tmpBSB;
 
     BSB_INIT(tmpBSB, tmpBuf, sizeof(tmpBuf));
@@ -683,7 +683,7 @@ LOCAL uint32_t ja4plus_tls_process_server_hello(ArkimeSession_t *session, const 
     memcpy(ja4s + 8, cipherHex, 4);
     ja4s[12] = '_';
 
-    char tmpBuf[5 * 256];
+    char tmpBuf[5 * 256 + 1];  // 256 "%04x," entries + snprintf NUL
     BSB tmpBSB;
 
     BSB_INIT(tmpBSB, tmpBuf, sizeof(tmpBuf));
@@ -1359,10 +1359,14 @@ LOCAL int ja4plus_dhcpv6_udp_parser(ArkimeSession_t *session, void *UNUSED(uw), 
     };
 
 
-    if (len < 46 || data[0] == 0 ||  data[0] > 11)
+    // Minimum: msg-type+txn-id (4) or relay header (34), plus one option header
+    if (len < 8 || data[0] == 0)
         return 0;
 
     int msgType = data[0];
+
+    if ((msgType == 12 || msgType == 13) && len < 38)
+        return 0;
     char requestIp = 'n';
     char fqdn = 'n';
 
@@ -1380,7 +1384,12 @@ LOCAL int ja4plus_dhcpv6_udp_parser(ArkimeSession_t *session, void *UNUSED(uw), 
     BSB bsb;
     BSB_INIT(bsb, data, len);
 
-    BSB_IMPORT_skip(bsb, 4);
+    // Relay-Forward/Relay-Reply have msg-type, hop-count, link-address and
+    // peer-address before the options; everything else just msg-type + txn-id
+    if (msgType == 12 || msgType == 13)
+        BSB_IMPORT_skip(bsb, 34);
+    else
+        BSB_IMPORT_skip(bsb, 4);
     while (BSB_REMAINING(bsb) >= 4) {
         int t = 0;
         int l = 0;
