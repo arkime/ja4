@@ -13,6 +13,7 @@
 #include "arkime.h"
 #include "../parsers/ssh_info.h"
 #include <math.h>
+#include <inttypes.h>
 
 extern ArkimeConfig_t        config;
 LOCAL int                    ja4sField;
@@ -26,6 +27,7 @@ LOCAL int                    ja4hField;
 LOCAL int                    ja4hRawField;
 LOCAL int                    ja4dField;
 LOCAL int                    ja4d6Field;
+LOCAL int                    ja4nField;
 
 
 LOCAL int                    ja4plus_plugin_num;
@@ -1475,6 +1477,213 @@ LOCAL int ja4plus_dhcpv6_udp_parser(ArkimeSession_t *session, void *UNUSED(uw), 
     return 0;
 }
 /******************************************************************************/
+/* JA4N - NTP fingerprint
+ *
+ * (mode)(version)-(leap)-(stratum)-(poll)-(precision)-(rootdelay)(rootdisp)-
+ * (ref)(org)(rec)(xmt)-(refid)_(poll secs)_(ref epoch)_(xmt epoch)
+ */
+#define JA4PLUS_NTP_EPOCH 2208988800LL
+#define JA4PLUS_NTP_YEAR  (365LL * 24 * 3600)
+
+/******************************************************************************/
+/* Root delay/dispersion are 16.16 fixed point, bucketed as zero / exactly 1s / other */
+LOCAL char ja4plus_ntp_root_code(uint32_t val)
+{
+    if (val == 0)
+        return '0';
+    if (val == 0x00010000)
+        return '1';
+    return '2';
+}
+/******************************************************************************/
+/* Unix epoch seconds of an NTP timestamp, an unset timestamp stays 0 */
+LOCAL int64_t ja4plus_ntp_epoch(uint64_t ts)
+{
+    if (ts == 0)
+        return 0;
+    return (int64_t)(ts >> 32) - JA4PLUS_NTP_EPOCH;
+}
+/******************************************************************************/
+/* Multiply a little endian decimal digit array by m, returns the new length */
+LOCAL int ja4plus_ntp_mul(uint8_t *digits, int len, int m)
+{
+    int carry = 0;
+
+    for (int i = 0; i < len; i++) {
+        const int v = digits[i] * m + carry;
+        digits[i] = v % 10;
+        carry = v / 10;
+    }
+    while (carry) {
+        digits[len++] = carry % 10;
+        carry /= 10;
+    }
+    return len;
+}
+/******************************************************************************/
+/* Poll is a log2 seconds exponent, rendered as the decimal seconds with the
+ * point removed, so -1 is 05, -2 is 025 and -4 is 00625. 2^-n is 5^n over 10^n,
+ * which is exactly n decimal digits, hence the zero padding.
+ */
+LOCAL void ja4plus_ntp_poll_secs(int8_t poll, char *out, int outlen)
+{
+    uint8_t digits[160];  // 5^128 is 90 digits, 2^127 is 39
+    int     len = 1;
+
+    digits[0] = 1;
+
+    const int n = (poll < 0) ? -poll : 0;
+    for (int i = 0; i < (poll < 0 ? n : poll); i++) {
+        len = ja4plus_ntp_mul(digits, len, poll < 0 ? 5 : 2);
+    }
+
+    int pos = 0;
+    if (poll < 0) {
+        out[pos++] = '0';
+        for (int i = len; i < n && pos < outlen - 1; i++) {
+            out[pos++] = '0';
+        }
+    }
+    for (int i = len - 1; i >= 0 && pos < outlen - 1; i--) {
+        out[pos++] = '0' + digits[i];
+    }
+    out[pos] = 0;
+}
+/******************************************************************************/
+/* now is capture time, not wall clock, so the fingerprint is reproducible */
+LOCAL char ja4plus_ntp_ts_code(uint64_t ts, int64_t now)
+{
+    if (ts == 0)
+        return '0';
+
+    int64_t diff = ja4plus_ntp_epoch(ts) - now;
+    if (diff < 0)
+        diff = -diff;
+    return (diff <= JA4PLUS_NTP_YEAR) ? '1' : '2';
+}
+/******************************************************************************/
+/* Like wireshark packet-ntp.c, the meaning comes from stratum alone and never
+ * from the bytes, but unlike wireshark the name isn't checked against the
+ * known kiss-o'-death/clock lists, it is just passed through
+ */
+LOCAL void ja4plus_ntp_refid(const ArkimeSession_t *session, const uint8_t *refId, uint8_t stratum, char out[5])
+{
+    // 0 is a kiss-o'-death code, 1 a reference clock name, anything else an
+    // address. A literal IPv4 address and the first 4 bytes of the md5 of an
+    // IPv6 address are indistinguishable, so go by the session's own family
+    if (stratum > 1) {
+        memcpy(out, ARKIME_SESSION_IS_v6(session) ? "ipv6" : "ipv4", 5);
+        return;
+    }
+
+    int printable = 0, nulls = 0;
+    for (int i = 0; i < 4; i++) {
+        if (isprint(refId[i]))
+            printable++;
+        else if (refId[i] == 0)
+            nulls++;
+    }
+
+    if (printable == 4) {
+        memcpy(out, refId, 4);
+    } else if (printable == 3 && nulls == 1) {
+        for (int i = 0; i < 4; i++) {
+            out[i] = refId[i] ? refId[i] : '0';
+        }
+    } else {
+        // Always 4 printable chars, so an all zero refid lands here as 0000
+        memcpy(out, arkime_char_to_hexstr[refId[0]], 2);
+        memcpy(out + 2, arkime_char_to_hexstr[refId[1]], 2);
+    }
+    out[4] = 0;
+}
+/******************************************************************************/
+LOCAL int ja4plus_ntp_parser(ArkimeSession_t *session, void UNUSED(*uw), const uint8_t *data, int len, int UNUSED(which))
+{
+    // Short mode 6/7 control packets have a different header and no
+    // fingerprintable fields
+    if (len < 48)
+        return 0;
+
+    static const char modeCodes[] = "0apcsbn7";
+
+    uint8_t        flags = 0, stratum = 0, poll = 0, precision = 0;
+    uint32_t       rootDelay = 0, rootDisp = 0;
+    uint64_t       refTs = 0, orgTs = 0, recTs = 0, xmtTs = 0;
+    const uint8_t *refId = NULL;
+
+    BSB bsb;
+    BSB_INIT(bsb, data, len);
+
+    BSB_IMPORT_u08(bsb, flags);
+    BSB_IMPORT_u08(bsb, stratum);
+    BSB_IMPORT_u08(bsb, poll);
+    BSB_IMPORT_u08(bsb, precision);
+    BSB_IMPORT_u32(bsb, rootDelay);
+    BSB_IMPORT_u32(bsb, rootDisp);
+    BSB_IMPORT_ptr(bsb, refId, 4);
+    BSB_IMPORT_u64(bsb, refTs);
+    BSB_IMPORT_u64(bsb, orgTs);
+    BSB_IMPORT_u64(bsb, recTs);
+    BSB_IMPORT_u64(bsb, xmtTs);
+
+    if (BSB_IS_ERROR(bsb) || !refId)
+        return 0;
+
+    char refIdStr[5];
+    ja4plus_ntp_refid(session, refId, stratum, refIdStr);
+
+    const int64_t now = session->firstPacket.tv_sec;
+
+    char pollSecs[160];
+    ja4plus_ntp_poll_secs((int8_t)poll, pollSecs, sizeof(pollSecs));
+
+    char ja4n[256];
+    snprintf(ja4n, sizeof(ja4n), "%c%u-%u-%u-%d-%u-%c%c-%c%c%c%c-%s_%s_%08" PRIx64 "_%08" PRIx64,
+             modeCodes[flags & 0x07],
+             (flags >> 3) & 0x07,   // version
+             (flags >> 6) & 0x03,   // leap
+             stratum,
+             (int8_t)poll,   // log2 seconds, signed per RFC 5905
+             256 - precision,
+             ja4plus_ntp_root_code(rootDelay),
+             ja4plus_ntp_root_code(rootDisp),
+             ja4plus_ntp_ts_code(refTs, now),
+             ja4plus_ntp_ts_code(orgTs, now),
+             ja4plus_ntp_ts_code(recTs, now),
+             ja4plus_ntp_ts_code(xmtTs, now),
+             refIdStr,
+             pollSecs,
+             refTs >> 32,   // raw NTP seconds, not unix epoch
+             xmtTs >> 32
+            );
+
+    arkime_field_string_add(ja4nField, session, ja4n, -1, TRUE);
+    return 0;
+}
+/******************************************************************************/
+/* Same checks as parsers/ntp.c, kept separate so ja4n doesn't depend on the
+ * ntp parser being enabled
+ */
+LOCAL void ja4plus_ntp_classify(ArkimeSession_t *session, const uint8_t *data, int len, int UNUSED(which), void UNUSED(*uw))
+{
+    if (len < 48)
+        return;
+
+    if (data[1] > 16)  // stratum
+        return;
+
+    const uint8_t version = (data[0] >> 3) & 0x07;
+    const uint8_t mode = data[0] & 0x07;
+
+    if (version < 1 || version > 4 || mode == 0)
+        return;
+
+    // Called once per direction, and twice more when both ports are 123, but
+    // arkime_parsers_register2 drops the duplicates
+    arkime_parsers_register(session, ja4plus_ntp_parser, 0, 0);
+}
+/******************************************************************************/
 LOCAL uint32_t ja4plus_dhcp_packet(ArkimeSession_t *session, const uint8_t *d, int l, void UNUSED(*uw))
 {
     if (IN6_IS_ADDR_V4MAPPED(&session->addr1)) {
@@ -1512,6 +1721,7 @@ void arkime_plugin_init()
 
     ja4Raw = arkime_config_boolean(NULL, "ja4Raw", FALSE);
     ja4hOmitZeroSections = arkime_config_boolean(NULL, "ja4hOmitZeroSections", FALSE);
+    const gboolean ja4nEnable = arkime_config_boolean(NULL, "ja4nEnable", FALSE);
 
     arkime_parsers_add_named_func("tls_process_server_hello", ja4plus_tls_process_server_hello);
     arkime_parsers_add_named_func("dtls_process_server_hello", ja4plus_dtls_process_server_hello);
@@ -1519,6 +1729,9 @@ void arkime_plugin_init()
     arkime_parsers_add_named_func("ssh_counting200", ja4plus_ssh_ja4ssh);
     arkime_parsers_add_named_func("tcp_raw_packet", ja4plus_tcp_raw_packet);
     arkime_parsers_add_named_func("dhcp_packet", ja4plus_dhcp_packet);
+
+    if (ja4nEnable)
+        arkime_parsers_classifier_register_port("ja4n", NULL, 123, ARKIME_PARSERS_PORT_UDP, ja4plus_ntp_classify);
 
     ja4sField = arkime_field_define("tls", "lotermfield",
                                     "tls.ja4s", "JA4s", "tls.ja4s",
@@ -1602,6 +1815,14 @@ void arkime_plugin_init()
                                      "DHCP JA4d6 field",
                                      ARKIME_FIELD_TYPE_STR_GHASH,  ARKIME_FIELD_FLAG_CNT,
                                      (char *)NULL);
+
+    // termfield, not lotermfield, since the reference id section is case sensitive
+    ja4nField = arkime_field_define("ja4n", "termfield",
+                                    "ntp.ja4n", "JA4n", "ntp.ja4n",
+                                    "NTP JA4n field",
+                                    ARKIME_FIELD_TYPE_STR_GHASH,  ARKIME_FIELD_FLAG_CNT,
+                                    (char *)NULL);
+
     int t;
     for (t = 0; t < config.packetThreads; t++) {
         checksums256[t] = g_checksum_new(G_CHECKSUM_SHA256);
