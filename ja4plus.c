@@ -13,7 +13,6 @@
 #include "arkime.h"
 #include "../parsers/ssh_info.h"
 #include <math.h>
-#include <inttypes.h>
 
 extern ArkimeConfig_t        config;
 LOCAL int                    ja4sField;
@@ -1479,12 +1478,10 @@ LOCAL int ja4plus_dhcpv6_udp_parser(ArkimeSession_t *session, void *UNUSED(uw), 
 /******************************************************************************/
 /* JA4N - NTP fingerprint
  *
- * (mode)(version)-(leap)-(stratum)-(poll)-(precision)-(rootdelay)(rootdisp)-
- * (ref)(org)(rec)(xmt)-(refid)_(poll secs)_(ref or xmt epoch)
+ * (mode)(version)-(leap)-(stratum)-(poll)-(precision)-(rootdelay)(rootdisp)_
+ * (ref)(org)(rec)(xmt)-(refid)_(poll secs)
  *
- * The trailing epoch is the seconds field of the reference timestamp for
- * request modes (1,3,6) and of the transmit timestamp for response modes
- * (2,4,5), per the JA4N spec.
+ * ex: c4-0-2-10-25-22_1111-ipv4_1024
  */
 #define JA4PLUS_NTP_EPOCH 2208988800LL
 #define JA4PLUS_NTP_YEAR  (365LL * 24 * 3600)
@@ -1642,14 +1639,9 @@ LOCAL int ja4plus_ntp_parser(ArkimeSession_t *session, void UNUSED(*uw), const u
     char pollSecs[160];
     ja4plus_ntp_poll_secs((int8_t)poll, pollSecs, sizeof(pollSecs));
 
-    // Requests (mode 1,3,6) use the reference timestamp, responses (mode 2,4,5)
-    // use the transmit timestamp, raw NTP seconds not unix epoch
-    const uint8_t  mode = flags & 0x07;
-    const uint64_t epochTs = (mode == 2 || mode == 4 || mode == 5) ? xmtTs : refTs;
-
     char ja4n[256];
-    snprintf(ja4n, sizeof(ja4n), "%c%u-%u-%u-%d-%u-%c%c-%c%c%c%c-%s_%s_%08" PRIx64,
-             modeCodes[mode],
+    snprintf(ja4n, sizeof(ja4n), "%c%u-%u-%u-%d-%u-%c%c_%c%c%c%c-%s_%s",
+             modeCodes[flags & 0x07],
              (flags >> 3) & 0x07,   // version
              (flags >> 6) & 0x03,   // leap
              stratum,
@@ -1662,8 +1654,7 @@ LOCAL int ja4plus_ntp_parser(ArkimeSession_t *session, void UNUSED(*uw), const u
              ja4plus_ntp_ts_code(recTs, now),
              ja4plus_ntp_ts_code(xmtTs, now),
              refIdStr,
-             pollSecs,
-             epochTs >> 32
+             pollSecs
             );
 
     arkime_field_string_add(ja4nField, session, ja4n, -1, TRUE);
