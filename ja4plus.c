@@ -1484,7 +1484,7 @@ LOCAL int ja4plus_dhcpv6_udp_parser(ArkimeSession_t *session, void *UNUSED(uw), 
  * ex: c4-0-2-10-25-22_1111-ipv4_1024
  */
 #define JA4PLUS_NTP_EPOCH 2208988800LL
-#define JA4PLUS_NTP_YEAR  (365LL * 24 * 3600)
+#define JA4PLUS_NTP_RECENT (30LL * 24 * 3600)
 
 /******************************************************************************/
 /* Root delay/dispersion are 16.16 fixed point, bucketed as zero / exactly 1s / other */
@@ -1560,7 +1560,7 @@ LOCAL char ja4plus_ntp_ts_code(uint64_t ts, int64_t now)
     int64_t diff = ja4plus_ntp_epoch(ts) - now;
     if (diff < 0)
         diff = -diff;
-    return (diff <= JA4PLUS_NTP_YEAR) ? '1' : '2';
+    return (diff <= JA4PLUS_NTP_RECENT) ? '1' : '2';
 }
 /******************************************************************************/
 /* Like wireshark packet-ntp.c, the meaning comes from stratum alone and never
@@ -1642,11 +1642,11 @@ LOCAL int ja4plus_ntp_parser(ArkimeSession_t *session, void UNUSED(*uw), const u
     char ja4n[256];
     snprintf(ja4n, sizeof(ja4n), "%c%u-%u-%u-%d-%u-%c%c_%c%c%c%c-%s_%s",
              modeCodes[flags & 0x07],
-             (flags >> 3) & 0x07,   // version
-             (flags >> 6) & 0x03,   // leap
+             (flags >> 3) & 0x07u,   // version
+             (flags >> 6) & 0x03u,   // leap
              stratum,
              (int8_t)poll,   // log2 seconds, signed per RFC 5905
-             256 - precision,
+             256u - precision,
              ja4plus_ntp_root_code(rootDelay),
              ja4plus_ntp_root_code(rootDisp),
              ja4plus_ntp_ts_code(refTs, now),
