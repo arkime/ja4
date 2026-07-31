@@ -19,6 +19,7 @@ LOCAL int                    ja4sField;
 LOCAL int                    ja4sRawField;
 LOCAL int                    ja4sshField;
 LOCAL int                    ja4lField;
+LOCAL int                    ja4lDeltaField;
 LOCAL int                    ja4lsField;
 LOCAL int                    ja4tField;
 LOCAL int                    ja4tsField;
@@ -34,6 +35,7 @@ LOCAL GChecksum             *checksums256[ARKIME_MAX_PACKET_THREADS];
 extern uint8_t               arkime_char_to_hexstr[256][3];
 LOCAL gboolean               ja4Raw;
 LOCAL gboolean               ja4hOmitZeroSections;
+LOCAL gboolean               ja4nEnable;
 
 #define JA4PLUS_SYN_ACK_COUNT 4
 typedef struct {
@@ -1126,6 +1128,13 @@ LOCAL uint32_t ja4plus_tcp_raw_packet(ArkimeSession_t *session, const uint8_t *U
                                  ja4plus_tcp->client_ttl,
                                  (timestampF - ja4plus_tcp->timestampE) / 2
                                 );
+
+                        if (ja4nEnable) {
+                            char ja4ldelta[100];
+                            snprintf(ja4ldelta, sizeof(ja4ldelta), "%.1f",
+                                     ((timestampF - ja4plus_tcp->timestampE) / 2.0) / ((ja4plus_tcp->timestampC - ja4plus_tcp->synAckTimes[ja4plus_tcp->synAckTimesCnt - 1]) / 2.0));
+                            arkime_field_string_add(ja4lDeltaField, session, ja4ldelta, -1, TRUE);
+                        }
                     }
                     arkime_field_string_add(ja4lField, session, ja4l, -1, TRUE);
                 }
@@ -1720,7 +1729,7 @@ void arkime_plugin_init()
 
     ja4Raw = arkime_config_boolean(NULL, "ja4Raw", FALSE);
     ja4hOmitZeroSections = arkime_config_boolean(NULL, "ja4hOmitZeroSections", FALSE);
-    const gboolean ja4nEnable = arkime_config_boolean(NULL, "ja4nEnable", FALSE);
+    ja4nEnable = arkime_config_boolean(NULL, "ja4nEnable", FALSE);
 
     arkime_parsers_add_named_func("tls_process_server_hello", ja4plus_tls_process_server_hello);
     arkime_parsers_add_named_func("dtls_process_server_hello", ja4plus_dtls_process_server_hello);
@@ -1770,6 +1779,12 @@ void arkime_plugin_init()
     ja4lField = arkime_field_define("tcp", "lotermfield",
                                     "tcp.ja4l", "JA4l", "tcp.ja4l",
                                     "JA4 Latency Client field",
+                                    ARKIME_FIELD_TYPE_STR,  0,
+                                    (char *)NULL);
+
+    ja4lDeltaField = arkime_field_define("tcp", "lotermfield",
+                                    "tcp.ja4l-delta", "JA4l-Delta", "tcp.ja4l-delta",
+                                    "JA4 Latency Client Delta field",
                                     ARKIME_FIELD_TYPE_STR,  0,
                                     (char *)NULL);
 
