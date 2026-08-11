@@ -92,6 +92,7 @@
      "packets" : 6,
      "port" : 54068
     },
+    "srcISNCnt" : 1,
     "srcOui" : [
      "Apple, Inc."
     ],
@@ -112,6 +113,8 @@
      ],
      "ja4tsCnt" : 1
     },
+    "tcpSynAckValidated" : true,
+    "tcpSynValidated" : true,
     "tcpflags" : {
      "ack" : 5,
      "ae" : 0,
@@ -240,6 +243,7 @@
      "packets" : 8,
      "port" : 54069
     },
+    "srcISNCnt" : 1,
     "srcOui" : [
      "Apple, Inc."
     ],
@@ -266,6 +270,8 @@
      ],
      "ja4tsCnt" : 1
     },
+    "tcpSynAckValidated" : true,
+    "tcpSynValidated" : true,
     "tcpflags" : {
      "ack" : 6,
      "ae" : 0,
@@ -521,6 +527,7 @@
      "packets" : 12,
      "port" : 54072
     },
+    "srcISNCnt" : 1,
     "srcOui" : [
      "Apple, Inc."
     ],
@@ -546,6 +553,8 @@
      ],
      "ja4tsCnt" : 1
     },
+    "tcpSynAckValidated" : true,
+    "tcpSynValidated" : true,
     "tcpflags" : {
      "ack" : 8,
      "ae" : 0,

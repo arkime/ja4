@@ -236,6 +236,7 @@
      "packets" : 6,
      "port" : 50606
     },
+    "srcISNCnt" : 1,
     "srcOui" : [
      "Cisco Systems, Inc"
     ],
@@ -264,6 +265,8 @@
      ],
      "ja4tsCnt" : 1
     },
+    "tcpSynAckValidated" : true,
+    "tcpSynValidated" : true,
     "tcpflags" : {
      "ack" : 10,
      "ae" : 0,

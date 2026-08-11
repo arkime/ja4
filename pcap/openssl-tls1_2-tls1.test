@@ -251,6 +251,7 @@
      "packets" : 11,
      "port" : 40291
     },
+    "srcISNCnt" : 1,
     "srcOui" : [
      "Dell Inc."
     ],
@@ -277,6 +278,8 @@
      ],
      "ja4tsCnt" : 1
     },
+    "tcpSynAckValidated" : true,
+    "tcpSynValidated" : true,
     "tcpflags" : {
      "ack" : 8,
      "ae" : 0,

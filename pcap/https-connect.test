@@ -227,6 +227,7 @@
      "packets" : 8,
      "port" : 54723
     },
+    "srcISNCnt" : 1,
     "srcOui" : [
      "Super Micro Computer, Inc."
     ],
@@ -252,6 +253,8 @@
      ],
      "ja4tsCnt" : 1
     },
+    "tcpSynAckValidated" : true,
+    "tcpSynValidated" : true,
     "tcpflags" : {
      "ack" : 9,
      "ae" : 0,

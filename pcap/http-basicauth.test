@@ -232,6 +232,7 @@
      "packets" : 3,
      "port" : 1087
     },
+    "srcISNCnt" : 1,
     "srcOui" : [
      "Cisco Systems, Inc"
     ],
@@ -258,6 +259,8 @@
      ],
      "ja4tsCnt" : 1
     },
+    "tcpSynAckValidated" : true,
+    "tcpSynValidated" : true,
     "tcpflags" : {
      "ack" : 2,
      "ae" : 0,

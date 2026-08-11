@@ -198,6 +198,7 @@
      "packets" : 9,
      "port" : 61273
     },
+    "srcISNCnt" : 1,
     "srcOui" : [
      "Apple, Inc."
     ],
@@ -219,6 +220,8 @@
      ],
      "ja4tsCnt" : 1
     },
+    "tcpSynAckValidated" : true,
+    "tcpSynValidated" : true,
     "tcpflags" : {
      "ack" : 7,
      "ae" : 0,

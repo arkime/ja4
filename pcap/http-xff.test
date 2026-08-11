@@ -240,6 +240,7 @@
      "packets" : 6,
      "port" : 41954
     },
+    "srcISNCnt" : 1,
     "srcOui" : [
      "Cisco Systems, Inc"
     ],
@@ -265,6 +266,8 @@
      ],
      "ja4tsCnt" : 1
     },
+    "tcpSynAckValidated" : true,
+    "tcpSynValidated" : true,
     "tcpflags" : {
      "ack" : 4,
      "ae" : 0,

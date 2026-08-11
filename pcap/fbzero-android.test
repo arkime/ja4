@@ -171,6 +171,7 @@
      "packets" : 25,
      "port" : 39584
     },
+    "srcISNCnt" : 1,
     "srcOui" : [
      "Huawei Technologies Co.,Ltd"
     ],
@@ -193,6 +194,8 @@
      ],
      "ja4tsCnt" : 1
     },
+    "tcpSynAckValidated" : true,
+    "tcpSynValidated" : true,
     "tcpflags" : {
      "ack" : 18,
      "ae" : 0,

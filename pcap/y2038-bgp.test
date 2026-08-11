@@ -199,6 +199,8 @@
      ],
      "ja4tsCnt" : 1
     },
+    "tcpSynAckValidated" : false,
+    "tcpSynValidated" : false,
     "tcpflags" : {
      "ack" : 0,
      "ae" : 0,

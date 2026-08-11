@@ -232,6 +232,7 @@
      "packets" : 3,
      "port" : 54162
     },
+    "srcISNCnt" : 1,
     "srcOui" : [
      "Juniper Networks"
     ],
@@ -256,6 +257,8 @@
      ],
      "ja4tsCnt" : 1
     },
+    "tcpSynAckValidated" : true,
+    "tcpSynValidated" : true,
     "tcpflags" : {
      "ack" : 3,
      "ae" : 0,

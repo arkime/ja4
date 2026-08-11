@@ -319,6 +319,7 @@
      "packets" : 2,
      "port" : 64379
     },
+    "srcISNCnt" : 1,
     "srcOui" : [
      "Juniper Networks",
      "Palo Alto Networks"
@@ -339,6 +340,8 @@
      ],
      "ja4tsCnt" : 1
     },
+    "tcpSynAckValidated" : true,
+    "tcpSynValidated" : true,
     "tcpflags" : {
      "ack" : 0,
      "ae" : 0,

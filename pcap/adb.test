@@ -111,6 +111,7 @@
      "packets" : 8,
      "port" : 36698
     },
+    "srcISNCnt" : 1,
     "srcPayload8" : "434e584e00000001",
     "srcRIR" : "ARIN",
     "srcTTL" : [
@@ -129,6 +130,8 @@
      ],
      "ja4tsCnt" : 1
     },
+    "tcpSynAckValidated" : true,
+    "tcpSynValidated" : true,
     "tcpflags" : {
      "ack" : 5,
      "ae" : 0,

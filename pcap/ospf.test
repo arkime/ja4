@@ -1262,6 +1262,7 @@
      "packets" : 1,
      "port" : 34808
     },
+    "srcISNCnt" : 1,
     "srcOui" : [
      "PCS Computer Systems GmbH"
     ],
@@ -1276,6 +1277,8 @@
      ],
      "ja4tCnt" : 1
     },
+    "tcpSynAckValidated" : false,
+    "tcpSynValidated" : false,
     "tcpflags" : {
      "ack" : 0,
      "ae" : 0,
@@ -1815,6 +1818,7 @@
      "packets" : 1,
      "port" : 51532
     },
+    "srcISNCnt" : 1,
     "srcOui" : [
      "PCS Computer Systems GmbH"
     ],
@@ -1829,6 +1833,8 @@
      ],
      "ja4tCnt" : 1
     },
+    "tcpSynAckValidated" : false,
+    "tcpSynValidated" : false,
     "tcpflags" : {
      "ack" : 0,
      "ae" : 0,
@@ -1924,6 +1930,7 @@
      "packets" : 1,
      "port" : 42834
     },
+    "srcISNCnt" : 1,
     "srcOui" : [
      "PCS Computer Systems GmbH"
     ],
@@ -1938,6 +1945,8 @@
      ],
      "ja4tCnt" : 1
     },
+    "tcpSynAckValidated" : false,
+    "tcpSynValidated" : false,
     "tcpflags" : {
      "ack" : 0,
      "ae" : 0,
@@ -2033,6 +2042,7 @@
      "packets" : 1,
      "port" : 54958
     },
+    "srcISNCnt" : 1,
     "srcOui" : [
      "PCS Computer Systems GmbH"
     ],
@@ -2047,6 +2057,8 @@
      ],
      "ja4tCnt" : 1
     },
+    "tcpSynAckValidated" : false,
+    "tcpSynValidated" : false,
     "tcpflags" : {
      "ack" : 0,
      "ae" : 0,
@@ -2142,6 +2154,7 @@
      "packets" : 1,
      "port" : 44110
     },
+    "srcISNCnt" : 1,
     "srcOui" : [
      "PCS Computer Systems GmbH"
     ],
@@ -2156,6 +2169,8 @@
      ],
      "ja4tCnt" : 1
     },
+    "tcpSynAckValidated" : false,
+    "tcpSynValidated" : false,
     "tcpflags" : {
      "ack" : 0,
      "ae" : 0,
@@ -2254,6 +2269,7 @@
      "packets" : 1,
      "port" : 52112
     },
+    "srcISNCnt" : 1,
     "srcOui" : [
      "PCS Computer Systems GmbH"
     ],
@@ -2268,6 +2284,8 @@
      ],
      "ja4tCnt" : 1
     },
+    "tcpSynAckValidated" : false,
+    "tcpSynValidated" : false,
     "tcpflags" : {
      "ack" : 0,
      "ae" : 0,
@@ -2366,6 +2384,7 @@
      "packets" : 1,
      "port" : 32802
     },
+    "srcISNCnt" : 1,
     "srcOui" : [
      "PCS Computer Systems GmbH"
     ],
@@ -2380,6 +2399,8 @@
      ],
      "ja4tCnt" : 1
     },
+    "tcpSynAckValidated" : false,
+    "tcpSynValidated" : false,
     "tcpflags" : {
      "ack" : 0,
      "ae" : 0,
@@ -2478,6 +2499,7 @@
      "packets" : 1,
      "port" : 44002
     },
+    "srcISNCnt" : 1,
     "srcOui" : [
      "PCS Computer Systems GmbH"
     ],
@@ -2492,6 +2514,8 @@
      ],
      "ja4tCnt" : 1
     },
+    "tcpSynAckValidated" : false,
+    "tcpSynValidated" : false,
     "tcpflags" : {
      "ack" : 0,
      "ae" : 0,
@@ -2590,6 +2614,7 @@
      "packets" : 1,
      "port" : 39392
     },
+    "srcISNCnt" : 1,
     "srcOui" : [
      "PCS Computer Systems GmbH"
     ],
@@ -2604,6 +2629,8 @@
      ],
      "ja4tCnt" : 1
     },
+    "tcpSynAckValidated" : false,
+    "tcpSynValidated" : false,
     "tcpflags" : {
      "ack" : 0,
      "ae" : 0,
@@ -2702,6 +2729,7 @@
      "packets" : 1,
      "port" : 53518
     },
+    "srcISNCnt" : 1,
     "srcOui" : [
      "PCS Computer Systems GmbH"
     ],
@@ -2716,6 +2744,8 @@
      ],
      "ja4tCnt" : 1
     },
+    "tcpSynAckValidated" : false,
+    "tcpSynValidated" : false,
     "tcpflags" : {
      "ack" : 0,
      "ae" : 0,
@@ -2814,6 +2844,7 @@
      "packets" : 1,
      "port" : 44256
     },
+    "srcISNCnt" : 1,
     "srcOui" : [
      "PCS Computer Systems GmbH"
     ],
@@ -2828,6 +2859,8 @@
      ],
      "ja4tCnt" : 1
     },
+    "tcpSynAckValidated" : false,
+    "tcpSynValidated" : false,
     "tcpflags" : {
      "ack" : 0,
      "ae" : 0,
@@ -3130,6 +3163,7 @@
      "packets" : 1,
      "port" : 52338
     },
+    "srcISNCnt" : 1,
     "srcOui" : [
      "PCS Computer Systems GmbH"
     ],
@@ -3144,6 +3178,8 @@
      ],
      "ja4tCnt" : 1
     },
+    "tcpSynAckValidated" : false,
+    "tcpSynValidated" : false,
     "tcpflags" : {
      "ack" : 0,
      "ae" : 0,
@@ -3355,6 +3391,7 @@
      "packets" : 1,
      "port" : 52342
     },
+    "srcISNCnt" : 1,
     "srcOui" : [
      "PCS Computer Systems GmbH"
     ],
@@ -3369,6 +3406,8 @@
      ],
      "ja4tCnt" : 1
     },
+    "tcpSynAckValidated" : false,
+    "tcpSynValidated" : false,
     "tcpflags" : {
      "ack" : 0,
      "ae" : 0,
@@ -3464,6 +3503,7 @@
      "packets" : 1,
      "port" : 51566
     },
+    "srcISNCnt" : 1,
     "srcOui" : [
      "PCS Computer Systems GmbH"
     ],
@@ -3478,6 +3518,8 @@
      ],
      "ja4tCnt" : 1
     },
+    "tcpSynAckValidated" : false,
+    "tcpSynValidated" : false,
     "tcpflags" : {
      "ack" : 0,
      "ae" : 0,
@@ -3573,6 +3615,7 @@
      "packets" : 1,
      "port" : 42868
     },
+    "srcISNCnt" : 1,
     "srcOui" : [
      "PCS Computer Systems GmbH"
     ],
@@ -3587,6 +3630,8 @@
      ],
      "ja4tCnt" : 1
     },
+    "tcpSynAckValidated" : false,
+    "tcpSynValidated" : false,
     "tcpflags" : {
      "ack" : 0,
      "ae" : 0,
@@ -3682,6 +3727,7 @@
      "packets" : 1,
      "port" : 44142
     },
+    "srcISNCnt" : 1,
     "srcOui" : [
      "PCS Computer Systems GmbH"
     ],
@@ -3696,6 +3742,8 @@
      ],
      "ja4tCnt" : 1
     },
+    "tcpSynAckValidated" : false,
+    "tcpSynValidated" : false,
     "tcpflags" : {
      "ack" : 0,
      "ae" : 0,
@@ -3791,6 +3839,7 @@
      "packets" : 1,
      "port" : 54994
     },
+    "srcISNCnt" : 1,
     "srcOui" : [
      "PCS Computer Systems GmbH"
     ],
@@ -3805,6 +3854,8 @@
      ],
      "ja4tCnt" : 1
     },
+    "tcpSynAckValidated" : false,
+    "tcpSynValidated" : false,
     "tcpflags" : {
      "ack" : 0,
      "ae" : 0,

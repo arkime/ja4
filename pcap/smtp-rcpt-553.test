@@ -127,6 +127,7 @@
      "packets" : 9,
      "port" : 48012
     },
+    "srcISNCnt" : 1,
     "srcOui" : [
      "Cisco Systems, Inc"
     ],
@@ -152,6 +153,8 @@
      ],
      "ja4tsCnt" : 1
     },
+    "tcpSynAckValidated" : true,
+    "tcpSynValidated" : true,
     "tcpflags" : {
      "ack" : 5,
      "ae" : 0,

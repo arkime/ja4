@@ -110,6 +110,7 @@
      "packets" : 3,
      "port" : 59602
     },
+    "srcISNCnt" : 1,
     "srcOui" : [
      "Juniper Networks"
     ],
@@ -135,6 +136,8 @@
      ],
      "ja4tsCnt" : 1
     },
+    "tcpSynAckValidated" : true,
+    "tcpSynValidated" : true,
     "tcpflags" : {
      "ack" : 2,
      "ae" : 0,
@@ -245,6 +248,7 @@
      "packets" : 3,
      "port" : 32769
     },
+    "srcISNCnt" : 1,
     "srcOui" : [
      "Juniper Networks"
     ],
@@ -264,6 +268,8 @@
      ],
      "ja4tsCnt" : 1
     },
+    "tcpSynAckValidated" : true,
+    "tcpSynValidated" : true,
     "tcpflags" : {
      "ack" : 1,
      "ae" : 0,

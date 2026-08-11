@@ -260,6 +260,7 @@
      "packets" : 20,
      "port" : 2578
     },
+    "srcISNCnt" : 1,
     "srcOui" : [
      "Runtop Inc"
     ],
@@ -281,6 +282,8 @@
      ],
      "ja4tsCnt" : 1
     },
+    "tcpSynAckValidated" : true,
+    "tcpSynValidated" : true,
     "tcpflags" : {
      "ack" : 9,
      "ae" : 0,
@@ -405,6 +408,7 @@
      "packets" : 6,
      "port" : 2579
     },
+    "srcISNCnt" : 1,
     "srcOui" : [
      "Runtop Inc"
     ],
@@ -424,6 +428,8 @@
      ],
      "ja4tsCnt" : 1
     },
+    "tcpSynAckValidated" : true,
+    "tcpSynValidated" : true,
     "tcpflags" : {
      "ack" : 5,
      "ae" : 0,
@@ -587,6 +593,7 @@
      "packets" : 16,
      "port" : 3082
     },
+    "srcISNCnt" : 1,
     "srcOui" : [
      "3com"
     ],
@@ -608,6 +615,8 @@
      ],
      "ja4tsCnt" : 1
     },
+    "tcpSynAckValidated" : true,
+    "tcpSynValidated" : true,
     "tcpflags" : {
      "ack" : 9,
      "ae" : 0,
@@ -727,6 +736,7 @@
      "packets" : 8,
      "port" : 2585
     },
+    "srcISNCnt" : 1,
     "srcOui" : [
      "Runtop Inc"
     ],
@@ -746,6 +756,8 @@
      ],
      "ja4tsCnt" : 1
     },
+    "tcpSynAckValidated" : true,
+    "tcpSynValidated" : true,
     "tcpflags" : {
      "ack" : 7,
      "ae" : 0,
@@ -907,6 +919,7 @@
      "packets" : 16,
      "port" : 502
     },
+    "srcISNCnt" : 1,
     "srcOui" : [
      "3com"
     ],
@@ -926,6 +939,8 @@
      ],
      "ja4tsCnt" : 1
     },
+    "tcpSynAckValidated" : true,
+    "tcpSynValidated" : true,
     "tcpflags" : {
      "ack" : 15,
      "ae" : 0,
@@ -1875,6 +1890,7 @@
      "packets" : 169,
      "port" : 2582
     },
+    "srcISNCnt" : 1,
     "srcOui" : [
      "VMware, Inc."
     ],
@@ -1897,6 +1913,8 @@
      ],
      "ja4tsCnt" : 1
     },
+    "tcpSynAckValidated" : true,
+    "tcpSynValidated" : true,
     "tcpflags" : {
      "ack" : 65,
      "ae" : 0,
@@ -3795,6 +3813,7 @@
      "packets" : 513,
      "port" : 51411
     },
+    "srcISNCnt" : 1,
     "srcOui" : [
      "Apple, Inc."
     ],
@@ -3816,6 +3835,8 @@
      ],
      "ja4tsCnt" : 1
     },
+    "tcpSynAckValidated" : true,
+    "tcpSynValidated" : true,
     "tcpflags" : {
      "ack" : 256,
      "ae" : 0,

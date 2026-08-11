@@ -112,6 +112,7 @@
      "packets" : 7,
      "port" : 1040
     },
+    "srcISNCnt" : 1,
     "srcOui" : [
      "VMware, Inc."
     ],
@@ -134,6 +135,8 @@
      ],
      "ja4tsCnt" : 1
     },
+    "tcpSynAckValidated" : true,
+    "tcpSynValidated" : true,
     "tcpflags" : {
      "ack" : 3,
      "ae" : 0,

@@ -119,6 +119,7 @@
      "packets" : 7,
      "port" : 50001
     },
+    "srcISNCnt" : 1,
     "srcOui" : [
      "CIMSYS Inc"
     ],
@@ -140,6 +141,8 @@
      ],
      "ja4tsCnt" : 1
     },
+    "tcpSynAckValidated" : true,
+    "tcpSynValidated" : true,
     "tcpflags" : {
      "ack" : 5,
      "ae" : 0,
@@ -308,6 +311,7 @@
      "packets" : 8,
      "port" : 50002
     },
+    "srcISNCnt" : 1,
     "srcOui" : [
      "CIMSYS Inc"
     ],
@@ -329,6 +333,8 @@
      ],
      "ja4tsCnt" : 1
     },
+    "tcpSynAckValidated" : true,
+    "tcpSynValidated" : true,
     "tcpflags" : {
      "ack" : 6,
      "ae" : 0,
@@ -496,6 +502,7 @@
      "packets" : 8,
      "port" : 50003
     },
+    "srcISNCnt" : 1,
     "srcOui" : [
      "CIMSYS Inc"
     ],
@@ -517,6 +524,8 @@
      ],
      "ja4tsCnt" : 1
     },
+    "tcpSynAckValidated" : true,
+    "tcpSynValidated" : true,
     "tcpflags" : {
      "ack" : 6,
      "ae" : 0,
@@ -750,6 +759,7 @@
      "packets" : 8,
      "port" : 50004
     },
+    "srcISNCnt" : 1,
     "srcOui" : [
      "CIMSYS Inc"
     ],
@@ -771,6 +781,8 @@
      ],
      "ja4tsCnt" : 1
     },
+    "tcpSynAckValidated" : true,
+    "tcpSynValidated" : true,
     "tcpflags" : {
      "ack" : 6,
      "ae" : 0,
@@ -1005,6 +1017,7 @@
      "packets" : 8,
      "port" : 50005
     },
+    "srcISNCnt" : 1,
     "srcOui" : [
      "CIMSYS Inc"
     ],
@@ -1026,6 +1039,8 @@
      ],
      "ja4tsCnt" : 1
     },
+    "tcpSynAckValidated" : true,
+    "tcpSynValidated" : true,
     "tcpflags" : {
      "ack" : 6,
      "ae" : 0,
@@ -1186,6 +1201,7 @@
      "packets" : 10,
      "port" : 50006
     },
+    "srcISNCnt" : 1,
     "srcOui" : [
      "CIMSYS Inc"
     ],
@@ -1207,6 +1223,8 @@
      ],
      "ja4tsCnt" : 1
     },
+    "tcpSynAckValidated" : true,
+    "tcpSynValidated" : true,
     "tcpflags" : {
      "ack" : 8,
      "ae" : 0,
@@ -1361,6 +1379,7 @@
      "packets" : 8,
      "port" : 50007
     },
+    "srcISNCnt" : 1,
     "srcOui" : [
      "CIMSYS Inc"
     ],
@@ -1382,6 +1401,8 @@
      ],
      "ja4tsCnt" : 1
     },
+    "tcpSynAckValidated" : true,
+    "tcpSynValidated" : true,
     "tcpflags" : {
      "ack" : 6,
      "ae" : 0,
@@ -1518,6 +1539,7 @@
      "packets" : 6,
      "port" : 50008
     },
+    "srcISNCnt" : 1,
     "srcOui" : [
      "CIMSYS Inc"
     ],
@@ -1538,6 +1560,8 @@
      ],
      "ja4tsCnt" : 1
     },
+    "tcpSynAckValidated" : true,
+    "tcpSynValidated" : true,
     "tcpflags" : {
      "ack" : 4,
      "ae" : 0,
@@ -1689,6 +1713,7 @@
      "packets" : 6,
      "port" : 50009
     },
+    "srcISNCnt" : 1,
     "srcOui" : [
      "CIMSYS Inc"
     ],
@@ -1709,6 +1734,8 @@
      ],
      "ja4tsCnt" : 1
     },
+    "tcpSynAckValidated" : true,
+    "tcpSynValidated" : true,
     "tcpflags" : {
      "ack" : 4,
      "ae" : 0,
@@ -1855,6 +1882,7 @@
      "packets" : 6,
      "port" : 50010
     },
+    "srcISNCnt" : 1,
     "srcOui" : [
      "CIMSYS Inc"
     ],
@@ -1874,6 +1902,8 @@
      ],
      "ja4tsCnt" : 1
     },
+    "tcpSynAckValidated" : true,
+    "tcpSynValidated" : true,
     "tcpflags" : {
      "ack" : 4,
      "ae" : 0,
@@ -2052,6 +2082,7 @@
      "packets" : 15,
      "port" : 50011
     },
+    "srcISNCnt" : 1,
     "srcOui" : [
      "CIMSYS Inc"
     ],
@@ -2077,6 +2108,8 @@
      ],
      "ja4tsCnt" : 1
     },
+    "tcpSynAckValidated" : true,
+    "tcpSynValidated" : true,
     "tcpflags" : {
      "ack" : 13,
      "ae" : 0,
@@ -2241,6 +2274,7 @@
      "packets" : 13,
      "port" : 50012
     },
+    "srcISNCnt" : 1,
     "srcOui" : [
      "CIMSYS Inc"
     ],
@@ -2262,6 +2296,8 @@
      ],
      "ja4tsCnt" : 1
     },
+    "tcpSynAckValidated" : true,
+    "tcpSynValidated" : true,
     "tcpflags" : {
      "ack" : 11,
      "ae" : 0,
@@ -2426,6 +2462,7 @@
      "packets" : 13,
      "port" : 50013
     },
+    "srcISNCnt" : 1,
     "srcOui" : [
      "CIMSYS Inc"
     ],
@@ -2454,6 +2491,8 @@
      ],
      "ja4tsCnt" : 1
     },
+    "tcpSynAckValidated" : true,
+    "tcpSynValidated" : true,
     "tcpflags" : {
      "ack" : 11,
      "ae" : 0,
@@ -2594,6 +2633,7 @@
      "packets" : 7,
      "port" : 50014
     },
+    "srcISNCnt" : 1,
     "srcOui" : [
      "CIMSYS Inc"
     ],
@@ -2615,6 +2655,8 @@
      ],
      "ja4tsCnt" : 1
     },
+    "tcpSynAckValidated" : true,
+    "tcpSynValidated" : true,
     "tcpflags" : {
      "ack" : 5,
      "ae" : 0,

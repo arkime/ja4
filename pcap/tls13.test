@@ -105,6 +105,7 @@
      "packets" : 3,
      "port" : 62510
     },
+    "srcISNCnt" : 1,
     "srcOui" : [
      "Intel Corporate"
     ],
@@ -125,6 +126,8 @@
      ],
      "ja4tsCnt" : 1
     },
+    "tcpSynAckValidated" : true,
+    "tcpSynValidated" : true,
     "tcpflags" : {
      "ack" : 3,
      "ae" : 0,

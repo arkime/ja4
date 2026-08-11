@@ -118,6 +118,7 @@
      "packets" : 4,
      "port" : 65174
     },
+    "srcISNCnt" : 1,
     "srcOuterASN" : [
      "---"
     ],
@@ -155,6 +156,8 @@
      ],
      "ja4tsCnt" : 1
     },
+    "tcpSynAckValidated" : true,
+    "tcpSynValidated" : true,
     "tcpflags" : {
      "ack" : 2,
      "ae" : 0,

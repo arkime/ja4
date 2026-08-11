@@ -152,6 +152,7 @@
      "packets" : 17,
      "port" : 49927
     },
+    "srcISNCnt" : 1,
     "srcOui" : [
      "Intel Corporation"
     ],
@@ -177,6 +178,8 @@
      ],
      "ja4tsCnt" : 1
     },
+    "tcpSynAckValidated" : true,
+    "tcpSynValidated" : true,
     "tcpflags" : {
      "ack" : 17,
      "ae" : 0,

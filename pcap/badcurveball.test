@@ -170,6 +170,7 @@
      "packets" : 7,
      "port" : 55318
     },
+    "srcISNCnt" : 1,
     "srcOui" : [
      "Apple, Inc."
     ],
@@ -196,6 +197,8 @@
      ],
      "ja4tsCnt" : 1
     },
+    "tcpSynAckValidated" : true,
+    "tcpSynValidated" : true,
     "tcpflags" : {
      "ack" : 5,
      "ae" : 0,

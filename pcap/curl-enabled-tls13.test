@@ -324,6 +324,7 @@
      "packets" : 16,
      "port" : 46638
     },
+    "srcISNCnt" : 1,
     "srcPayload8" : "1603010200010001",
     "srcRIR" : "ARIN",
     "srcTTL" : [
@@ -342,6 +343,8 @@
      ],
      "ja4tsCnt" : 1
     },
+    "tcpSynAckValidated" : true,
+    "tcpSynValidated" : true,
     "tcpflags" : {
      "ack" : 13,
      "ae" : 0,

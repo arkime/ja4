@@ -106,6 +106,7 @@
      "packets" : 6,
      "port" : 54321
     },
+    "srcISNCnt" : 1,
     "srcPayload8" : "102800044d515454",
     "srcRIR" : "ARIN",
     "srcTTL" : [
@@ -122,6 +123,8 @@
      ],
      "ja4tsCnt" : 1
     },
+    "tcpSynAckValidated" : true,
+    "tcpSynValidated" : true,
     "tcpflags" : {
      "ack" : 5,
      "ae" : 0,
@@ -250,6 +253,7 @@
      "packets" : 4,
      "port" : 44444
     },
+    "srcISNCnt" : 1,
     "srcPayload8" : "103f00064d514973",
     "srcRIR" : "ARIN",
     "srcTTL" : [
@@ -266,6 +270,8 @@
      ],
      "ja4tsCnt" : 1
     },
+    "tcpSynAckValidated" : true,
+    "tcpSynValidated" : true,
     "tcpflags" : {
      "ack" : 3,
      "ae" : 0,
@@ -387,6 +393,7 @@
      "packets" : 5,
      "port" : 33333
     },
+    "srcISNCnt" : 1,
     "srcPayload8" : "102a00044d515454",
     "srcRIR" : "ARIN",
     "srcTTL" : [
@@ -403,6 +410,8 @@
      ],
      "ja4tsCnt" : 1
     },
+    "tcpSynAckValidated" : true,
+    "tcpSynValidated" : true,
     "tcpflags" : {
      "ack" : 4,
      "ae" : 0,
@@ -536,6 +545,7 @@
      "packets" : 6,
      "port" : 22222
     },
+    "srcISNCnt" : 1,
     "srcPayload8" : "101a00044d515454",
     "srcRIR" : "ARIN",
     "srcTTL" : [
@@ -552,6 +562,8 @@
      ],
      "ja4tsCnt" : 1
     },
+    "tcpSynAckValidated" : true,
+    "tcpSynValidated" : true,
     "tcpflags" : {
      "ack" : 5,
      "ae" : 0,
@@ -678,6 +690,7 @@
      "packets" : 5,
      "port" : 11111
     },
+    "srcISNCnt" : 1,
     "srcPayload8" : "103100044d515454",
     "srcRIR" : "ARIN",
     "srcTTL" : [
@@ -694,6 +707,8 @@
      ],
      "ja4tsCnt" : 1
     },
+    "tcpSynAckValidated" : true,
+    "tcpSynValidated" : true,
     "tcpflags" : {
      "ack" : 4,
      "ae" : 0,
@@ -813,6 +828,7 @@
      "packets" : 4,
      "port" : 55556
     },
+    "srcISNCnt" : 1,
     "srcPayload8" : "102a00044d515454",
     "srcRIR" : "ARIN",
     "srcTTL" : [
@@ -829,6 +845,8 @@
      ],
      "ja4tsCnt" : 1
     },
+    "tcpSynAckValidated" : true,
+    "tcpSynValidated" : true,
     "tcpflags" : {
      "ack" : 3,
      "ae" : 0,
@@ -947,6 +965,7 @@
      "packets" : 5,
      "port" : 55557
     },
+    "srcISNCnt" : 1,
     "srcPayload8" : "102a00044d515454",
     "srcRIR" : "ARIN",
     "srcTTL" : [
@@ -967,6 +986,8 @@
      ],
      "ja4tsCnt" : 1
     },
+    "tcpSynAckValidated" : true,
+    "tcpSynValidated" : true,
     "tcpflags" : {
      "ack" : 4,
      "ae" : 0,

@@ -224,6 +224,7 @@
      "packets" : 30,
      "port" : 45678
     },
+    "srcISNCnt" : 1,
     "srcOui" : [
      "CIMSYS Inc"
     ],
@@ -246,6 +247,8 @@
      ],
      "ja4tsCnt" : 1
     },
+    "tcpSynAckValidated" : true,
+    "tcpSynValidated" : true,
     "tcpflags" : {
      "ack" : 1,
      "ae" : 0,

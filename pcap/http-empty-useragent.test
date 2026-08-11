@@ -145,6 +145,7 @@
      "packets" : 8,
      "port" : 57722
     },
+    "srcISNCnt" : 1,
     "srcPayload8" : "474554202f204854",
     "srcTTL" : [
      64
@@ -161,6 +162,8 @@
      ],
      "ja4tsCnt" : 1
     },
+    "tcpSynAckValidated" : true,
+    "tcpSynValidated" : true,
     "tcpflags" : {
      "ack" : 8,
      "ae" : 0,

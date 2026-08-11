@@ -243,6 +243,7 @@
      "packets" : 5,
      "port" : 50384
     },
+    "srcISNCnt" : 1,
     "srcOui" : [
      "LITE-ON Technology Corp."
     ],
@@ -268,6 +269,8 @@
      ],
      "ja4tsCnt" : 1
     },
+    "tcpSynAckValidated" : true,
+    "tcpSynValidated" : true,
     "tcpflags" : {
      "ack" : 4,
      "ae" : 0,
