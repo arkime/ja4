@@ -21,6 +21,7 @@ LOCAL int                    ja4sshField;
 LOCAL int                    ja4lField;
 LOCAL int                    ja4lDeltaField;
 LOCAL int                    ja4lsField;
+LOCAL int                    ja4lsDeltaField;
 LOCAL int                    ja4tField;
 LOCAL int                    ja4tsField;
 LOCAL int                    ja4hField;
@@ -48,6 +49,11 @@ typedef struct {
     uint32_t       timestampE;
 
     uint32_t       synAckTimes[JA4PLUS_SYN_ACK_COUNT];
+
+    // Everything in the ja4ts before the timing section, only allocated once a
+    // retransmitted syn-ack creates that section, so a later rst can re-emit
+    // without still having the syn-ack header around
+    char          *ja4tsPrefix;
 
     uint8_t        client_ttl;
     uint8_t        server_ttl;
@@ -488,6 +494,10 @@ LOCAL uint32_t ja4plus_dtls_process_server_hello(ArkimeSession_t *session, const
             BSB_IMPORT_u16 (ebsb, etype);
             BSB_IMPORT_u16 (ebsb, elen);
 
+            // A truncated header
+            if (BSB_IS_ERROR(ebsb))
+                break;
+
             if (ja4plus_is_grease_value(etype)) {
                 BSB_IMPORT_skip (ebsb, elen);
                 continue;
@@ -629,6 +639,10 @@ LOCAL uint32_t ja4plus_tls_process_server_hello(ArkimeSession_t *session, const 
 
             BSB_IMPORT_u16 (ebsb, etype);
             BSB_IMPORT_u16 (ebsb, elen);
+
+            // A truncated header
+            if (BSB_IS_ERROR(ebsb))
+                break;
 
             if (ja4plus_is_grease_value(etype)) {
                 BSB_IMPORT_skip (ebsb, elen);
@@ -915,12 +929,23 @@ LOCAL uint32_t ja4plus_ssh_ja4ssh(ArkimeSession_t *session, const uint8_t *UNUSE
     return 0;
 }
 /******************************************************************************/
-LOCAL void ja4plus_ja4ts(ArkimeSession_t *session, const JA4PlusTCP_t *data, const struct tcphdr *tcph)
+LOCAL void ja4plus_ja4ts_times(BSB *obsb, const JA4PlusTCP_t *data)
+{
+    for (int i = 1; i < data->synAckTimesCnt; i++) {
+        BSB_EXPORT_sprintf(*obsb, "%.0f-", round ((data->synAckTimes[i] - data->synAckTimes[i - 1]) / 1000000.0));
+    }
+    BSB_EXPORT_rewind(*obsb, 1); // remove last -
+}
+/******************************************************************************/
+LOCAL void ja4plus_ja4ts(ArkimeSession_t *session, JA4PlusTCP_t *data, const struct tcphdr *tcph)
 {
     uint8_t        *p = (uint8_t *)tcph + 20;
     const uint8_t  *end = (uint8_t *)tcph + tcph->th_off * 4;
-    uint16_t        mss = 0xffff;
-    uint8_t         window_scale = 0xff;
+    // Both references default these to 0 and render 0 as "00", so an absent
+    // option and a zero value are deliberately indistinguishable. A sentinel
+    // would collide with a real mss of 65535.
+    uint16_t        mss = 0;
+    uint8_t         window_scale = 0;
 
     char obuf[100];
     BSB obsb;
@@ -956,36 +981,58 @@ LOCAL void ja4plus_ja4ts(ArkimeSession_t *session, const JA4PlusTCP_t *data, con
             BSB_IMPORT_u08(hbsb, size);
             if (size < 2 || BSB_REMAINING(hbsb) < size - 2)
                 break;
-            if (next == 2)
+
+            // Always consume the declared size, like the wireshark and zeek
+            // references, so an option with a non standard length doesn't
+            // desync the rest of the walk
+            if (next == 2 && size >= 4) {
                 BSB_IMPORT_u16(hbsb, mss);
-            else if (next == 3)
+                BSB_IMPORT_skip(hbsb, size - 4);
+            } else if (next == 3 && size >= 3) {
                 BSB_IMPORT_u08(hbsb, window_scale);
-            else
+                BSB_IMPORT_skip(hbsb, size - 3);
+            } else {
                 BSB_IMPORT_skip(hbsb, size - 2);
+            }
         }
 
         BSB_EXPORT_rewind(obsb, 1); // remove last -
     }
 
-    if (mss == 0xffff) {
-        BSB_EXPORT_cstr(obsb, "_00");
-    } else {
-        BSB_EXPORT_sprintf(obsb, "_%d", mss);
-    }
+    BSB_EXPORT_sprintf(obsb, "_%02d", mss);
 
-    if (window_scale == 0xff) {
+    if (window_scale == 0) {
         BSB_EXPORT_cstr(obsb, "_00");
     } else {
         BSB_EXPORT_sprintf(obsb, "_%d", window_scale);
     }
 
     if (data->synAckTimesCnt > 1) {
+        if (!data->ja4tsPrefix && BSB_NOT_ERROR(obsb))
+            data->ja4tsPrefix = g_strndup(obuf, BSB_LENGTH(obsb));
+
         BSB_EXPORT_cstr(obsb, "_");
-        for (int i = 1; i < data->synAckTimesCnt; i++) {
-            BSB_EXPORT_sprintf(obsb, "%.0f-", round ((data->synAckTimes[i] - data->synAckTimes[i - 1]) / 1000000.0));
-        }
-        BSB_EXPORT_rewind(obsb, 1); // remove last -
+        ja4plus_ja4ts_times(&obsb, data);
     }
+
+    BSB_EXPORT_u08(obsb, 0);
+    arkime_field_string_add(ja4tsField, session, obuf, -1, TRUE);
+}
+/******************************************************************************/
+/* A rst ending the syn-ack sequence appends -R<seconds since the last syn-ack>.
+ * Both references only emit it inside the timing section, so it needs 2+
+ * syn-acks, which is exactly when ja4tsPrefix has been stashed.
+ */
+LOCAL void ja4plus_ja4ts_rst(ArkimeSession_t *session, const JA4PlusTCP_t *data, uint32_t rstTime)
+{
+    char obuf[100];
+    BSB  obsb;
+
+    BSB_INIT(obsb, obuf, sizeof(obuf));
+    BSB_EXPORT_cstr(obsb, data->ja4tsPrefix);
+    BSB_EXPORT_cstr(obsb, "_");
+    ja4plus_ja4ts_times(&obsb, data);
+    BSB_EXPORT_sprintf(obsb, "-R%.0f", round ((rstTime - data->synAckTimes[data->synAckTimesCnt - 1]) / 1000000.0));
 
     BSB_EXPORT_u08(obsb, 0);
     arkime_field_string_add(ja4tsField, session, obuf, -1, TRUE);
@@ -995,8 +1042,11 @@ LOCAL void ja4plus_ja4t(ArkimeSession_t *session, JA4PlusTCP_t UNUSED(*data), co
 {
     uint8_t        *p = (uint8_t *)tcph + 20;
     const uint8_t  *end = (uint8_t *)tcph + tcph->th_off * 4;
-    uint16_t        mss = 0xffff;
-    uint8_t         window_scale = 0xff;
+    // Both references default these to 0 and render 0 as "00", so an absent
+    // option and a zero value are deliberately indistinguishable. A sentinel
+    // would collide with a real mss of 65535.
+    uint16_t        mss = 0;
+    uint8_t         window_scale = 0;
 
     char obuf[100];
     BSB obsb;
@@ -1032,24 +1082,27 @@ LOCAL void ja4plus_ja4t(ArkimeSession_t *session, JA4PlusTCP_t UNUSED(*data), co
             BSB_IMPORT_u08(hbsb, size);
             if (size < 2 || BSB_REMAINING(hbsb) < size - 2)
                 break;
-            if (next == 2)
+
+            // Always consume the declared size, like the wireshark and zeek
+            // references, so an option with a non standard length doesn't
+            // desync the rest of the walk
+            if (next == 2 && size >= 4) {
                 BSB_IMPORT_u16(hbsb, mss);
-            else if (next == 3)
+                BSB_IMPORT_skip(hbsb, size - 4);
+            } else if (next == 3 && size >= 3) {
                 BSB_IMPORT_u08(hbsb, window_scale);
-            else
+                BSB_IMPORT_skip(hbsb, size - 3);
+            } else {
                 BSB_IMPORT_skip(hbsb, size - 2);
+            }
         }
 
         BSB_EXPORT_rewind(obsb, 1); // remove last -
     }
 
-    if (mss == 0xffff) {
-        BSB_EXPORT_cstr(obsb, "_00");
-    } else {
-        BSB_EXPORT_sprintf(obsb, "_%d", mss);
-    }
+    BSB_EXPORT_sprintf(obsb, "_%02d", mss);
 
-    if (window_scale == 0xff) {
+    if (window_scale == 0) {
         BSB_EXPORT_cstr(obsb, "_00");
     } else {
         BSB_EXPORT_sprintf(obsb, "_%d", window_scale);
@@ -1057,6 +1110,21 @@ LOCAL void ja4plus_ja4t(ArkimeSession_t *session, JA4PlusTCP_t UNUSED(*data), co
 
     BSB_EXPORT_u08(obsb, 0);
     arkime_field_string_add(ja4tField, session, obuf, -1, TRUE);
+}
+/******************************************************************************/
+/* Ratio of the two latencies that make up a ja4l/ja4ls. The halving both are
+ * displayed with cancels out, so the raw differences are used. The FoxIO
+ * wireshark reference divides unconditionally and emits an inf, we skip the
+ * field instead.
+ */
+LOCAL void ja4plus_ja4l_delta(ArkimeSession_t *session, int field, uint32_t num, uint32_t den)
+{
+    if (den == 0)
+        return;
+
+    char delta[20];
+    snprintf(delta, sizeof(delta), "%.1f", (double)num / (double)den);
+    arkime_field_string_add(field, session, delta, -1, TRUE);
 }
 /******************************************************************************/
 LOCAL uint32_t ja4plus_tcp_raw_packet(ArkimeSession_t *session, const uint8_t *UNUSED(d), int UNUSED(l), void *uw)
@@ -1104,8 +1172,19 @@ LOCAL uint32_t ja4plus_tcp_raw_packet(ArkimeSession_t *session, const uint8_t *U
                 }
                 ja4plus_ja4t(session, ja4plus_tcp, tcp);
             }
+        } else if ((tcp->th_flags & TH_RST) && packet->direction == 1) {
+            // Server rst ends the syn-ack sequence, emit once and drop the
+            // prefix so a second rst doesn't repeat it
+            if (ja4plus_tcp->ja4tsPrefix) {
+                ja4plus_ja4ts_rst(session, ja4plus_tcp, TIMESTAMP_TO_RUSEC(packet->ts));
+                g_free(ja4plus_tcp->ja4tsPrefix);
+                ja4plus_tcp->ja4tsPrefix = NULL;
+            }
         } else {
-            if ((tcp->th_flags & TH_ACK) && (ja4plus_tcp->timestampC == 0))
+            // C is the client's handshake ack. Both references constrain it to
+            // the client side, wireshark with seq==1 && ack==1 and zeek with
+            // is_orig, otherwise a bare server ack lands here instead.
+            if (packet->direction == 0 && (tcp->th_flags & TH_ACK) && (ja4plus_tcp->timestampC == 0))
                 ja4plus_tcp->timestampC = TIMESTAMP_TO_RUSEC(packet->ts);
         }
     } else if (ja4plus_tcp->synAckTimesCnt > 0) {
@@ -1129,21 +1208,23 @@ LOCAL uint32_t ja4plus_tcp_raw_packet(ArkimeSession_t *session, const uint8_t *U
                                  (timestampF - ja4plus_tcp->timestampE) / 2
                                 );
 
-                        if (ja4nEnable) {
-                            char ja4ldelta[100];
-                            snprintf(ja4ldelta, sizeof(ja4ldelta), "%.1f",
-                                     ((timestampF - ja4plus_tcp->timestampE) / 2.0) / ((ja4plus_tcp->timestampC - ja4plus_tcp->synAckTimes[ja4plus_tcp->synAckTimesCnt - 1]) / 2.0));
-                            arkime_field_string_add(ja4lDeltaField, session, ja4ldelta, -1, TRUE);
-                        }
+                        ja4plus_ja4l_delta(session, ja4lDeltaField,
+                                           timestampF - ja4plus_tcp->timestampE,
+                                           ja4plus_tcp->timestampC - ja4plus_tcp->synAckTimes[ja4plus_tcp->synAckTimesCnt - 1]);
                     }
                     arkime_field_string_add(ja4lField, session, ja4l, -1, TRUE);
                 }
 
+                g_free(ja4plus_tcp->ja4tsPrefix);
                 ARKIME_TYPE_FREE(JA4PlusTCP_t, ja4plus_data->tcp);
                 ja4plus_data->tcp = JA4PLUS_TCP_DONE;
             }
         } else {
-            if (ja4plus_tcp->timestampE == 0) {
+            // E is the first server data packet *after* D, not simply the first
+            // server data packet. Server first protocols (ftp, smtp, ssh, ...)
+            // send before the client does, and without the D check the ja4ls
+            // and ja4l timings would be measured against firstPacket instead.
+            if (ja4plus_tcp->timestampD != 0 && ja4plus_tcp->timestampE == 0) {
                 ja4plus_tcp->timestampE = TIMESTAMP_TO_RUSEC(packet->ts);
 
                 if (ja4plus_tcp->synAckTimes[ja4plus_tcp->synAckTimesCnt - 1] >= ja4plus_tcp->timestampA) {
@@ -1160,6 +1241,10 @@ LOCAL uint32_t ja4plus_tcp_raw_packet(ArkimeSession_t *session, const uint8_t *U
                                  ja4plus_tcp->server_ttl,
                                  (ja4plus_tcp->timestampE - ja4plus_tcp->timestampD) / 2
                                 );
+
+                        ja4plus_ja4l_delta(session, ja4lsDeltaField,
+                                           ja4plus_tcp->timestampE - ja4plus_tcp->timestampD,
+                                           ja4plus_tcp->synAckTimes[ja4plus_tcp->synAckTimesCnt - 1] - ja4plus_tcp->timestampA);
                     }
                     arkime_field_string_add(ja4lsField, session, ja4ls, -1, TRUE);
                 }
@@ -1173,8 +1258,10 @@ LOCAL void ja4plus_plugin_save(ArkimeSession_t *session, int final)
 {
     JA4PlusData_t *ja4plus_data = session->pluginData[ja4plus_plugin_num];
     if (final && ja4plus_data) {
-        if (ja4plus_data->tcp && ja4plus_data->tcp != JA4PLUS_TCP_DONE)
+        if (ja4plus_data->tcp && ja4plus_data->tcp != JA4PLUS_TCP_DONE) {
+            g_free(ja4plus_data->tcp->ja4tsPrefix);
             ARKIME_TYPE_FREE(JA4PlusTCP_t, ja4plus_data->tcp);
+        }
 
         if (ja4plus_data->http) {
             JA4PlusHTTP_t *ja4_http = ja4plus_data->http;
@@ -1783,16 +1870,22 @@ void arkime_plugin_init()
                                     (char *)NULL);
 
     ja4lDeltaField = arkime_field_define("tcp", "lotermfield",
-                                    "tcp.ja4l-delta", "JA4l-Delta", "tcp.ja4l-delta",
-                                    "JA4 Latency Client Delta field",
-                                    ARKIME_FIELD_TYPE_STR,  0,
-                                    (char *)NULL);
+                                         "tcp.ja4l-delta", "JA4l-Delta", "tcp.ja4l-delta",
+                                         "JA4 Latency Client Delta field",
+                                         ARKIME_FIELD_TYPE_STR,  0,
+                                         (char *)NULL);
 
     ja4lsField = arkime_field_define("tcp", "lotermfield",
                                      "tcp.ja4ls", "JA4ls", "tcp.ja4ls",
                                      "JA4 Latency Server field",
                                      ARKIME_FIELD_TYPE_STR,  0,
                                      (char *)NULL);
+
+    ja4lsDeltaField = arkime_field_define("tcp", "lotermfield",
+                                          "tcp.ja4ls-delta", "JA4ls-Delta", "tcp.ja4ls-delta",
+                                          "JA4 Latency Server Delta field",
+                                          ARKIME_FIELD_TYPE_STR,  0,
+                                          (char *)NULL);
 
     ja4tsField = arkime_field_define("tcp", "lotermfield",
                                      "tcp.ja4ts", "JA4ts", "tcp.ja4ts",
