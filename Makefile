@@ -1,2 +1,2 @@
 setup:
-	(cd pcap ; ln -sf ../../arkime/tests/pcap/*.pcap .)
+	(cd pcap ; ln -sf ../../arkime.dev6/tests/pcap/*.pcap .)
