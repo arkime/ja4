@@ -36,7 +36,6 @@ LOCAL GChecksum             *checksums256[ARKIME_MAX_PACKET_THREADS];
 extern uint8_t               arkime_char_to_hexstr[256][3];
 LOCAL gboolean               ja4Raw;
 LOCAL gboolean               ja4hOmitZeroSections;
-LOCAL gboolean               ja4nEnable;
 
 #define JA4PLUS_SYN_ACK_COUNT 4
 typedef struct {
@@ -1818,7 +1817,6 @@ void arkime_plugin_init()
 
     ja4Raw = arkime_config_boolean(NULL, "ja4Raw", FALSE);
     ja4hOmitZeroSections = arkime_config_boolean(NULL, "ja4hOmitZeroSections", FALSE);
-    ja4nEnable = arkime_config_boolean(NULL, "ja4nEnable", FALSE);
 
     arkime_parsers_add_named_func("tls_process_server_hello", ja4plus_tls_process_server_hello);
     arkime_parsers_add_named_func("dtls_process_server_hello", ja4plus_dtls_process_server_hello);
@@ -1827,8 +1825,7 @@ void arkime_plugin_init()
     arkime_parsers_add_named_func("tcp_raw_packet", ja4plus_tcp_raw_packet);
     arkime_parsers_add_named_func("dhcp_packet", ja4plus_dhcp_packet);
 
-    if (ja4nEnable)
-        arkime_parsers_classifier_register_port("ja4n", NULL, 123, ARKIME_PARSERS_PORT_UDP, ja4plus_ntp_classify);
+    arkime_parsers_classifier_register_port("ja4n", NULL, 123, ARKIME_PARSERS_PORT_UDP, ja4plus_ntp_classify);
 
     ja4sField = arkime_field_define("tls", "lotermfield",
                                     "tls.ja4s", "JA4s", "tls.ja4s",
