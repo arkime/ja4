@@ -36,7 +36,6 @@ LOCAL GChecksum             *checksums256[ARKIME_MAX_PACKET_THREADS];
 extern uint8_t               arkime_char_to_hexstr[256][3];
 LOCAL gboolean               ja4Raw;
 LOCAL gboolean               ja4hOmitZeroSections;
-LOCAL gboolean               ja4nEnable;
 
 #define JA4PLUS_SYN_ACK_COUNT 4
 typedef struct {
@@ -1575,9 +1574,11 @@ LOCAL int ja4plus_dhcpv6_udp_parser(ArkimeSession_t *session, void *UNUSED(uw), 
 /* JA4N - NTP fingerprint
  *
  * (mode)(version)-(leap)-(stratum)-(poll)-(precision)-(rootdelay)(rootdisp)_
- * (ref)(org)(rec)(xmt)-(refid)_(poll secs)
+ * (ref)(org)(rec)(xmt)_(refid)_(poll secs)
  *
- * ex: c4-0-2-10-25-22_1111-ipv4_1024
+ * stratum is a code, 0 when the packet has no stratum and 1 for any real one
+ *
+ * ex: c4-0-1-10-25-22_1111_ipv4_1024
  */
 #define JA4PLUS_NTP_EPOCH 2208988800LL
 #define JA4PLUS_NTP_RECENT (30LL * 24 * 3600)
@@ -1736,11 +1737,11 @@ LOCAL int ja4plus_ntp_parser(ArkimeSession_t *session, void UNUSED(*uw), const u
     ja4plus_ntp_poll_secs((int8_t)poll, pollSecs, sizeof(pollSecs));
 
     char ja4n[256];
-    snprintf(ja4n, sizeof(ja4n), "%c%u-%u-%u-%d-%u-%c%c_%c%c%c%c-%s_%s",
+    snprintf(ja4n, sizeof(ja4n), "%c%u-%u-%u-%d-%u-%c%c_%c%c%c%c_%s_%s",
              modeCodes[flags & 0x07],
              (flags >> 3) & 0x07u,   // version
              (flags >> 6) & 0x03u,   // leap
-             stratum,
+             stratum ? 1u : 0u,   // code, not the raw stratum
              (int8_t)poll,   // log2 seconds, signed per RFC 5905
              256u - precision,
              ja4plus_ntp_root_code(rootDelay),
@@ -1816,7 +1817,6 @@ void arkime_plugin_init()
 
     ja4Raw = arkime_config_boolean(NULL, "ja4Raw", FALSE);
     ja4hOmitZeroSections = arkime_config_boolean(NULL, "ja4hOmitZeroSections", FALSE);
-    ja4nEnable = arkime_config_boolean(NULL, "ja4nEnable", FALSE);
 
     arkime_parsers_add_named_func("tls_process_server_hello", ja4plus_tls_process_server_hello);
     arkime_parsers_add_named_func("dtls_process_server_hello", ja4plus_dtls_process_server_hello);
@@ -1825,8 +1825,7 @@ void arkime_plugin_init()
     arkime_parsers_add_named_func("tcp_raw_packet", ja4plus_tcp_raw_packet);
     arkime_parsers_add_named_func("dhcp_packet", ja4plus_dhcp_packet);
 
-    if (ja4nEnable)
-        arkime_parsers_classifier_register_port("ja4n", NULL, 123, ARKIME_PARSERS_PORT_UDP, ja4plus_ntp_classify);
+    arkime_parsers_classifier_register_port("ja4n", NULL, 123, ARKIME_PARSERS_PORT_UDP, ja4plus_ntp_classify);
 
     ja4sField = arkime_field_define("tls", "lotermfield",
                                     "tls.ja4s", "JA4s", "tls.ja4s",

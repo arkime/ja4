@@ -3232,6 +3232,10 @@
     },
     "node" : "test",
     "ntp" : {
+     "ja4n" : [
+      "c4-3-0-6-24-02_0001_INIT_64"
+     ],
+     "ja4nCnt" : 1,
      "mode" : [
       "client"
      ],
@@ -3460,6 +3464,10 @@
     },
     "node" : "test",
     "ntp" : {
+     "ja4n" : [
+      "c4-3-0-6-24-02_0001_INIT_64"
+     ],
+     "ja4nCnt" : 1,
      "mode" : [
       "client"
      ],
