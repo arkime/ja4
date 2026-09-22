@@ -523,7 +523,9 @@ LOCAL uint32_t ja4plus_dtls_process_server_hello(ArkimeSession_t *session, const
                 BSB alpnBsb;
                 BSB_IMPORT_bsb (ebsb, alpnBsb, elen);
 
-                BSB_IMPORT_skip (alpnBsb, 2); // len
+                uint16_t llen = 0;
+                BSB_IMPORT_u16 (alpnBsb, llen); // list len
+                BSB_SHRINK_REMAINING (alpnBsb, llen);
                 uint8_t plen = 0;
                 BSB_IMPORT_u08 (alpnBsb, plen); // len
                 const unsigned char *pstr = NULL;
@@ -669,7 +671,9 @@ LOCAL uint32_t ja4plus_tls_process_server_hello(ArkimeSession_t *session, const 
                 BSB alpnBsb;
                 BSB_IMPORT_bsb (ebsb, alpnBsb, elen);
 
-                BSB_IMPORT_skip (alpnBsb, 2); // len
+                uint16_t llen = 0;
+                BSB_IMPORT_u16 (alpnBsb, llen); // list len
+                BSB_SHRINK_REMAINING (alpnBsb, llen);
                 uint8_t plen = 0;
                 BSB_IMPORT_u08 (alpnBsb, plen); // len
                 const unsigned char *pstr = NULL;
