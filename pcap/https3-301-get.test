@@ -5,6 +5,7 @@
     "@timestamp" : "SET",
     "cert" : [
      {
+      "exponent" : 65537,
       "hash" : "db:c7:e9:0b:0d:a5:d8:8a:55:35:43:0e:eb:66:5d:07:78:59:e8:e8",
       "issuerCN" : [
        "digicert high assurance ev root ca"
@@ -17,12 +18,16 @@
       ],
       "ja4x" : "7d5dbb3783b4_7d5dbb3783b4_897f3043ab93",
       "ja4x_r" : "550406,55040a,55040b,550403_550406,55040a,55040b,550403_551d0f,551d25,551d20,551d13,2b06010505070101,551d1f,551d0e,551d23",
+      "keyLength" : 2048,
       "notAfter" : 1636502400000,
       "notBefore" : 1194609600000,
+      "pathLen" : 0,
       "publicAlgorithm" : "rsaEncryption",
       "remainingDays" : 2906,
       "remainingSeconds" : 251105579,
       "serial" : "0337b928347c60a6aec5adb1217f3860",
+      "sha256" : "541af019961760ef19e8fb4134e6d43085b5e5e087f30197dc42b2097e10487e",
+      "signatureAlgorithm" : "sha1WithRSAEncryption",
       "subjectCN" : [
        "digicert high assurance ev ca-1"
       ],
@@ -33,7 +38,8 @@
        "www.digicert.com"
       ],
       "validDays" : 5114,
-      "validSeconds" : 441892800
+      "validSeconds" : 441892800,
+      "version" : 3
      },
      {
       "alt" : [
@@ -41,6 +47,7 @@
        "www.github.com"
       ],
       "altCnt" : 2,
+      "exponent" : 65537,
       "hash" : "d7:12:e9:69:65:dc:f2:36:c8:74:c7:03:7d:c0:b2:24:a9:3b:d2:33",
       "issuerCN" : [
        "digicert high assurance ev ca-1"
@@ -53,12 +60,15 @@
       ],
       "ja4x" : "7d5dbb3783b4_59b7510e6266_5e17a2514980",
       "ja4x_r" : "550406,55040a,55040b,550403_55040f,2b0601040182373c020103,2b0601040182373c020102,550405,550409,550411,550406,550408,550407,55040a,550403_551d23,551d0e,551d11,551d0f,551d25,551d1f,551d20,2b06010505070101,551d13",
+      "keyLength" : 2048,
       "notAfter" : 1441195200000,
       "notBefore" : 1370822400000,
       "publicAlgorithm" : "rsaEncryption",
       "remainingDays" : 645,
       "remainingSeconds" : 55798379,
       "serial" : "047fbe2e4bde0084d2caf8e3ecfe7058",
+      "sha256" : "575aac186497e1291a4551d92a0836dcabfb56749430b529232764a7802646cb",
+      "signatureAlgorithm" : "sha1WithRSAEncryption",
       "subjectCN" : [
        "github.com"
       ],
@@ -66,7 +76,8 @@
        "GitHub, Inc."
       ],
       "validDays" : 814,
-      "validSeconds" : 70372800
+      "validSeconds" : 70372800,
+      "version" : 3
      }
     ],
     "certCnt" : 2,

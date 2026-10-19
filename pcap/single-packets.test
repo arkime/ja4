@@ -72,6 +72,10 @@
       "http://www.shangri-la.com/"
      ],
      "request-refererCnt" : 1,
+     "requestBodyLen" : [
+      0
+     ],
+     "requestBodyLenCnt" : 1,
      "requestHeader" : [
       "accept",
       "accept-encoding",
@@ -277,6 +281,10 @@
       "http://www.shangri-la.com/"
      ],
      "request-refererCnt" : 1,
+     "requestBodyLen" : [
+      0
+     ],
+     "requestBodyLenCnt" : 1,
      "requestHeader" : [
       "accept",
       "accept-encoding",
@@ -460,6 +468,10 @@
       "http://www.shangri-la.com/"
      ],
      "request-refererCnt" : 1,
+     "requestBodyLen" : [
+      0
+     ],
+     "requestBodyLenCnt" : 1,
      "requestHeader" : [
       "accept",
       "accept-encoding",
@@ -647,6 +659,10 @@
      "requestBody" : [
       "id=455187796&event=PAGEVIEW&pixel_version=1"
      ],
+     "requestBodyLen" : [
+      43
+     ],
+     "requestBodyLenCnt" : 1,
      "requestHeader" : [
       "accept",
       "accept-encoding",
@@ -855,6 +871,10 @@
       "http://whc.unesco.org/en/interactive-map/"
      ],
      "request-refererCnt" : 1,
+     "requestBodyLen" : [
+      0
+     ],
+     "requestBodyLenCnt" : 1,
      "requestHeader" : [
       "accept",
       "accept-encoding",
@@ -1058,6 +1078,10 @@
       "http://whc.unesco.org/en/interactive-map/"
      ],
      "request-refererCnt" : 1,
+     "requestBodyLen" : [
+      0
+     ],
+     "requestBodyLenCnt" : 1,
      "requestHeader" : [
       "accept",
       "accept-encoding",
@@ -1253,6 +1277,10 @@
       "http://whc.unesco.org/en/interactive-map/"
      ],
      "request-refererCnt" : 1,
+     "requestBodyLen" : [
+      0
+     ],
+     "requestBodyLenCnt" : 1,
      "requestHeader" : [
       "accept",
       "accept-encoding",
@@ -1449,6 +1477,10 @@
       "http://www.sustainablesites.org/"
      ],
      "request-refererCnt" : 1,
+     "requestBodyLen" : [
+      0
+     ],
+     "requestBodyLenCnt" : 1,
      "requestHeader" : [
       "accept",
       "accept-encoding",
@@ -1615,6 +1647,10 @@
      "requestBody" : [
       "<html><body><h1>403 Forbidden</h1>\nRequest forbidden by administrative rules.\n</body></html>\n\n"
      ],
+     "requestBodyLen" : [
+      94
+     ],
+     "requestBodyLenCnt" : 1,
      "requestHeader" : [
       "cache-control",
       "connection",

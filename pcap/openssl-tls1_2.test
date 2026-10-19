@@ -5,6 +5,7 @@
     "@timestamp" : "SET",
     "cert" : [
      {
+      "exponent" : 65537,
       "hash" : "bb:dc:e1:3e:9d:53:7a:52:29:91:5c:b1:23:c7:aa:b0:a8:55:e7:98",
       "issuerCN" : [
        "geotrust global ca"
@@ -14,12 +15,16 @@
       ],
       "ja4x" : "a373a9f83c6b_a373a9f83c6b_52cc06d4c2b4",
       "ja4x_r" : "550406,55040a,550403_550406,55040a,550403_551d23,551d0e,551d13,551d0f,551d1f,2b06010505070101,551d20",
+      "keyLength" : 2048,
       "notAfter" : 1483228799000,
       "notBefore" : 1365174955000,
+      "pathLen" : 0,
       "publicAlgorithm" : "rsaEncryption",
       "remainingDays" : 808,
       "remainingSeconds" : 69890903,
       "serial" : "023a76",
+      "sha256" : "c3f697a92a293d86f9a3ee7ccb970e20e0050b8728cc83ed1b996ce9005d4c36",
+      "signatureAlgorithm" : "sha1WithRSAEncryption",
       "subjectCN" : [
        "google internet authority g2"
       ],
@@ -27,9 +32,11 @@
        "Google Inc"
       ],
       "validDays" : 1366,
-      "validSeconds" : 118053844
+      "validSeconds" : 118053844,
+      "version" : 3
      },
      {
+      "exponent" : 65537,
       "hash" : "73:59:75:5c:6d:f9:a0:ab:c3:06:0b:ce:36:95:64:c8:ec:45:42:a3",
       "issuerON" : [
        "Equifax"
@@ -39,12 +46,15 @@
       ],
       "ja4x" : "e7bc7ebc3d9e_a373a9f83c6b_97731fcbbbd7",
       "ja4x_r" : "550406,55040a,55040b_550406,55040a,550403_551d23,551d0e,551d13,551d0f,551d1f,551d20",
+      "keyLength" : 2048,
       "notAfter" : 1534824000000,
       "notBefore" : 1021953600000,
       "publicAlgorithm" : "rsaEncryption",
       "remainingDays" : 1406,
       "remainingSeconds" : 121486104,
       "serial" : "12bbe6",
+      "sha256" : "3c35cc963eb004451323d3275d05b353235053490d9cd83729a2faf5e7ca1cc0",
+      "signatureAlgorithm" : "sha1WithRSAEncryption",
       "subjectCN" : [
        "geotrust global ca"
       ],
@@ -52,7 +62,8 @@
        "GeoTrust Inc."
       ],
       "validDays" : 5936,
-      "validSeconds" : 512870400
+      "validSeconds" : 512870400,
+      "version" : 3
      },
      {
       "alt" : [
@@ -107,6 +118,7 @@
        "youtubeeducation.com"
       ],
       "altCnt" : 49,
+      "exponent" : 65537,
       "hash" : "0e:a3:27:7c:eb:7f:b2:8c:2b:5d:7d:d7:6b:e9:ba:1a:ec:0d:ff:91",
       "issuerCN" : [
        "google internet authority g2"
@@ -116,12 +128,15 @@
       ],
       "ja4x" : "a373a9f83c6b_2bab15409345_29378ef12ee8",
       "ja4x_r" : "550406,55040a,550403_550406,550408,550407,55040a,550403_551d25,551d11,2b06010505070101,551d0e,551d13,551d23,551d20,551d1f",
+      "keyLength" : 2048,
       "notAfter" : 1419292800000,
       "notBefore" : 1411553285000,
       "publicAlgorithm" : "rsaEncryption",
       "remainingDays" : 68,
       "remainingSeconds" : 5954904,
       "serial" : "7a5b0bd895632f87",
+      "sha256" : "821256697c48a076a3c98f057453a6504ebfb7cfa6b2c6bb46fe85ec760043f1",
+      "signatureAlgorithm" : "sha1WithRSAEncryption",
       "subjectCN" : [
        "*.google.com"
       ],
@@ -129,7 +144,8 @@
        "Google Inc"
       ],
       "validDays" : 89,
-      "validSeconds" : 7739515
+      "validSeconds" : 7739515,
+      "version" : 3
      }
     ],
     "certCnt" : 3,
@@ -312,6 +328,10 @@
       "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256"
      ],
      "cipherCnt" : 1,
+     "group" : [
+      "secp256r1"
+     ],
+     "groupCnt" : 1,
      "ja3" : [
       "c1a36e1a870786cc75edddc0009eaf3a"
      ],

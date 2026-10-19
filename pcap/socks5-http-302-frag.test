@@ -83,6 +83,10 @@
       "/"
      ],
      "pathCnt" : 1,
+     "requestBodyLen" : [
+      0
+     ],
+     "requestBodyLenCnt" : 1,
      "requestHeader" : [
       "accept",
       "accept-encoding",
@@ -111,6 +115,10 @@
      "response-location" : [
       "http://www.google.de/?gws_rd=cr&ei=xxxxxxxxxxxxxxxxxxxxxx"
      ],
+     "responseBodyLen" : [
+      258
+     ],
+     "responseBodyLenCnt" : 1,
      "responseHeader" : [
       "alternate-protocol",
       "cache-control",
@@ -228,8 +236,33 @@
      "bytes" : 942
     },
     "socks" : {
+     "boundASN" : [
+      "AS1 Cool Beans!"
+     ],
+     "boundGEO" : [
+      "CA"
+     ],
+     "boundIp" : [
+      "10.0.0.2"
+     ],
+     "boundIpCnt" : 1,
+     "boundPort" : [
+      80
+     ],
+     "boundPortCnt" : 1,
+     "boundRIR" : [
+      "TEST"
+     ],
      "host" : "www.google.com",
-     "port" : 80
+     "port" : 80,
+     "status" : [
+      "succeeded"
+     ],
+     "statusCnt" : 1,
+     "version" : [
+      5
+     ],
+     "versionCnt" : 1
     },
     "source" : {
      "as" : {

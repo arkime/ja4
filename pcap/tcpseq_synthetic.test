@@ -794,10 +794,18 @@
       "/before-rst"
      ],
      "pathCnt" : 2,
+     "requestBodyLen" : [
+      0
+     ],
+     "requestBodyLenCnt" : 1,
      "requestHeader" : [
       "host"
      ],
      "requestHeaderCnt" : 1,
+     "responseBodyLen" : [
+      0
+     ],
+     "responseBodyLenCnt" : 1,
      "serverVersion" : [
       "1.1"
      ],
@@ -969,10 +977,18 @@
       "/before-rst"
      ],
      "pathCnt" : 1,
+     "requestBodyLen" : [
+      0
+     ],
+     "requestBodyLenCnt" : 1,
      "requestHeader" : [
       "host"
      ],
      "requestHeaderCnt" : 1,
+     "responseBodyLen" : [
+      0
+     ],
+     "responseBodyLenCnt" : 1,
      "serverVersion" : [
       "1.1"
      ],
@@ -1139,10 +1155,18 @@
       "/new-conn"
      ],
      "pathCnt" : 1,
+     "requestBodyLen" : [
+      0
+     ],
+     "requestBodyLenCnt" : 1,
      "requestHeader" : [
       "host"
      ],
      "requestHeaderCnt" : 1,
+     "responseBodyLen" : [
+      0
+     ],
+     "responseBodyLenCnt" : 1,
      "serverVersion" : [
       "1.1"
      ],
@@ -1305,10 +1329,18 @@
       "/before-rst"
      ],
      "pathCnt" : 2,
+     "requestBodyLen" : [
+      0
+     ],
+     "requestBodyLenCnt" : 1,
      "requestHeader" : [
       "host"
      ],
      "requestHeaderCnt" : 1,
+     "responseBodyLen" : [
+      0
+     ],
+     "responseBodyLenCnt" : 1,
      "serverVersion" : [
       "1.1"
      ],
@@ -1489,10 +1521,18 @@
       "/before-rst"
      ],
      "pathCnt" : 1,
+     "requestBodyLen" : [
+      0
+     ],
+     "requestBodyLenCnt" : 1,
      "requestHeader" : [
       "host"
      ],
      "requestHeaderCnt" : 1,
+     "responseBodyLen" : [
+      0
+     ],
+     "responseBodyLenCnt" : 1,
      "serverVersion" : [
       "1.1"
      ],
@@ -1656,10 +1696,18 @@
       "/new-conn"
      ],
      "pathCnt" : 1,
+     "requestBodyLen" : [
+      0
+     ],
+     "requestBodyLenCnt" : 1,
      "requestHeader" : [
       "host"
      ],
      "requestHeaderCnt" : 1,
+     "responseBodyLen" : [
+      0
+     ],
+     "responseBodyLenCnt" : 1,
      "serverVersion" : [
       "1.1"
      ],
@@ -1822,10 +1870,18 @@
       "/before-rst"
      ],
      "pathCnt" : 2,
+     "requestBodyLen" : [
+      0
+     ],
+     "requestBodyLenCnt" : 1,
      "requestHeader" : [
       "host"
      ],
      "requestHeaderCnt" : 1,
+     "responseBodyLen" : [
+      0
+     ],
+     "responseBodyLenCnt" : 1,
      "serverVersion" : [
       "1.1"
      ],

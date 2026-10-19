@@ -889,6 +889,10 @@
       "c0s21_c0s1_c1s0"
      ],
      "ja4sshCnt" : 1,
+     "serverVersion" : [
+      "ssh-2.0-openssh_9.6"
+     ],
+     "serverVersionCnt" : 1,
      "version" : [
       "ssh-2.0-openssh_9.6"
      ],
@@ -983,6 +987,10 @@
       "/"
      ],
      "pathCnt" : 1,
+     "requestBodyLen" : [
+      0
+     ],
+     "requestBodyLenCnt" : 1,
      "requestHeader" : [
       "host"
      ],

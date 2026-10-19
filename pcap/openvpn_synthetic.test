@@ -5,6 +5,7 @@
     "@timestamp" : "SET",
     "cert" : [
      {
+      "exponent" : 65537,
       "hash" : "6c:2b:1a:38:4e:18:84:5a:dd:8a:5e:88:e5:2b:39:61:76:b6:50:c2",
       "issuerCN" : [
        "arkime.test"
@@ -17,12 +18,15 @@
       ],
       "ja4x" : "02ace205b8e9_02ace205b8e9_000000000000",
       "ja4x_r" : "550403,55040a,55040b_550403,55040a,55040b_",
+      "keyLength" : 2048,
       "notAfter" : 1841616800000,
       "notBefore" : 1778544800000,
       "publicAlgorithm" : "rsaEncryption",
       "remainingDays" : 968,
       "remainingSeconds" : 83679200,
       "serial" : "00eafe13b1b1f8cf87",
+      "sha256" : "cdbda2149c5925eaa961c1e9338ead719fb197be29c90520a7fa341285a45866",
+      "signatureAlgorithm" : "sha256WithRSAEncryption",
       "subjectCN" : [
        "arkime.test"
       ],
@@ -33,7 +37,8 @@
        "Test"
       ],
       "validDays" : 730,
-      "validSeconds" : 63072000
+      "validSeconds" : 63072000,
+      "version" : 1
      }
     ],
     "certCnt" : 1,
@@ -176,6 +181,7 @@
     "@timestamp" : "SET",
     "cert" : [
      {
+      "exponent" : 65537,
       "hash" : "6c:2b:1a:38:4e:18:84:5a:dd:8a:5e:88:e5:2b:39:61:76:b6:50:c2",
       "issuerCN" : [
        "arkime.test"
@@ -188,12 +194,15 @@
       ],
       "ja4x" : "02ace205b8e9_02ace205b8e9_000000000000",
       "ja4x_r" : "550403,55040a,55040b_550403,55040a,55040b_",
+      "keyLength" : 2048,
       "notAfter" : 1841616800000,
       "notBefore" : 1778544800000,
       "publicAlgorithm" : "rsaEncryption",
       "remainingDays" : 968,
       "remainingSeconds" : 83679200,
       "serial" : "00eafe13b1b1f8cf87",
+      "sha256" : "cdbda2149c5925eaa961c1e9338ead719fb197be29c90520a7fa341285a45866",
+      "signatureAlgorithm" : "sha256WithRSAEncryption",
       "subjectCN" : [
        "arkime.test"
       ],
@@ -204,7 +213,8 @@
        "Test"
       ],
       "validDays" : 730,
-      "validSeconds" : 63072000
+      "validSeconds" : 63072000,
+      "version" : 1
      }
     ],
     "certCnt" : 1,
@@ -345,6 +355,7 @@
     "@timestamp" : "SET",
     "cert" : [
      {
+      "exponent" : 65537,
       "hash" : "6c:2b:1a:38:4e:18:84:5a:dd:8a:5e:88:e5:2b:39:61:76:b6:50:c2",
       "issuerCN" : [
        "arkime.test"
@@ -357,12 +368,15 @@
       ],
       "ja4x" : "02ace205b8e9_02ace205b8e9_000000000000",
       "ja4x_r" : "550403,55040a,55040b_550403,55040a,55040b_",
+      "keyLength" : 2048,
       "notAfter" : 1841616800000,
       "notBefore" : 1778544800000,
       "publicAlgorithm" : "rsaEncryption",
       "remainingDays" : 968,
       "remainingSeconds" : 83679200,
       "serial" : "00eafe13b1b1f8cf87",
+      "sha256" : "cdbda2149c5925eaa961c1e9338ead719fb197be29c90520a7fa341285a45866",
+      "signatureAlgorithm" : "sha256WithRSAEncryption",
       "subjectCN" : [
        "arkime.test"
       ],
@@ -373,7 +387,8 @@
        "Test"
       ],
       "validDays" : 730,
-      "validSeconds" : 63072000
+      "validSeconds" : 63072000,
+      "version" : 1
      }
     ],
     "certCnt" : 1,
@@ -558,6 +573,7 @@
     "@timestamp" : "SET",
     "cert" : [
      {
+      "exponent" : 65537,
       "hash" : "6c:2b:1a:38:4e:18:84:5a:dd:8a:5e:88:e5:2b:39:61:76:b6:50:c2",
       "issuerCN" : [
        "arkime.test"
@@ -570,12 +586,15 @@
       ],
       "ja4x" : "02ace205b8e9_02ace205b8e9_000000000000",
       "ja4x_r" : "550403,55040a,55040b_550403,55040a,55040b_",
+      "keyLength" : 2048,
       "notAfter" : 1841616800000,
       "notBefore" : 1778544800000,
       "publicAlgorithm" : "rsaEncryption",
       "remainingDays" : 968,
       "remainingSeconds" : 83679200,
       "serial" : "00eafe13b1b1f8cf87",
+      "sha256" : "cdbda2149c5925eaa961c1e9338ead719fb197be29c90520a7fa341285a45866",
+      "signatureAlgorithm" : "sha256WithRSAEncryption",
       "subjectCN" : [
        "arkime.test"
       ],
@@ -586,7 +605,8 @@
        "Test"
       ],
       "validDays" : 730,
-      "validSeconds" : 63072000
+      "validSeconds" : 63072000,
+      "version" : 1
      }
     ],
     "certCnt" : 1,

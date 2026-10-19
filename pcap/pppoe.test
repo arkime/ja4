@@ -5,6 +5,7 @@
     "@timestamp" : "SET",
     "cert" : [
      {
+      "exponent" : 65537,
       "hash" : "a1:44:6b:ce:0c:87:4d:f0:f2:c3:f6:1d:a5:c9:a2:bc:f9:da:b2:04",
       "issuerCN" : [
        "america online root certification authority 1"
@@ -14,12 +15,15 @@
       ],
       "ja4x" : "a373a9f83c6b_2bab15409345_7a0b71e99dec",
       "ja4x_r" : "550406,55040a,550403_550406,550408,550407,55040a,550403_551d0f,551d0e,551d23,551d13,551d20,551d1f",
+      "keyLength" : 2048,
       "notAfter" : 1875288399000,
       "notBefore" : 1086369999000,
       "publicAlgorithm" : "rsaEncryption",
       "remainingDays" : 7889,
       "remainingSeconds" : 681612344,
       "serial" : "07",
+      "sha256" : "ac3967faeba64012b77e53b900dd9db0590e547ed1a25e1a3475bf643af8c920",
+      "signatureAlgorithm" : "sha1WithRSAEncryption",
       "subjectCN" : [
        "aol member ca"
       ],
@@ -27,9 +31,11 @@
        "America Online Inc."
       ],
       "validDays" : 9131,
-      "validSeconds" : 788918400
+      "validSeconds" : 788918400,
+      "version" : 3
      },
      {
+      "exponent" : 65537,
       "hash" : "39:21:c1:15:c1:5d:0e:ca:5c:cb:5b:c4:f0:7d:21:d8:05:0b:56:6a",
       "issuerCN" : [
        "america online root certification authority 1"
@@ -39,12 +45,15 @@
       ],
       "ja4x" : "a373a9f83c6b_a373a9f83c6b_79faaa53868b",
       "ja4x_r" : "550406,55040a,550403_550406,55040a,550403_551d13,551d0e,551d23,551d0f",
+      "keyLength" : 2048,
       "notAfter" : 2142276180000,
       "notBefore" : 1022565600000,
       "publicAlgorithm" : "rsaEncryption",
       "remainingDays" : 10979,
       "remainingSeconds" : 948600125,
       "serial" : "01",
+      "sha256" : "77407312c63a153d5bc00b4e51759cdfdac237dc2a33b67946e98e9bfa680ae3",
+      "signatureAlgorithm" : "sha1WithRSAEncryption",
       "subjectCN" : [
        "america online root certification authority 1"
       ],
@@ -52,9 +61,11 @@
        "America Online Inc."
       ],
       "validDays" : 12959,
-      "validSeconds" : 1119710580
+      "validSeconds" : 1119710580,
+      "version" : 3
      },
      {
+      "exponent" : 65537,
       "hash" : "cc:04:2e:48:2f:29:6a:3a:dc:a4:8b:fb:79:a6:cd:5f:67:8a:c1:e2",
       "issuerCN" : [
        "aol member ca"
@@ -64,12 +75,15 @@
       ],
       "ja4x" : "2bab15409345_c9d784bbb12e_121e41c3c35b",
       "ja4x_r" : "550406,550408,550407,55040a,550403_550406,550408,550407,55040a,55040b,550403,2a864886f70d010901_551d23,551d0e,551d0f,551d25,551d1f,2b06010505070101,551d20,551d13",
+      "keyLength" : 1024,
       "notAfter" : 1231995540000,
       "notBefore" : 1168837200000,
       "publicAlgorithm" : "rsaEncryption",
       "remainingDays" : 443,
       "remainingSeconds" : 38319485,
       "serial" : "0119",
+      "sha256" : "205dd7a5de07920c7bb612bfe36b1aa0fdcd57438d4525004c26eb33564d1d84",
+      "signatureAlgorithm" : "sha1WithRSAEncryption",
       "subjectCN" : [
        "kdc.uas.aol.com"
       ],
@@ -80,7 +94,8 @@
        "Core Services"
       ],
       "validDays" : 730,
-      "validSeconds" : 63158340
+      "validSeconds" : 63158340,
+      "version" : 3
      }
     ],
     "certCnt" : 3,

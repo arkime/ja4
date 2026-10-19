@@ -57,6 +57,10 @@
       "/tcp-normal"
      ],
      "pathCnt" : 1,
+     "requestBodyLen" : [
+      0
+     ],
+     "requestBodyLenCnt" : 1,
      "requestHeader" : [
       "host"
      ],
@@ -234,6 +238,10 @@
       "/tcp-fullretrans"
      ],
      "pathCnt" : 1,
+     "requestBodyLen" : [
+      0
+     ],
+     "requestBodyLenCnt" : 1,
      "requestHeader" : [
       "host"
      ],
@@ -413,6 +421,10 @@
       "/tcp-partial-retrans"
      ],
      "pathCnt" : 1,
+     "requestBodyLen" : [
+      0
+     ],
+     "requestBodyLenCnt" : 1,
      "requestHeader" : [
       "host"
      ],
@@ -590,6 +602,10 @@
       "/tcp-outoforder"
      ],
      "pathCnt" : 1,
+     "requestBodyLen" : [
+      0
+     ],
+     "requestBodyLenCnt" : 1,
      "requestHeader" : [
       "host"
      ],
@@ -771,6 +787,10 @@
       "/tcp-gap"
      ],
      "pathCnt" : 1,
+     "requestBodyLen" : [
+      0
+     ],
+     "requestBodyLenCnt" : 1,
      "requestHeader" : [
       "host"
      ],
@@ -952,6 +972,10 @@
       "/tcp-partial-cascade"
      ],
      "pathCnt" : 1,
+     "requestBodyLen" : [
+      0
+     ],
+     "requestBodyLenCnt" : 1,
      "requestHeader" : [
       "host"
      ],
@@ -1131,6 +1155,10 @@
       "/tcp-multi-partial"
      ],
      "pathCnt" : 1,
+     "requestBodyLen" : [
+      0
+     ],
+     "requestBodyLenCnt" : 1,
      "requestHeader" : [
       "host"
      ],
@@ -1316,10 +1344,18 @@
       "/tcp-reuse"
      ],
      "pathCnt" : 1,
+     "requestBodyLen" : [
+      0
+     ],
+     "requestBodyLenCnt" : 1,
      "requestHeader" : [
       "host"
      ],
      "requestHeaderCnt" : 1,
+     "responseBodyLen" : [
+      4
+     ],
+     "responseBodyLenCnt" : 1,
      "serverVersion" : [
       "1.0"
      ],
@@ -1498,6 +1534,10 @@
       "/tcp-reuse"
      ],
      "pathCnt" : 1,
+     "requestBodyLen" : [
+      0
+     ],
+     "requestBodyLenCnt" : 1,
      "requestHeader" : [
       "host"
      ],
@@ -1664,10 +1704,18 @@
       "/tcp-reuse"
      ],
      "pathCnt" : 1,
+     "requestBodyLen" : [
+      0
+     ],
+     "requestBodyLenCnt" : 1,
      "requestHeader" : [
       "host"
      ],
      "requestHeaderCnt" : 1,
+     "responseBodyLen" : [
+      4
+     ],
+     "responseBodyLenCnt" : 1,
      "serverVersion" : [
       "1.0"
      ],
@@ -1845,6 +1893,10 @@
       "/wrap"
      ],
      "pathCnt" : 1,
+     "requestBodyLen" : [
+      0
+     ],
+     "requestBodyLenCnt" : 1,
      "requestHeader" : [
       "host"
      ],
