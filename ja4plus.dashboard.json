@@ -1,0 +1,184 @@
+{
+  "name": "JA4+",
+  "description": "JA4+ fingerprints (ja4plus plugin): TLS clients and servers, HTTP clients, certificates, SSH, TCP, DHCP and NTP",
+  "requires": [
+    "tls.ja4s"
+  ],
+  "data": {
+    "version": 1,
+    "folder": "Analysis",
+    "colorScheme": "rainbow",
+    "widgets": [
+      {
+        "id": "w0",
+        "viewMode": "navigation",
+        "width": 4,
+        "height": 1
+      },
+      {
+        "id": "w1",
+        "viewMode": "metric",
+        "width": 1,
+        "height": 1,
+        "title": "TLS clients (JA4)",
+        "expression": "tls.ja4 == EXISTS!"
+      },
+      {
+        "id": "w2",
+        "viewMode": "metric",
+        "width": 1,
+        "height": 1,
+        "title": "TLS servers (JA4S)",
+        "expression": "tls.ja4s == EXISTS!"
+      },
+      {
+        "id": "w3",
+        "viewMode": "metric",
+        "width": 1,
+        "height": 1,
+        "title": "HTTP clients (JA4H)",
+        "expression": "http.ja4h == EXISTS!"
+      },
+      {
+        "id": "w4",
+        "viewMode": "metric",
+        "width": 1,
+        "height": 1,
+        "title": "SSH (JA4SSH)",
+        "expression": "ssh.ja4ssh == EXISTS!"
+      },
+      {
+        "id": "w5",
+        "field": "tls.ja4",
+        "viewMode": "table",
+        "width": 2,
+        "height": 3,
+        "length": 20,
+        "metrics": [
+          "sessions",
+          "bytes"
+        ],
+        "sortMetric": "sessions",
+        "metricType": "sessions",
+        "title": "TLS client fingerprints (JA4)"
+      },
+      {
+        "id": "w6",
+        "field": "tls.ja4s",
+        "viewMode": "table",
+        "width": 2,
+        "height": 3,
+        "length": 20,
+        "metrics": [
+          "sessions",
+          "bytes"
+        ],
+        "sortMetric": "sessions",
+        "metricType": "sessions",
+        "title": "TLS server fingerprints (JA4S)"
+      },
+      {
+        "id": "w7",
+        "field": "tls.ja4",
+        "fields": [
+          "tls.ja4",
+          "tls.ja4s"
+        ],
+        "viewMode": "sankey",
+        "width": 4,
+        "height": 3,
+        "length": 10,
+        "title": "TLS client to server fingerprints"
+      },
+      {
+        "id": "w8",
+        "field": "http.ja4h",
+        "viewMode": "table",
+        "width": 2,
+        "height": 3,
+        "length": 20,
+        "title": "HTTP client fingerprints (JA4H)"
+      },
+      {
+        "id": "w9",
+        "field": "cert.ja4x",
+        "viewMode": "table",
+        "width": 2,
+        "height": 3,
+        "length": 20,
+        "title": "Certificate fingerprints (JA4X)"
+      },
+      {
+        "id": "w10",
+        "field": "ssh.ja4ssh",
+        "viewMode": "table",
+        "width": 2,
+        "height": 2,
+        "length": 20,
+        "title": "SSH fingerprints (JA4SSH)"
+      },
+      {
+        "id": "w11",
+        "field": "tcp.ja4t",
+        "viewMode": "table",
+        "width": 2,
+        "height": 2,
+        "length": 20,
+        "title": "TCP client fingerprints (JA4T)"
+      },
+      {
+        "id": "w12",
+        "field": "tcp.ja4ts",
+        "viewMode": "table",
+        "width": 2,
+        "height": 2,
+        "length": 20,
+        "title": "TCP server fingerprints (JA4TS)"
+      },
+      {
+        "id": "w13",
+        "field": "dhcp.ja4d",
+        "viewMode": "table",
+        "width": 2,
+        "height": 2,
+        "length": 20,
+        "title": "DHCP fingerprints (JA4D)"
+      },
+      {
+        "id": "w14",
+        "field": "ntp.ja4n",
+        "viewMode": "table",
+        "width": 2,
+        "height": 2,
+        "length": 20,
+        "title": "NTP fingerprints (JA4N)"
+      },
+      {
+        "id": "w15",
+        "field": "tls.ja4_r",
+        "viewMode": "table",
+        "width": 2,
+        "height": 2,
+        "length": 20,
+        "title": "TLS client fingerprints, raw (JA4_r)"
+      },
+      {
+        "id": "w16",
+        "field": "ip.src",
+        "fields": [
+          "ip.src",
+          "ip.dst",
+          "tls.ja4",
+          "tls.ja4s",
+          "http.ja4h",
+          "cert.ja4x",
+          "tcp.ja4t"
+        ],
+        "viewMode": "sessions",
+        "width": 4,
+        "height": 3,
+        "length": 20
+      }
+    ]
+  }
+}
