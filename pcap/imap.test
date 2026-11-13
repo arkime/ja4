@@ -523,7 +523,18 @@
    "body" : {
     "@timestamp" : "SET",
     "client" : {
-     "bytes" : 0
+     "bytes" : 192
+    },
+    "dcerpc" : {
+     "msgType" : [
+      "request",
+      "response"
+     ],
+     "msgTypeCnt" : 2,
+     "opnum" : [
+      2
+     ],
+     "opnumCnt" : 1
     },
     "destination" : {
      "as" : {
@@ -551,6 +562,7 @@
      "Cisco Systems, Inc"
     ],
     "dstOuiCnt" : 1,
+    "dstPayload8" : "0500020310000000",
     "dstRIR" : "ARIN",
     "dstTTL" : [
      127
@@ -597,12 +609,13 @@
      "lte" : 942357352030
     },
     "protocol" : [
+     "dcerpc",
      "tcp"
     ],
-    "protocolCnt" : 1,
+    "protocolCnt" : 2,
     "segmentCnt" : 1,
     "server" : {
-     "bytes" : 0
+     "bytes" : 432
     },
     "source" : {
      "as" : {
@@ -630,6 +643,7 @@
      "VMware, Inc."
     ],
     "srcOuiCnt" : 1,
+    "srcPayload8" : "0500000310000000",
     "srcRIR" : "ARIN",
     "srcTTL" : [
      128
@@ -649,7 +663,7 @@
      "syn-ack" : 0,
      "urg" : 0
     },
-    "totDataBytes" : 0
+    "totDataBytes" : 624
    },
    "header" : {
     "index" : {
@@ -764,7 +778,18 @@
    "body" : {
     "@timestamp" : "SET",
     "client" : {
-     "bytes" : 0
+     "bytes" : 96
+    },
+    "dcerpc" : {
+     "msgType" : [
+      "request",
+      "response"
+     ],
+     "msgTypeCnt" : 2,
+     "opnum" : [
+      2
+     ],
+     "opnumCnt" : 1
     },
     "destination" : {
      "as" : {
@@ -792,6 +817,7 @@
      "Cisco Systems, Inc"
     ],
     "dstOuiCnt" : 1,
+    "dstPayload8" : "0500020310000000",
     "dstRIR" : "ARIN",
     "dstTTL" : [
      127
@@ -828,12 +854,13 @@
      "lte" : 942357352031
     },
     "protocol" : [
+     "dcerpc",
      "tcp"
     ],
-    "protocolCnt" : 1,
+    "protocolCnt" : 2,
     "segmentCnt" : 1,
     "server" : {
-     "bytes" : 0
+     "bytes" : 128
     },
     "source" : {
      "as" : {
@@ -861,6 +888,7 @@
      "VMware, Inc."
     ],
     "srcOuiCnt" : 1,
+    "srcPayload8" : "0500000310000000",
     "srcRIR" : "ARIN",
     "srcTTL" : [
      128
@@ -880,7 +908,7 @@
      "syn-ack" : 0,
      "urg" : 0
     },
-    "totDataBytes" : 0
+    "totDataBytes" : 224
    },
    "header" : {
     "index" : {
