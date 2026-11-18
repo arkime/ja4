@@ -11,6 +11,12 @@ ARKIME = os.environ.get('ARKIME_DIR', os.path.join(HERE, '..', 'arkime'))
 sys.path.insert(0, os.path.join(ARKIME, 'release', 'dashboards'))
 from generate import plain, nav, metric, table, sankey, sessions, A  # noqa: E402
 
+# a session with any JA4+ fingerprint; the raw (_r) and latency delta fields
+# are only set alongside these, so they need no term of their own
+JA4_FIELDS = ['tls.ja4', 'tls.ja4s', 'http.ja4h', 'cert.ja4x', 'ssh.ja4ssh', 'tcp.ja4t', 'tcp.ja4ts',
+              'tcp.ja4l', 'tcp.ja4ls', 'dhcp.ja4d', 'dhcp.ja4d6', 'ntp.ja4n']
+ANY_JA4 = ' || '.join(f'{f} == EXISTS!' for f in JA4_FIELDS)
+
 dash = plain('JA4+', 'JA4+ fingerprints (ja4plus plugin): TLS clients and servers, HTTP clients, certificates, SSH, TCP, DHCP and NTP', [
     nav(),
     metric('TLS clients (JA4)', expression='tls.ja4 == EXISTS!'), metric('TLS servers (JA4S)', expression='tls.ja4s == EXISTS!'),
@@ -21,8 +27,9 @@ dash = plain('JA4+', 'JA4+ fingerprints (ja4plus plugin): TLS clients and server
     table('http.ja4h', title='HTTP client fingerprints (JA4H)'), table('cert.ja4x', title='Certificate fingerprints (JA4X)'),
     table('ssh.ja4ssh', h=2, title='SSH fingerprints (JA4SSH)'), table('tcp.ja4t', h=2, title='TCP client fingerprints (JA4T)'),
     table('tcp.ja4ts', h=2, title='TCP server fingerprints (JA4TS)'), table('dhcp.ja4d', h=2, title='DHCP fingerprints (JA4D)'),
-    table('ntp.ja4n', h=2, title='NTP fingerprints (JA4N)'), table('tls.ja4_r', h=2, title='TLS client fingerprints, raw (JA4_r)'),
-    sessions(['ip.src', 'ip.dst', 'tls.ja4', 'tls.ja4s', 'http.ja4h', 'cert.ja4x', 'tcp.ja4t']),
+    table('ntp.ja4n', h=2, title='NTP fingerprints (JA4N)'), table('ip.src', h=2, metrics=['sessions', 'tls.ja4'], sortMetric='tls.ja4', agg='cardinality',
+          expression='tls.ja4 == EXISTS!', title='Clients with the most JA4 fingerprints'),
+    sessions(['ip.src', 'ip.dst', 'tls.ja4', 'tls.ja4s', 'http.ja4h', 'cert.ja4x', 'tcp.ja4t'], expression=ANY_JA4),
 ], folder=A, requires=['tls.ja4s'])
 
 for i, w in enumerate(dash['data']['widgets']):

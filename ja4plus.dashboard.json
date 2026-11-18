@@ -155,12 +155,20 @@
       },
       {
         "id": "w15",
-        "field": "tls.ja4_r",
+        "field": "ip.src",
         "viewMode": "table",
         "width": 2,
         "height": 2,
         "length": 20,
-        "title": "TLS client fingerprints, raw (JA4_r)"
+        "metrics": [
+          "sessions",
+          "tls.ja4"
+        ],
+        "sortMetric": "tls.ja4",
+        "metricType": "tls.ja4",
+        "metricAgg": "cardinality",
+        "title": "Clients with the most JA4 fingerprints",
+        "expression": "tls.ja4 == EXISTS!"
       },
       {
         "id": "w16",
@@ -177,7 +185,8 @@
         "viewMode": "sessions",
         "width": 4,
         "height": 3,
-        "length": 20
+        "length": 20,
+        "expression": "tls.ja4 == EXISTS! || tls.ja4s == EXISTS! || http.ja4h == EXISTS! || cert.ja4x == EXISTS! || ssh.ja4ssh == EXISTS! || tcp.ja4t == EXISTS! || tcp.ja4ts == EXISTS! || tcp.ja4l == EXISTS! || tcp.ja4ls == EXISTS! || dhcp.ja4d == EXISTS! || dhcp.ja4d6 == EXISTS! || ntp.ja4n == EXISTS!"
       }
     ]
   }
