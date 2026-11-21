@@ -37,7 +37,8 @@ extern uint8_t               arkime_char_to_hexstr[256][3];
 LOCAL gboolean               ja4Raw;
 LOCAL gboolean               ja4hOmitZeroSections;
 
-#define JA4PLUS_SYN_ACK_COUNT 4
+// Same as the wireshark reference MAX_SYN_ACK_TIMES, so up to 9 retransmit delays
+#define JA4PLUS_SYN_ACK_COUNT 10
 typedef struct {
     // Used for JA4L
     // Timestamps are reference against firstPacket
@@ -56,7 +57,7 @@ typedef struct {
 
     uint8_t        client_ttl;
     uint8_t        server_ttl;
-    uint8_t        synAckTimesCnt: 3;
+    uint8_t        synAckTimesCnt: 4;
 } JA4PlusTCP_t;
 
 typedef struct {
@@ -75,6 +76,9 @@ typedef struct {
 typedef struct {
     JA4PlusTCP_t  *tcp;
     JA4PlusHTTP_t *http;
+    // Bare acks per direction since the last ja4ssh, kept here and not in
+    // JA4PlusTCP_t since that is freed once the ja4l is done
+    uint16_t       sshAcks[2];
 } JA4PlusData_t;
 
 typedef struct {
@@ -120,19 +124,28 @@ LOCAL void ja4plus_http_process_headers (ArkimeSession_t *session)
         uint32_t totalVlen = 0;
         while (start < end) {
             while (start < end && isspace(*start)) start++;
-            const char *equal = memchr(start, '=', end - start);
-            if (!equal)
-                break;
+
+            // Only look for the = inside this cookie, otherwise a cookie
+            // without one swallows the next cookie into its name
+            const char *semi = memchr(start, ';', end - start);
+            const char *cend = semi ? semi : end;
+            const char *equal = memchr(start, '=', cend - start);
+            if (!equal) {
+                // Not a name=value pair, skipped like the wireshark reference
+                if (!semi)
+                    break;
+                start = semi + 1;
+                continue;
+            }
             uint32_t flen = equal - start;
             cookies[num].field = g_strndup(start, flen); // COPY
             cookies[num].flen = flen;
             totalFlen += flen;
 
-            start = memchr(equal + 1, ';', end - (equal + 1));
             equal++;
-            while (equal < end && isspace(*equal)) equal++;
-            if (equal < end && equal != start) {
-                int vlen = start ? start - equal : end - equal;
+            while (equal < cend && isspace(*equal)) equal++;
+            if (equal < cend) {
+                int vlen = cend - equal;
                 cookies[num].vlen = vlen;
                 totalVlen += vlen;
 
@@ -145,9 +158,9 @@ LOCAL void ja4plus_http_process_headers (ArkimeSession_t *session)
             if (num == 99)
                 break;
 
-            if (!start)
+            if (!semi)
                 break;
-            start++;
+            start = semi + 1;
         }
 
         ja4_http->cookies = num;
@@ -206,24 +219,41 @@ LOCAL void ja4plus_http_process_headers (ArkimeSession_t *session)
     g_string_truncate(ja4_http->header_value, 0);
 }
 /******************************************************************************/
+/* The http state for the session, created on first use */
+LOCAL JA4PlusHTTP_t *ja4plus_http_get(ArkimeSession_t *session)
+{
+    JA4PlusData_t *ja4plus_data = (JA4PlusData_t *) session->pluginData[ja4plus_plugin_num];
+    if (!ja4plus_data) {
+        ja4plus_data = session->pluginData[ja4plus_plugin_num] = ARKIME_TYPE_ALLOC0 (JA4PlusData_t);
+    }
+
+    JA4PlusHTTP_t *ja4_http = ja4plus_data->http;
+    if (!ja4_http) {
+        ja4_http = ja4plus_data->http = ARKIME_TYPE_ALLOC0 (JA4PlusHTTP_t);
+        ja4_http->header_value = g_string_sized_new(100);
+        ja4_http->header_fields = g_string_sized_new(100);
+        memcpy(ja4_http->accept_lang, "0000", 4);
+    }
+    return ja4_http;
+}
+/******************************************************************************/
 /* An http msg is complete, process the headers and create the ja4h */
 LOCAL void ja4plus_http_complete(ArkimeSession_t *session, http_parser *parser)
 {
     if (parser->type != 0)
         return;
 
-    JA4PlusData_t *ja4plus_data = (JA4PlusData_t *) session->pluginData[ja4plus_plugin_num];
-    if (!ja4plus_data)
+    // The HTTP/2 connection preface (PRI * HTTP/2.0) parses as a request
+    // without headers, but it isn't one and the references don't fingerprint it
+    const char *methodStr = http_method_str(parser->method);
+    if (methodStr && strcmp(methodStr, "PRI") == 0)
         return;
 
-    JA4PlusHTTP_t *ja4_http = ja4plus_data->http;
-    if (!ja4_http)
-        return;
+    // A request without any headers never ran the header callbacks, it still
+    // gets a ja4h like both references
+    JA4PlusHTTP_t *ja4_http = ja4plus_http_get(session);
 
     char ja4h[52];
-
-    if (!ja4_http->header_fields)
-        return;
 
     if (ja4_http->state != 0) {
         ja4plus_http_process_headers(session);
@@ -232,7 +262,6 @@ LOCAL void ja4plus_http_complete(ArkimeSession_t *session, http_parser *parser)
     // JA4H method code: first two characters of the method lowercased,
     // matching the FoxIO reference implementations
     char method[3] = "00";
-    const char *methodStr = http_method_str(parser->method);
     if (methodStr && methodStr[0] != '<' && methodStr[0] && methodStr[1]) {
         method[0] = tolower(methodStr[0]);
         method[1] = tolower(methodStr[1]);
@@ -272,22 +301,28 @@ LOCAL void ja4plus_http_complete(ArkimeSession_t *session, http_parser *parser)
     }
 
     if (ja4Raw) {
-        char ja4h_r[1024];
+        // Not a fixed buffer, cookies easily make this longer than any sane one
+        GString *ja4h_r = g_string_sized_new(ja4_http->header_fields->len + 100);
 
-        snprintf(ja4h_r, sizeof(ja4h_r), "%s%d%d%c%c%02d%4.4s_%s_%s_%s",
-                 method,
-                 parser->http_major,
-                 parser->http_minor,
-                 (ja4_http->cookies == 0) ? 'n' : 'c',
-                 (ja4_http->referer == 0) ? 'n' : 'r',
-                 MIN(ja4_http->headers, 99),
-                 ja4_http->accept_lang,
-                 ja4_http->header_fields->str,
-                 (ja4_http->sorted_cookie_fields != NULL) ? ja4_http->sorted_cookie_fields : "",
-                 (ja4_http->sorted_cookie_values != NULL) ? ja4_http->sorted_cookie_values : ""
-                );
-        ja4h_r[sizeof(ja4h_r) - 1] = 0;
-        arkime_field_string_add(ja4hRawField, session, ja4h_r, -1, TRUE);
+        g_string_append_printf(ja4h_r, "%s%d%d%c%c%02d%4.4s_",
+                               method,
+                               parser->http_major,
+                               parser->http_minor,
+                               (ja4_http->cookies == 0) ? 'n' : 'c',
+                               (ja4_http->referer == 0) ? 'n' : 'r',
+                               MIN(ja4_http->headers, 99),
+                               ja4_http->accept_lang
+                              );
+        g_string_append_len(ja4h_r, ja4_http->header_fields->str, ja4_http->header_fields->len);
+        g_string_append_c(ja4h_r, '_');
+        if (ja4_http->sorted_cookie_fields)
+            g_string_append(ja4h_r, ja4_http->sorted_cookie_fields);
+        g_string_append_c(ja4h_r, '_');
+        if (ja4_http->sorted_cookie_values)
+            g_string_append(ja4h_r, ja4_http->sorted_cookie_values);
+
+        arkime_field_string_add(ja4hRawField, session, ja4h_r->str, ja4h_r->len, TRUE);
+        g_string_free(ja4h_r, TRUE);
     }
     g_string_truncate(ja4_http->header_fields, 0);
 
@@ -310,18 +345,7 @@ LOCAL void ja4plus_http_header_field_raw (ArkimeSession_t *session, http_parser 
     if (!at || hp->type != 0)
         return;
 
-    JA4PlusData_t *ja4plus_data = (JA4PlusData_t *) session->pluginData[ja4plus_plugin_num];
-    if (!ja4plus_data) {
-        ja4plus_data = session->pluginData[ja4plus_plugin_num] = ARKIME_TYPE_ALLOC0 (JA4PlusData_t);
-    }
-
-    JA4PlusHTTP_t *ja4_http = ja4plus_data->http;
-    if (!ja4plus_data->http) {
-        ja4_http = ja4plus_data->http = ARKIME_TYPE_ALLOC0 (JA4PlusHTTP_t);
-        ja4_http->header_value = g_string_sized_new(100);
-        ja4_http->header_fields = g_string_sized_new(100);
-        memcpy(ja4_http->accept_lang, "0000", 4);
-    }
+    JA4PlusHTTP_t *ja4_http = ja4plus_http_get(session);
 
     if (ja4_http->state != 0) {
         ja4plus_http_process_headers(session);
@@ -921,12 +945,20 @@ LOCAL uint32_t ja4plus_ssh_ja4ssh(ArkimeSession_t *session, const uint8_t *UNUSE
 
     const SSHInfo_t *ssh = uw;
 
+    // The bare ack counts are kept by ja4plus_tcp_raw_packet
+    JA4PlusData_t *ja4plus_data = session->pluginData[ja4plus_plugin_num];
+    int            acks[2] = {0, 0};
+    if (ja4plus_data) {
+        acks[0] = ja4plus_data->sshAcks[0];
+        acks[1] = ja4plus_data->sshAcks[1];
+        ja4plus_data->sshAcks[0] = ja4plus_data->sshAcks[1] = 0;
+    }
+
     BSB_INIT(bsb, ja4ssh, sizeof(ja4ssh));
     BSB_EXPORT_sprintf(bsb, "c%ds%d_c%ds%d_c%ds%d",
                        ja4plus_ssh_mode(ssh->lens[0], ssh->packets200[0]), ja4plus_ssh_mode(ssh->lens[1], ssh->packets200[1]),
                        ssh->packets200[0], ssh->packets200[1],
-                       session->tcpFlagAckCnt[0], session->tcpFlagAckCnt[1]);
-    session->tcpFlagAckCnt[0] = session->tcpFlagAckCnt[1] = 0;
+                       acks[0], acks[1]);
 
     arkime_field_string_add(ja4sshField, session, ja4ssh, BSB_LENGTH(bsb), TRUE);
     return 0;
@@ -950,7 +982,7 @@ LOCAL void ja4plus_ja4ts(ArkimeSession_t *session, JA4PlusTCP_t *data, const str
     uint16_t        mss = 0;
     uint8_t         window_scale = 0;
 
-    char obuf[100];
+    char obuf[256]; // room for 40 bytes of options and 9 retransmit delays
     BSB obsb;
 
     BSB_INIT(obsb, obuf, sizeof(obuf));
@@ -1028,11 +1060,12 @@ LOCAL void ja4plus_ja4ts(ArkimeSession_t *session, JA4PlusTCP_t *data, const str
  */
 LOCAL void ja4plus_ja4ts_rst(ArkimeSession_t *session, const JA4PlusTCP_t *data, uint32_t rstTime)
 {
-    char obuf[100];
+    char obuf[256];
     BSB  obsb;
 
     BSB_INIT(obsb, obuf, sizeof(obuf));
-    BSB_EXPORT_cstr(obsb, data->ja4tsPrefix);
+    // Not BSB_EXPORT_cstr, that is sizeof based and only copies 7 bytes of a pointer
+    BSB_EXPORT_ptr(obsb, data->ja4tsPrefix, strlen(data->ja4tsPrefix));
     BSB_EXPORT_cstr(obsb, "_");
     ja4plus_ja4ts_times(&obsb, data);
     BSB_EXPORT_sprintf(obsb, "-R%.0f", round ((rstTime - data->synAckTimes[data->synAckTimesCnt - 1]) / 1000000.0));
@@ -1132,22 +1165,30 @@ LOCAL void ja4plus_ja4l_delta(ArkimeSession_t *session, int field, uint32_t num,
 /******************************************************************************/
 LOCAL uint32_t ja4plus_tcp_raw_packet(ArkimeSession_t *session, const uint8_t *UNUSED(d), int UNUSED(l), void *uw)
 {
-    JA4PlusData_t *ja4plus_data = session->pluginData[ja4plus_plugin_num];
-    JA4PlusTCP_t  *ja4plus_tcp;
-    if (!ja4plus_data) {
-        ja4plus_data = session->pluginData[ja4plus_plugin_num] = ARKIME_TYPE_ALLOC0 (JA4PlusData_t);
-        ja4plus_tcp = ja4plus_data->tcp = ARKIME_TYPE_ALLOC0 (JA4PlusTCP_t);
-    } else if (ja4plus_data->tcp) {
-        if (ja4plus_data->tcp == JA4PLUS_TCP_DONE)
-            return 0;
-        ja4plus_tcp = ja4plus_data->tcp;
-    } else {
-        ja4plus_tcp = ja4plus_data->tcp = ARKIME_TYPE_ALLOC0 (JA4PlusTCP_t);
-    }
-
     ArkimePacket_t      *packet = (ArkimePacket_t *)uw;
     const struct tcphdr *tcphdr = (struct tcphdr *)(packet->pkt + packet->payloadOffset);
     int                  len = packet->payloadLen - 4 * tcphdr->th_off;
+
+    JA4PlusData_t *ja4plus_data = session->pluginData[ja4plus_plugin_num];
+    if (!ja4plus_data) {
+        ja4plus_data = session->pluginData[ja4plus_plugin_num] = ARKIME_TYPE_ALLOC0 (JA4PlusData_t);
+    }
+
+    // JA4SSH counts bare acks, no payload and no other flag, like both
+    // references, except that the ecn bits (0xc0) are ignored here.
+    // session->tcpFlagAckCnt can't be used since it also counts data segments
+    // that don't have psh set.
+    if (len == 0 && (tcphdr->th_flags & ~0xc0) == TH_ACK && ja4plus_data->sshAcks[packet->direction] < 0xffff) {
+        ja4plus_data->sshAcks[packet->direction]++;
+    }
+
+    if (ja4plus_data->tcp == JA4PLUS_TCP_DONE)
+        return 0;
+
+    if (!ja4plus_data->tcp) {
+        ja4plus_data->tcp = ARKIME_TYPE_ALLOC0 (JA4PlusTCP_t);
+    }
+    JA4PlusTCP_t  *ja4plus_tcp = ja4plus_data->tcp;
 
     const struct ip       *ip4 = (struct ip *)(packet->pkt + packet->ipOffset);
     const struct ip6_hdr  *ip6 = (struct ip6_hdr *)(packet->pkt + packet->ipOffset);
@@ -1355,7 +1396,8 @@ LOCAL int ja4plus_dhcp_udp_parser(ArkimeSession_t *session, void *UNUSED(uw), co
         if (t == 0) // Pad, no length
             continue;
         BSB_IMPORT_u08(bsb, l);
-        if (BSB_IS_ERROR(bsb) || l > BSB_REMAINING(bsb) || l == 0)
+        // A zero length option, like rapid commit (80), is still an option
+        if (BSB_IS_ERROR(bsb) || l > BSB_REMAINING(bsb))
             break;
         const uint8_t *v = 0;
         BSB_IMPORT_ptr(bsb, v, l);
@@ -1365,7 +1407,8 @@ LOCAL int ja4plus_dhcp_udp_parser(ArkimeSession_t *session, void *UNUSED(uw), co
             requestIp = 'i';
             continue;
         case 53:
-            msgType = v[0];
+            if (l > 0)
+                msgType = v[0];
             continue;
         case 55: // Parameter Request List
             for (int i = 0; i < l; i++) {
@@ -1379,7 +1422,8 @@ LOCAL int ja4plus_dhcp_udp_parser(ArkimeSession_t *session, void *UNUSED(uw), co
             if (l == 2) {
                 uint16_t size = 0;
                 memcpy(&size, v, 2);
-                snprintf(maxSize, sizeof(maxSize), "%04d", ntohs(size));
+                // 4 digits, both references cap at 9999
+                snprintf(maxSize, sizeof(maxSize), "%04d", MIN(ntohs(size), 9999));
             }
             break;
         case 81:
@@ -1507,7 +1551,7 @@ LOCAL int ja4plus_dhcpv6_udp_parser(ArkimeSession_t *session, void *UNUSED(uw), 
 
         switch (t) {
         case 1:
-            snprintf(maxSize, sizeof(maxSize), "%04d", l);
+            snprintf(maxSize, sizeof(maxSize), "%04d", MIN(l, 9999));
             break;
         case 4:
             // IA_TA presence keys the requested-ip flag (matches the FoxIO
