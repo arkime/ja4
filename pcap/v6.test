@@ -1192,7 +1192,7 @@
     "srcTTLCnt" : 1,
     "ssh" : {
      "ja4ssh" : [
-      "c20s20_c18s25_c11s3"
+      "c20s20_c18s25_c11s2"
      ],
      "ja4sshCnt" : 1,
      "version" : [
