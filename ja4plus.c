@@ -73,10 +73,28 @@ typedef struct {
     gchar          accept_lang[4];
 } JA4PlusHTTP_t;
 
+// The quic ja4l/ja4ls timestamps, like the wireshark reference A is the first
+// client initial, B the first server initial, C the first server handshake and
+// both are emitted at D, the first client handshake. Timestamps are referenced
+// against firstPacket, which is usually A, so seen tracks which are set.
+#define JA4PLUS_QUIC_SEEN_A 0x01
+#define JA4PLUS_QUIC_SEEN_B 0x02
+#define JA4PLUS_QUIC_SEEN_C 0x04
+typedef struct {
+    uint32_t       timestampA;
+    uint32_t       timestampB;
+    uint32_t       timestampC;
+    uint8_t        client_ttl;
+    uint8_t        server_ttl;
+    uint8_t        seen;
+} JA4PlusQUIC_t;
+
 #define JA4PLUS_TCP_DONE GINT_TO_POINTER(1)
+#define JA4PLUS_QUIC_DONE GINT_TO_POINTER(1)
 typedef struct {
     JA4PlusTCP_t  *tcp;
     JA4PlusHTTP_t *http;
+    JA4PlusQUIC_t *quic;
     // Bare acks per direction since the last ja4ssh, kept here and not in
     // JA4PlusTCP_t since that is freed once the ja4l is done
     uint16_t       sshAcks[2];
@@ -1332,6 +1350,153 @@ LOCAL uint32_t ja4plus_tcp_raw_packet(ArkimeSession_t *session, const uint8_t *U
     return 0;
 }
 /******************************************************************************/
+/* A quic variable length integer, sets the bsb error if truncated */
+LOCAL uint64_t ja4plus_quic_varint(BSB *bsb)
+{
+    uint8_t b = 0;
+    BSB_IMPORT_u08(*bsb, b);
+    uint64_t value = b & 0x3f;
+    const int extra = (1 << (b >> 6)) - 1;
+    for (int i = 0; i < extra; i++) {
+        BSB_IMPORT_u08(*bsb, b);
+        value = (value << 8) | b;
+    }
+    return value;
+}
+/******************************************************************************/
+#define JA4PLUS_QUIC_INITIAL   (1 << 0)
+#define JA4PLUS_QUIC_HANDSHAKE (1 << 2)
+/* The long header packet types, in v1 numbering, of the packets coalesced in
+ * one udp datagram. The type and length fields aren't encrypted, so the
+ * packets can be walked without decrypting.
+ */
+LOCAL int ja4plus_quic_long_types(const uint8_t *data, int len)
+{
+    BSB bsb;
+    BSB_INIT(bsb, data, len);
+
+    int types = 0;
+    while (BSB_REMAINING(bsb) > 0) {
+        uint8_t flags = 0;
+        uint32_t version = 0;
+        BSB_IMPORT_u08(bsb, flags);
+        BSB_IMPORT_u32(bsb, version);
+
+        // A short header runs to the end of the datagram, version 0 is version
+        // negotiation and gquic uses its own header formats
+        if (BSB_IS_ERROR(bsb) || (flags & 0x80) == 0 || version == 0 || (version >> 24) == 'Q')
+            break;
+
+        int type = (flags >> 4) & 0x3;
+        if (version == 0x6b3343cf) {
+            // v2 rotated the types, initial is 1, 0-rtt 2, handshake 3, retry 0
+            type = (type + 3) & 0x3;
+        }
+
+        // Retry has no length and runs to the end of the datagram
+        if (type == 3)
+            break;
+
+        uint8_t cidLen = 0;
+        BSB_IMPORT_u08(bsb, cidLen);
+        BSB_IMPORT_skip(bsb, cidLen);
+        BSB_IMPORT_u08(bsb, cidLen);
+        BSB_IMPORT_skip(bsb, cidLen);
+
+        if (type == 0) {
+            const uint64_t tokenLen = ja4plus_quic_varint(&bsb);
+            if (BSB_IS_ERROR(bsb) || tokenLen > (uint64_t)BSB_REMAINING(bsb))
+                break;
+            BSB_IMPORT_skip(bsb, tokenLen);
+        }
+
+        const uint64_t packetLen = ja4plus_quic_varint(&bsb);
+        if (BSB_IS_ERROR(bsb))
+            break;
+
+        types |= 1 << type;
+
+        // A packet cut short by the snaplen still counts, there is just nothing after it
+        if (packetLen > (uint64_t)BSB_REMAINING(bsb))
+            break;
+        BSB_IMPORT_skip(bsb, packetLen);
+    }
+    return types;
+}
+/******************************************************************************/
+/* Called by the udp parser for every packet, after classify */
+LOCAL uint32_t ja4plus_udp_raw_packet(ArkimeSession_t *session, const uint8_t *data, int len, void *uw)
+{
+    JA4PlusData_t *ja4plus_data = session->pluginData[ja4plus_plugin_num];
+    if (ja4plus_data && ja4plus_data->quic == JA4PLUS_QUIC_DONE)
+        return 0;
+
+    if (!arkime_session_has_protocol(session, "quic"))
+        return 0;
+
+    const int types = ja4plus_quic_long_types(data, len);
+    if ((types & (JA4PLUS_QUIC_INITIAL | JA4PLUS_QUIC_HANDSHAKE)) == 0)
+        return 0;
+
+    if (!ja4plus_data) {
+        ja4plus_data = session->pluginData[ja4plus_plugin_num] = ARKIME_TYPE_ALLOC0 (JA4PlusData_t);
+    }
+    if (!ja4plus_data->quic) {
+        ja4plus_data->quic = ARKIME_TYPE_ALLOC0 (JA4PlusQUIC_t);
+    }
+    JA4PlusQUIC_t *ja4plus_quic = ja4plus_data->quic;
+
+    const ArkimePacket_t *packet = (ArkimePacket_t *)uw;
+    const struct ip      *ip4 = (struct ip *)(packet->pkt + packet->ipOffset);
+    const struct ip6_hdr *ip6 = (struct ip6_hdr *)(packet->pkt + packet->ipOffset);
+    const uint8_t         ttl = packet->v6 ? ip6->ip6_hops : ip4->ip_ttl;
+    const uint32_t        ts = TIMESTAMP_TO_RUSEC(packet->ts);
+
+    // The wireshark reference picks the client by port 443, the session
+    // direction is used here instead so other ports work
+    if (packet->direction == 0) {
+        if ((types & JA4PLUS_QUIC_INITIAL) && !(ja4plus_quic->seen & JA4PLUS_QUIC_SEEN_A)) {
+            ja4plus_quic->timestampA = ts;
+            ja4plus_quic->client_ttl = ttl;
+            ja4plus_quic->seen |= JA4PLUS_QUIC_SEEN_A;
+        }
+
+        if ((types & JA4PLUS_QUIC_HANDSHAKE) && (ja4plus_quic->seen & JA4PLUS_QUIC_SEEN_C)) {
+            char ja4l[100];
+
+            if ((ja4plus_quic->seen & JA4PLUS_QUIC_SEEN_A) && (ja4plus_quic->seen & JA4PLUS_QUIC_SEEN_B) &&
+                ja4plus_quic->timestampB >= ja4plus_quic->timestampA) {
+                snprintf(ja4l, sizeof(ja4l), "%u_%u_quic",
+                         (ja4plus_quic->timestampB - ja4plus_quic->timestampA) / 2,
+                         ja4plus_quic->server_ttl);
+                arkime_field_string_add(ja4lsField, session, ja4l, -1, TRUE);
+            }
+
+            if (ja4plus_quic->client_ttl != 0 && ts >= ja4plus_quic->timestampC) {
+                snprintf(ja4l, sizeof(ja4l), "%u_%u_quic",
+                         (ts - ja4plus_quic->timestampC) / 2,
+                         ja4plus_quic->client_ttl);
+                arkime_field_string_add(ja4lField, session, ja4l, -1, TRUE);
+            }
+
+            ARKIME_TYPE_FREE(JA4PlusQUIC_t, ja4plus_data->quic);
+            ja4plus_data->quic = JA4PLUS_QUIC_DONE;
+        }
+    } else {
+        if ((types & JA4PLUS_QUIC_INITIAL) && !(ja4plus_quic->seen & JA4PLUS_QUIC_SEEN_B)) {
+            ja4plus_quic->timestampB = ts;
+            ja4plus_quic->server_ttl = ttl;
+            ja4plus_quic->seen |= JA4PLUS_QUIC_SEEN_B;
+        }
+
+        if ((types & JA4PLUS_QUIC_HANDSHAKE) && !(ja4plus_quic->seen & JA4PLUS_QUIC_SEEN_C)) {
+            ja4plus_quic->timestampC = ts;
+            ja4plus_quic->seen |= JA4PLUS_QUIC_SEEN_C;
+        }
+    }
+    return 0;
+}
+/******************************************************************************/
 LOCAL void ja4plus_plugin_save(ArkimeSession_t *session, int final)
 {
     JA4PlusData_t *ja4plus_data = session->pluginData[ja4plus_plugin_num];
@@ -1339,6 +1504,10 @@ LOCAL void ja4plus_plugin_save(ArkimeSession_t *session, int final)
         if (ja4plus_data->tcp && ja4plus_data->tcp != JA4PLUS_TCP_DONE) {
             g_free(ja4plus_data->tcp->ja4tsPrefix);
             ARKIME_TYPE_FREE(JA4PlusTCP_t, ja4plus_data->tcp);
+        }
+
+        if (ja4plus_data->quic && ja4plus_data->quic != JA4PLUS_QUIC_DONE) {
+            ARKIME_TYPE_FREE(JA4PlusQUIC_t, ja4plus_data->quic);
         }
 
         if (ja4plus_data->http) {
@@ -1905,6 +2074,9 @@ void arkime_plugin_init()
     arkime_parsers_add_named_func("tls_process_certificate_wInfo", ja4plus_process_certificate_wInfo);
     arkime_parsers_add_named_func("ssh_counting200", ja4plus_ssh_ja4ssh);
     arkime_parsers_add_named_func("tcp_raw_packet", ja4plus_tcp_raw_packet);
+    // Only called by an arkime that has the udp_raw_packet hook, older ones
+    // just don't get the quic ja4l/ja4ls
+    arkime_parsers_add_named_func("udp_raw_packet", ja4plus_udp_raw_packet);
     arkime_parsers_add_named_func("dhcp_packet", ja4plus_dhcp_packet);
 
     arkime_parsers_classifier_register_port("ja4n", NULL, 123, ARKIME_PARSERS_PORT_UDP, ja4plus_ntp_classify);
