@@ -253,6 +253,9 @@
      64
     ],
     "dstTTLCnt" : 1,
+    "encrypted" : [
+     "tls"
+    ],
     "ethertype" : 2048,
     "fileId" : [],
     "firstPacket" : 1386004472572,
@@ -750,6 +753,9 @@
      64
     ],
     "dstTTLCnt" : 1,
+    "encrypted" : [
+     "tls"
+    ],
     "ethertype" : 2048,
     "fileId" : [],
     "firstPacket" : 1386004475691,
@@ -1244,6 +1250,9 @@
      64
     ],
     "dstTTLCnt" : 1,
+    "encrypted" : [
+     "tls"
+    ],
     "ethertype" : 2048,
     "fileId" : [],
     "firstPacket" : 1386004480852,

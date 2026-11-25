@@ -34,6 +34,7 @@ LOCAL int                    ja4nField;
 LOCAL int                    ja4plus_plugin_num;
 LOCAL GChecksum             *checksums256[ARKIME_MAX_PACKET_THREADS];
 extern uint8_t               arkime_char_to_hexstr[256][3];
+extern char                  *arkime_char_to_hex;
 LOCAL gboolean               ja4Raw;
 LOCAL gboolean               ja4hOmitZeroSections;
 
@@ -79,6 +80,10 @@ typedef struct {
     // Bare acks per direction since the last ja4ssh, kept here and not in
     // JA4PlusTCP_t since that is freed once the ja4l is done
     uint16_t       sshAcks[2];
+    // sshAcks as of the last fin-ack. The wireshark reference emits ja4ssh on
+    // each fin-ack, so the acks that close the connection after it never count.
+    uint16_t       sshFinAcks[2];
+    uint8_t        sshFinSeen;
 } JA4PlusData_t;
 
 typedef struct {
@@ -200,18 +205,24 @@ LOCAL void ja4plus_http_process_headers (ArkimeSession_t *session)
             }
         }
     } else if (ja4_http->state == 'a') {
-        const char *lang = ja4_http->header_value->str;
-        size_t l = 0, a = 0;;
-        while (l < ja4_http->header_value->len && a < 4) {
-            if (isspace(lang[l]) || lang[l] == '-') {
-                l++;
-                continue;
-            } else if (lang[l] == ',' || lang[l] == ';') {
+        // Like the wireshark reference, scan the first value until 4 output
+        // characters, skipping spaces and hyphens. A non alpha character is
+        // written as 2 hex digits, so "*" is "2a00", and the result is cut at 4.
+        const uint8_t *lang = (uint8_t *)ja4_http->header_value->str;
+        size_t l = 0, a = 0;
+        for (; l < ja4_http->header_value->len && a < 4; l++) {
+            const uint8_t c = lang[l];
+            if (c == 0 || c == ',' || c == ';') {
                 break;
+            } else if (g_ascii_isspace(c) || c == '-') {
+                continue;
+            } else if (g_ascii_isalpha(c)) {
+                ja4_http->accept_lang[a++] = g_ascii_tolower(c);
+            } else {
+                ja4_http->accept_lang[a++] = arkime_char_to_hex[c >> 4];
+                if (a < 4)
+                    ja4_http->accept_lang[a++] = arkime_char_to_hex[c & 0xf];
             }
-            ja4_http->accept_lang[a] = tolower(lang[l]);
-            a++;
-            l++;
         }
     }
 
@@ -949,9 +960,11 @@ LOCAL uint32_t ja4plus_ssh_ja4ssh(ArkimeSession_t *session, const uint8_t *UNUSE
     JA4PlusData_t *ja4plus_data = session->pluginData[ja4plus_plugin_num];
     int            acks[2] = {0, 0};
     if (ja4plus_data) {
-        acks[0] = ja4plus_data->sshAcks[0];
-        acks[1] = ja4plus_data->sshAcks[1];
+        const uint16_t *src = ja4plus_data->sshFinSeen ? ja4plus_data->sshFinAcks : ja4plus_data->sshAcks;
+        acks[0] = src[0];
+        acks[1] = src[1];
         ja4plus_data->sshAcks[0] = ja4plus_data->sshAcks[1] = 0;
+        ja4plus_data->sshFinSeen = 0;
     }
 
     BSB_INIT(bsb, ja4ssh, sizeof(ja4ssh));
@@ -1181,6 +1194,12 @@ LOCAL uint32_t ja4plus_tcp_raw_packet(ArkimeSession_t *session, const uint8_t *U
     if (len == 0 && (tcphdr->th_flags & ~0xc0) == TH_ACK && ja4plus_data->sshAcks[packet->direction] < 0xffff) {
         ja4plus_data->sshAcks[packet->direction]++;
     }
+    // Like the reference, only a plain fin-ack (ecn bits ignored) emits
+    if ((tcphdr->th_flags & ~0xc0) == (TH_FIN | TH_ACK)) {
+        ja4plus_data->sshFinAcks[0] = ja4plus_data->sshAcks[0];
+        ja4plus_data->sshFinAcks[1] = ja4plus_data->sshAcks[1];
+        ja4plus_data->sshFinSeen = 1;
+    }
 
     if (ja4plus_data->tcp == JA4PLUS_TCP_DONE)
         return 0;
@@ -1232,30 +1251,30 @@ LOCAL uint32_t ja4plus_tcp_raw_packet(ArkimeSession_t *session, const uint8_t *U
                 ja4plus_tcp->timestampC = TIMESTAMP_TO_RUSEC(packet->ts);
         }
     } else if (ja4plus_tcp->synAckTimesCnt > 0) {
+        // Like the wireshark reference, no ja4l/ja4ls without both handshake
+        // ttls, a capture that starts mid handshake has no client syn
+        const int haveTtls = ja4plus_tcp->client_ttl != 0 && ja4plus_tcp->server_ttl != 0;
+
         if (packet->direction == 0) {
             if (ja4plus_tcp->timestampD == 0) {
                 ja4plus_tcp->timestampD = TIMESTAMP_TO_RUSEC(packet->ts);
             } else if (ja4plus_tcp->timestampC != 0 && ja4plus_tcp->timestampE != 0) {
-                if (ja4plus_tcp->timestampC >= ja4plus_tcp->synAckTimes[ja4plus_tcp->synAckTimesCnt - 1]) {
+                // http already emitted its ja4l at E, F only matters for the others
+                if (haveTtls &&
+                    ja4plus_tcp->timestampC >= ja4plus_tcp->synAckTimes[ja4plus_tcp->synAckTimesCnt - 1] &&
+                    !arkime_session_has_protocol(session, "http")) {
                     char ja4l[100];
+                    uint32_t timestampF = TIMESTAMP_TO_RUSEC(packet->ts);
 
-                    if (arkime_session_has_protocol(session, "http")) {
-                        snprintf(ja4l, sizeof(ja4l), "%u_%u_tcp",
-                                 (ja4plus_tcp->timestampC - ja4plus_tcp->synAckTimes[ja4plus_tcp->synAckTimesCnt - 1]) / 2,
-                                 ja4plus_tcp->client_ttl
-                                );
-                    } else {
-                        uint32_t timestampF = TIMESTAMP_TO_RUSEC(packet->ts);
-                        snprintf(ja4l, sizeof(ja4l), "%u_%u_%u",
-                                 (ja4plus_tcp->timestampC - ja4plus_tcp->synAckTimes[ja4plus_tcp->synAckTimesCnt - 1]) / 2,
-                                 ja4plus_tcp->client_ttl,
-                                 (timestampF - ja4plus_tcp->timestampE) / 2
-                                );
+                    snprintf(ja4l, sizeof(ja4l), "%u_%u_%u",
+                             (ja4plus_tcp->timestampC - ja4plus_tcp->synAckTimes[ja4plus_tcp->synAckTimesCnt - 1]) / 2,
+                             ja4plus_tcp->client_ttl,
+                             (timestampF - ja4plus_tcp->timestampE) / 2
+                            );
 
-                        ja4plus_ja4l_delta(session, ja4lDeltaField,
-                                           timestampF - ja4plus_tcp->timestampE,
-                                           ja4plus_tcp->timestampC - ja4plus_tcp->synAckTimes[ja4plus_tcp->synAckTimesCnt - 1]);
-                    }
+                    ja4plus_ja4l_delta(session, ja4lDeltaField,
+                                       timestampF - ja4plus_tcp->timestampE,
+                                       ja4plus_tcp->timestampC - ja4plus_tcp->synAckTimes[ja4plus_tcp->synAckTimesCnt - 1]);
                     arkime_field_string_add(ja4lField, session, ja4l, -1, TRUE);
                 }
 
@@ -1271,7 +1290,7 @@ LOCAL uint32_t ja4plus_tcp_raw_packet(ArkimeSession_t *session, const uint8_t *U
             if (ja4plus_tcp->timestampD != 0 && ja4plus_tcp->timestampE == 0) {
                 ja4plus_tcp->timestampE = TIMESTAMP_TO_RUSEC(packet->ts);
 
-                if (ja4plus_tcp->synAckTimes[ja4plus_tcp->synAckTimesCnt - 1] >= ja4plus_tcp->timestampA) {
+                if (haveTtls && ja4plus_tcp->synAckTimes[ja4plus_tcp->synAckTimesCnt - 1] >= ja4plus_tcp->timestampA) {
                     char ja4ls[100];
 
                     if (arkime_session_has_protocol(session, "http")) {
@@ -1291,6 +1310,21 @@ LOCAL uint32_t ja4plus_tcp_raw_packet(ArkimeSession_t *session, const uint8_t *U
                                            ja4plus_tcp->synAckTimes[ja4plus_tcp->synAckTimesCnt - 1] - ja4plus_tcp->timestampA);
                     }
                     arkime_field_string_add(ja4lsField, session, ja4ls, -1, TRUE);
+                }
+
+                // Like the wireshark reference, http has no third ja4l value so
+                // emit it now instead of waiting on a client packet F that may
+                // never come
+                if (haveTtls && ja4plus_tcp->timestampC != 0 &&
+                    ja4plus_tcp->timestampC >=ja4plus_tcp->synAckTimes[ja4plus_tcp->synAckTimesCnt - 1] &&
+                    arkime_session_has_protocol(session, "http")) {
+                    char ja4l[100];
+
+                    snprintf(ja4l, sizeof(ja4l), "%u_%u_tcp",
+                             (ja4plus_tcp->timestampC - ja4plus_tcp->synAckTimes[ja4plus_tcp->synAckTimesCnt - 1]) / 2,
+                             ja4plus_tcp->client_ttl
+                            );
+                    arkime_field_string_add(ja4lField, session, ja4l, -1, TRUE);
                 }
             }
         }

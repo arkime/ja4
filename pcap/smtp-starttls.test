@@ -161,6 +161,9 @@
      ],
      "smtpHelloCnt" : 1
     },
+    "encrypted" : [
+     "tls"
+    ],
     "ethertype" : 2048,
     "fileId" : [],
     "firstPacket" : 1388017124762,
